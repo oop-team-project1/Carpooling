@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService{
     public void create(User userToCreate) {
         boolean duplicateUsernameExists = true;
         boolean duplicateEmailExists = true;
+        boolean duplicatePhoneNumberExists = true;
 
         try {
             repository.getByUsername(userToCreate.getUsername());
@@ -63,6 +64,12 @@ public class UserServiceImpl implements UserService{
             duplicateEmailExists = false;
         }
 
+        try {
+            repository.getByPhoneNumber(userToCreate.getPhoneNumber());
+        } catch (EntityNotFoundException e) {
+            duplicatePhoneNumberExists = false;
+        }
+
         if (!isValidEmail(userToCreate.getEmail())) {
             throw new IllegalArgumentException("The email is not valid!");
         }
@@ -74,6 +81,11 @@ public class UserServiceImpl implements UserService{
         if (duplicateEmailExists) {
             throw new EntityDuplicateException("User", "email", userToCreate.getEmail());
         }
+
+        if (duplicatePhoneNumberExists) {
+            throw new EntityDuplicateException("User", "phone number", userToCreate.getPhoneNumber());
+        }
+
         repository.create(userToCreate);
     }
 
