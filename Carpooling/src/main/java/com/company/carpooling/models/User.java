@@ -37,7 +37,7 @@ public class User {
 
     @Column(name = "is_blocked")
     private boolean isBlocked;
-    @JsonIgnore
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
