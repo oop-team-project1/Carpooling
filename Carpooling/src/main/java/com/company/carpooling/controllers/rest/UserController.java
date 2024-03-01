@@ -7,7 +7,6 @@ import com.company.carpooling.models.User;
 import com.company.carpooling.models.UserDto;
 import com.company.carpooling.services.UserService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
