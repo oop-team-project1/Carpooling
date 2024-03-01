@@ -36,6 +36,9 @@ public class Trip {
     @Column(name = "distance")
     private float distance;
 
+    @Column(name = "duration")
+    private float duration;
+
     @Column(name = "passengers_count")
     private int passengersCount;
 

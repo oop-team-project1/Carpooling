@@ -63,9 +63,9 @@ public class BingMapsService {
             JsonNode rootNode = mapper.readTree(json);
             JsonNode locatedDistance = rootNode.path("resourceSets").get(0).path("resources").get(0).path("results").get(0).path("travelDistance");
             trip.setDistance(mapper.convertValue(locatedDistance, Float.class));
-            //TODO make trip have duration
-            //JsonNode locatedDuration = rootNode.path("resourceSets").get(0).path("resources").get(0).path("results").get(0).path("travelDuration");
 
+            JsonNode locatedDuration = rootNode.path("resourceSets").get(0).path("resources").get(0).path("results").get(0).path("travelDuration");
+            trip.setDuration(mapper.convertValue(locatedDuration, Float.class));
         } catch (JsonProcessingException e) {
             //TODO figure out what to throw instead
         }
