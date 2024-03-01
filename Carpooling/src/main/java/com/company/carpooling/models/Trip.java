@@ -25,11 +25,11 @@ public class Trip {
 
     @ManyToOne
     @JoinColumn(name = "start_point")
-    private Coordinate startPoint;
+    private Street startPoint;
 
     @ManyToOne
     @JoinColumn(name = "end_point")
-    private Coordinate endPoint;
+    private Street endPoint;
 
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
@@ -40,8 +40,8 @@ public class Trip {
     @Column(name = "passengers_count")
     private int passengersCount;
 
-    @JoinColumn(name = "status_id")
-    private TripStatus status;
+    /*@JoinColumn(name = "status_id")
+    private TripStatus status;*/
 
     @Column(name = "created_at")
     private Date dateOfCreation;
