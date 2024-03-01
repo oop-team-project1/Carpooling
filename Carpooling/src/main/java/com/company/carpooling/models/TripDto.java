@@ -1,6 +1,7 @@
 package com.company.carpooling.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TripDto {
     @NotNull
+    @Valid
     AddressDto startPoint;
 
     @NotNull
+    @Valid
     AddressDto endPoint;
 
     @NotNull
