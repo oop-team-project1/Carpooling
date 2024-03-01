@@ -188,4 +188,13 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
+
+    //TODO filter and sort trips
+    @GetMapping("/{id}/trips")
+    public void getUserTrips(@PathVariable int id){}
+    @PostMapping("/{id}/feedbacks")
+    public void leaveFeedback(@PathVariable int id){}
+    @GetMapping("/{id}/feedbacks")
+    public void getFeedbacks(@PathVariable int id){}
+
 }

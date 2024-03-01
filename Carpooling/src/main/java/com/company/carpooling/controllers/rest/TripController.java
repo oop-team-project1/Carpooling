@@ -22,6 +22,15 @@ public class TripController {
     private final TripMapper tripMapper;
     private final AuthenticationHelper authenticationHelper;
 
+    // TODO filter by status, start point, end point, free spots, driver
+    @GetMapping
+    public void getAll() {
+    }
+
+    @GetMapping("/{id}")
+    public void get(@PathVariable int id) {
+    }
+
     @PostMapping
     public void create(@RequestBody TripDto tripDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -32,5 +41,34 @@ public class TripController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PutMapping("/{id}")
+    public void update(@PathVariable int id) {
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {
+    }
+
+    @GetMapping("/{id}/passengers")
+    public void getPassengers(@PathVariable int id) {
+    }
+
+    @PostMapping("/{id}/passengers")
+    public void applyForTrip(@PathVariable int id) {
+    }
+
+    @DeleteMapping("/{id}/passengers")
+    public void cancelParticipation(@PathVariable int id) {
+    }
+
+    @PostMapping("/{id}/passengers/{passengerId}")
+    public void approvePassenger(@PathVariable int id, @PathVariable int passengerId) {
+    }
+
+    @PutMapping("/{id}/status")
+    public void changeStatus(@PathVariable int id) {
+    }
+
 
 }
