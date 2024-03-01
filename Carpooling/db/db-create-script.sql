@@ -1,5 +1,6 @@
 create schema if not exists carpooling;
 
+
 create table countries
 (
     country_id int auto_increment
