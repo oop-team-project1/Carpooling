@@ -6,8 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "trips")

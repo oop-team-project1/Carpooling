@@ -14,7 +14,7 @@ public class AddressMapper {
     private final CityService cityService;
     private final StreetService streetService;
 
-    public Street getAddress(AddressDto addressDto){
+    public Street getAddress(AddressDto addressDto) {
         Country country = new Country();
         country.setName(addressDto.getCountry());
         Country countrySaved = countryService.fetchOrCreate(country);
@@ -22,14 +22,13 @@ public class AddressMapper {
         City city = new City();
         city.setName(addressDto.getCity());
         city.setCountry(country);
-        City citySaved = cityService.fetchOrCreate(city,countrySaved);
+        City citySaved = cityService.fetchOrCreate(city, countrySaved);
 
         Street street = new Street();
         street.setStreetName(addressDto.getStreet());
         street.setCity(city);
-        Street streetSaved = streetService.fetchOrCreate(street,citySaved);
 
-        return streetSaved;
+        return streetService.fetchOrCreate(street, citySaved);
 
 
     }
