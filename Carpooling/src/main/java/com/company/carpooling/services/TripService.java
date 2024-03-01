@@ -9,4 +9,6 @@ public interface TripService {
     void create(Trip trip, User user);
 
     void update(Trip trip, User user);
+
+    void delete (int id, User user);
 }

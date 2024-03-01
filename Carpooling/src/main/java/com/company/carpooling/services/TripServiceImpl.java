@@ -34,6 +34,13 @@ public class TripServiceImpl implements TripService {
         tripRepository.update(trip);
     }
 
+    @Override
+    public void delete(int id, User user) {
+        Trip tripToDelete = tripRepository.get(id);
+        checkModifyPermissions(tripToDelete, user);
+        tripRepository.delete(id);
+    }
+
     private void checkIfBlocked(User user) {
         if (user.isBlocked()) {
             throw new AuthorizationException(BLOCKED_USER_ERROR);
@@ -45,6 +52,5 @@ public class TripServiceImpl implements TripService {
             throw new AuthorizationException(MODIFY_PERMISSION_ERROR);
         }
     }
-
 
 }

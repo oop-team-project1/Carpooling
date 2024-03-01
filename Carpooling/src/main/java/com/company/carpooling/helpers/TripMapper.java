@@ -3,7 +3,6 @@ package com.company.carpooling.helpers;
 import com.company.carpooling.models.*;
 import com.company.carpooling.repositories.TripRepository;
 import com.company.carpooling.services.BingMapsService;
-import com.company.carpooling.services.TripService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

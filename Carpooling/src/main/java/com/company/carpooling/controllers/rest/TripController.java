@@ -73,7 +73,18 @@ public class TripController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable int id,
+                       @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            tripService.delete(id, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/{id}/passengers")

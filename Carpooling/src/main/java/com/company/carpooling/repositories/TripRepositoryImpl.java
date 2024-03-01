@@ -43,6 +43,11 @@ public class TripRepositoryImpl implements TripRepository {
 
     @Override
     public void delete(int id) {
-
+        Trip tripToDelete = get(id);
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(tripToDelete);
+            session.getTransaction().commit();
+        }
     }
 }
