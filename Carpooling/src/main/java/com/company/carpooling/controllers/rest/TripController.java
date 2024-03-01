@@ -47,8 +47,8 @@ public class TripController {
                        @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
-            Trip trip = tripMapper.fromTripDto(tripDto, user);
-            tripService.create(trip);
+            Trip trip = tripMapper.fromTripDto(tripDto);
+            tripService.create(trip, user);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
@@ -60,9 +60,11 @@ public class TripController {
                        @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
-            Trip trip = tripMapper.fromTripDto(tripDto, user);
+            Trip trip = tripMapper.fromTripDto(id, tripDto);
             tripService.update(trip, user);
             return trip;
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         } catch (AuthorizationException e) {

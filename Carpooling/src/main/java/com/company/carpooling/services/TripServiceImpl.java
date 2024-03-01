@@ -21,7 +21,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void create(Trip trip) {
+    public void create(Trip trip, User user) {
+        checkIfBlocked(user);
+        trip.setDriver(user);
         tripRepository.create(trip);
     }
 
@@ -39,7 +41,7 @@ public class TripServiceImpl implements TripService {
     }
 
     private void checkModifyPermissions(Trip trip, User user) {
-        if (!(user.isAdmin() && user.getId() != trip.getDriver().getId())) {
+        if (!(user.isAdmin() || user.getId() == trip.getDriver().getId())) {
             throw new AuthorizationException(MODIFY_PERMISSION_ERROR);
         }
     }

@@ -6,7 +6,7 @@ import com.company.carpooling.models.User;
 public interface TripService {
     Trip get(int id);
 
-    void create(Trip trip);
+    void create(Trip trip, User user);
 
     void update(Trip trip, User user);
 }
