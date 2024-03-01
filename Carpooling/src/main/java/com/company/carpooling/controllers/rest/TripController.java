@@ -66,6 +66,10 @@ public class TripController {
     public void approvePassenger(@PathVariable int id, @PathVariable int passengerId) {
     }
 
+    @PostMapping("/{id}/passengers/{passengerId}")
+    public void rejectPassenger(@PathVariable int id, @PathVariable int passengerId) {
+    }
+
     @PutMapping("/{id}/status")
     public void changeStatus(@PathVariable int id) {
     }
