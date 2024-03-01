@@ -125,6 +125,7 @@ create table trips
     passengers_count int                                   not null,
     status_id        int       default 2                   not null,
     created_at       timestamp default current_timestamp() not null,
+    duration         float                                 not null,
     constraint trips_status_trips_status_id_fk
         foreign key (status_id) references status_trips (status_id),
     constraint trips_streets_street_id_fk
