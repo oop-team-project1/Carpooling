@@ -1,5 +1,8 @@
 package com.company.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,17 +23,24 @@ public class Trip {
 
     @ManyToOne
     @JoinColumn(name = "driver_id")
+    @JsonManagedReference
+    @JsonIgnoreProperties({"id", "firstName", "lastName", "email", "phoneNumber", "profilePic", "admin", "blocked"})
     private User driver;
 
     @ManyToOne
     @JoinColumn(name = "start_point")
+    @JsonManagedReference
+    @JsonIgnoreProperties("id")
     private Street startPoint;
 
     @ManyToOne
     @JoinColumn(name = "end_point")
+    @JsonManagedReference
+    @JsonIgnoreProperties("id")
     private Street endPoint;
 
     @Column(name = "departure_time")
+    @JsonFormat(pattern = "dd/MM/yy HH:mm")
     private LocalDateTime departureTime;
 
     @Column(name = "distance")
@@ -46,6 +56,7 @@ public class Trip {
     private TripStatus status;*/
 
     @Column(name = "created_at")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfCreation;
 
     //TODO set of users (accepted, pending, ...) or Map<User, UserStatus>

@@ -1,6 +1,8 @@
 package com.company.carpooling.controllers.rest;
 
 import com.company.carpooling.exceptions.AuthenticationException;
+import com.company.carpooling.exceptions.AuthorizationException;
+import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.helpers.AuthenticationHelper;
 import com.company.carpooling.helpers.TripMapper;
 import com.company.carpooling.models.Trip;
@@ -28,11 +30,21 @@ public class TripController {
     }
 
     @GetMapping("/{id}")
-    public void get(@PathVariable int id) {
+    public Trip get(@PathVariable int id,
+                    @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+        try {
+            authenticationHelper.tryGetUser(encodedString);
+            return tripService.get(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping
-    public void create(@RequestBody TripDto tripDto, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+    public void create(@RequestBody TripDto tripDto,
+                       @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
             Trip trip = tripMapper.fromTripDto(tripDto, user);
@@ -43,7 +55,19 @@ public class TripController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable int id) {
+    public Trip update(@PathVariable int id,
+                       @RequestBody TripDto tripDto,
+                       @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            Trip trip = tripMapper.fromTripDto(tripDto, user);
+            tripService.update(trip, user);
+            return trip;
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
     }
 
     @DeleteMapping("/{id}")
