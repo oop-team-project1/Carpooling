@@ -2,13 +2,16 @@ package com.company.carpooling.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class UserProfilePicServiceImpl implements  UserProfilePicService{
-    private final String CLOUDINARY_URL="cloudinary://863521527225825:m9l6q3maftGM0QyYtDHbA7XaXFo@dmkprwzyp";
+@Service
+public class UserProfilePicServiceImpl implements UserProfilePicService {
+    private final String CLOUDINARY_URL = "cloudinary://863521527225825:m9l6q3maftGM0QyYtDHbA7XaXFo@dmkprwzyp";
+
     @Override
     public String uploadPictureToCloudinary(MultipartFile multipartFile) {
         Cloudinary cloudinary = new Cloudinary(CLOUDINARY_URL);
