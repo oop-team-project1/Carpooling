@@ -1,11 +1,14 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.AuthorizationException;
+import com.company.carpooling.helpers.FilterOptionsTrip;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
 import com.company.carpooling.repositories.TripRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -14,6 +17,11 @@ public class TripServiceImpl implements TripService {
     public static final String MODIFY_PERMISSION_ERROR = "Only admin or trip creator can modify trip!";
 
     TripRepository tripRepository;
+
+    @Override
+    public List<Trip> get(FilterOptionsTrip filterOptionsTrip) {
+        return tripRepository.get(filterOptionsTrip);
+    }
 
     @Override
     public Trip get(int id) {
