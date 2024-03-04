@@ -2,6 +2,7 @@ package com.company.carpooling.controllers.rest;
 
 import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.AuthenticationHelper;
+import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.helpers.UserMapper;
 import com.company.carpooling.models.User;
 import com.company.carpooling.models.UserDto;
@@ -29,11 +30,18 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString)
+    public List<User> getAll(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                             @RequestParam(required = false) String username,
+                             @RequestParam(required = false) String phoneNumber,
+                             @RequestParam(required = false) String email,
+                             @RequestParam(required = false) String sortBy,
+                             @RequestParam(required = false) String sortOrder)
     {
+        FilterOptionsUsers filterOptionsUsers = new FilterOptionsUsers(username, phoneNumber,
+                email, sortBy, sortOrder);
         try {
             authenticationHelper.tryGetUser(encodedString);
-            return userService.getAll();
+            return userService.getAll(filterOptionsUsers);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (AuthorizationException e) {
