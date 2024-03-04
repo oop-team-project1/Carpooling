@@ -28,4 +28,6 @@ public interface UserService {
     void removeAdmin(int id, User user);
 
     void deleteUser(int id, User user);
+
+    void addProfilePicture(int id, User user, String newAvatar);
 }
