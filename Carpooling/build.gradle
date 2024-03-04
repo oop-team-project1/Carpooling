@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.37.0'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework:spring-context-support'
     implementation 'org.springframework.boot:spring-boot-starter-web'
