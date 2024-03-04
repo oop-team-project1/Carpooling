@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 
 @Entity
@@ -52,21 +54,18 @@ public class Trip {
     @Column(name = "passengers_count")
     private int passengersCount;
 
-    /*@JoinColumn(name = "status_id")
-    private TripStatus status;*/
+    @JoinColumn(name = "status_id")
+    private int status;
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfCreation;
 
     //TODO set of users (accepted, pending, ...) or Map<User, UserStatus>
-    /*@ManyToMany
-    @JoinTable(name = "passengers",
-            joinColumns = {@JoinColumn(name = "trip_id")},
-            inverseJoinColumns = {@JoinColumn(name = "trip_id")})
-    @MapKeyJoinColumn(@JoinTable(name = "passengers_statuses",
-            joinColumns = @JoinColumn(name = "status_id"),
-            inverseJoinColumns = @JoinColumn(name = "status_id")))
-    private Map<User, TripStatus> acceptedUsers;*/
+    /*@ElementCollection
+    @CollectionTable(name="passengers_statuses",
+            joinColumns=@JoinColumn(name="status_id"))
+    @MapKeyJoinColumn(name="trip_id", referencedColumnName="trip_id")
+    private Map<User, Integer> users;*/
 
 }

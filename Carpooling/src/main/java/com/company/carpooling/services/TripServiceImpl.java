@@ -46,7 +46,8 @@ public class TripServiceImpl implements TripService {
     public void delete(int id, User user) {
         Trip tripToDelete = tripRepository.get(id);
         checkModifyPermissions(tripToDelete, user);
-        tripRepository.delete(id);
+        tripToDelete.setStatus(3);
+        tripRepository.update(tripToDelete);
     }
 
     private void checkIfBlocked(User user) {

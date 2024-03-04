@@ -23,7 +23,7 @@ public class TripMapper {
         trip.setStartPoint(startPoint);
         trip.setEndPoint(endPoint);
         trip.setPassengersCount(dto.getFreeSpots());
-        /* trip.setStatus(TripStatus.UPCOMING);*/
+        trip.setStatus(1);
         return trip;
     }
 
