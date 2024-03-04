@@ -48,7 +48,7 @@ public class UserController {
                 email, sortBy, sortOrder);
         try {
             authenticationHelper.tryGetUser(encodedString);
-            return userService.getAll();
+            return userService.getAll(filterOptionsUsers);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (AuthorizationException e) {
