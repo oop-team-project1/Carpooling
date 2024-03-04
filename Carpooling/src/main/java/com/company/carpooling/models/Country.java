@@ -1,12 +1,13 @@
 package com.company.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
-
 
 @Entity
 @Table(name = "countries")
@@ -22,6 +23,8 @@ public class Country {
     @Column(name = "name")
     String name;
 
-    @OneToMany(mappedBy = "country", orphanRemoval = true)
+    @OneToMany(mappedBy = "country", orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @JsonIgnore
     Set<City> cities;
 }

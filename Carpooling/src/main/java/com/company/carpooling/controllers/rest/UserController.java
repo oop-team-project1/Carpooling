@@ -6,11 +6,13 @@ import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.helpers.UserMapper;
 import com.company.carpooling.models.User;
 import com.company.carpooling.models.UserDto;
+import com.company.carpooling.services.UserProfilePicService;
 import com.company.carpooling.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,12 +23,17 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
+    private final UserProfilePicService userProfilePicService;
 
 
-    public UserController(UserService userService, AuthenticationHelper authenticationHelper, UserMapper userMapper) {
+    public UserController(UserService userService,
+                          AuthenticationHelper authenticationHelper,
+                          UserMapper userMapper,
+                          UserProfilePicService userProfilePicService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
+        this.userProfilePicService = userProfilePicService;
     }
 
     @GetMapping
@@ -41,7 +48,7 @@ public class UserController {
                 email, sortBy, sortOrder);
         try {
             authenticationHelper.tryGetUser(encodedString);
-            return userService.getAll(filterOptionsUsers);
+            return userService.getAll();
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (AuthorizationException e) {
@@ -92,7 +99,7 @@ public class UserController {
 
     @GetMapping("/phoneNumber")
     public User getByPhoneNumber(@RequestParam String phoneNumber,
-                           @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+                                 @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             authenticationHelper.tryGetUser(encodedString);
             return userService.getByPhoneNumber(phoneNumber);
@@ -117,6 +124,21 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
     }
+
+    @PutMapping("/{id}/avatar")
+    public String setProfilePicture(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                    @PathVariable int id,
+                                    @RequestParam("avatar") MultipartFile file) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            String avatar = userProfilePicService.uploadPictureToCloudinary(file);
+            userService.addProfilePicture(id, user, avatar);
+            return avatar;
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
 
     @PutMapping("/{id}")
     public User update(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
@@ -196,12 +218,18 @@ public class UserController {
         }
     }
 
+
     //TODO filter and sort trips
     @GetMapping("/{id}/trips")
-    public void getUserTrips(@PathVariable int id){}
+    public void getUserTrips(@PathVariable int id) {
+    }
+
     @PostMapping("/{id}/feedbacks")
-    public void leaveFeedback(@PathVariable int id){}
+    public void leaveFeedback(@PathVariable int id) {
+    }
+
     @GetMapping("/{id}/feedbacks")
-    public void getFeedbacks(@PathVariable int id){}
+    public void getFeedbacks(@PathVariable int id) {
+    }
 
 }
