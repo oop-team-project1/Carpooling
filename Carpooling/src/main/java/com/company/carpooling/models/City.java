@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name="cities")
+@Table(name = "cities")
 public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -23,8 +23,7 @@ public class City {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
+    @JsonIgnoreProperties("id")
     Country country;
-
-
 
 }

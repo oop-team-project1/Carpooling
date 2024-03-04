@@ -1,7 +1,9 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.*;
+import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.models.User;
+import com.company.carpooling.models.UserProfilePic;
 import com.company.carpooling.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
+    public static final String MODIFY_PROFILE_PICTURE_ERROR = "You can't modify profile picture!";
     private final UserRepository repository;
     public static final String PERMISSION_ERROR = "Only admin or post creator can modify a post";
     public static final String USER_IS_BLOCKED = "User is blocked";
@@ -22,8 +25,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> getAll() {
-        return repository.getAll();
+    public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
+        return repository.getAll(filterOptionsUsers);
     }
 
     @Override
@@ -76,13 +79,9 @@ public class UserServiceImpl implements UserService{
 
         if (duplicateUsernameExists) {
             throw new EntityDuplicateException("User", "username", userToCreate.getUsername());
-        }
-
-        if (duplicateEmailExists) {
+        } else if (duplicateEmailExists) {
             throw new EntityDuplicateException("User", "email", userToCreate.getEmail());
-        }
-
-        if (duplicatePhoneNumberExists) {
+        } else if (duplicatePhoneNumberExists) {
             throw new EntityDuplicateException("User", "phone number", userToCreate.getPhoneNumber());
         }
 
@@ -167,6 +166,18 @@ public class UserServiceImpl implements UserService{
     public void deleteUser(int id, User user) {
         checkModifyPermissions(user);
         repository.deleteUser(id);
+    }
+
+    @Override
+    public void addProfilePicture(int id, User user, String newAvatar) {
+        if (user.getId() != id) {
+            throw new AuthorizationException(MODIFY_PROFILE_PICTURE_ERROR);
+        }
+
+        UserProfilePic profilePic = new UserProfilePic();
+        profilePic.setPic(newAvatar);
+        user.setProfilePic(profilePic);
+        repository.update(user);
     }
 
     private void checkModifyPermissions(User user) {

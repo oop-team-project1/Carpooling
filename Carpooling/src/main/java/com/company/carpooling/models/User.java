@@ -41,7 +41,7 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "profile_pic")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "profile_pic")
     private UserProfilePic profilePic;
 }
