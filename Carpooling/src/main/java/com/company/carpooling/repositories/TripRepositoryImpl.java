@@ -80,6 +80,8 @@ public class TripRepositoryImpl implements TripRepository {
                         .append(String.join(" and ", filters));
             }
 
+            queryString.append(generateOrderBy(filterOptions));
+
             Query<Trip> query = session.createQuery(queryString.toString(), Trip.class);
             query.setProperties(params);
             return query.list();
@@ -122,5 +124,39 @@ public class TripRepositoryImpl implements TripRepository {
             session.remove(tripToDelete);
             session.getTransaction().commit();
         }
+    }
+
+    private String generateOrderBy(FilterOptionsTrip filterOptions) {
+        if (filterOptions.getSortBy().isEmpty()) {
+            return "";
+        }
+
+        String orderBy = "";
+        switch (filterOptions.getSortBy().get()) {
+            case "startPointCity":
+                orderBy = "startPoint.city.name";
+                break;
+            case "endPointCity":
+                orderBy = "endPoint.city.name";
+                break;
+            case "dateOfCreation":
+                orderBy = "dateOfCreation";
+                break;
+            case "endPointCountry":
+                orderBy = "endPoint.city.country.name";
+                break;
+            case "startPointCountry":
+                orderBy = "startPoint.city.country.name";
+                break;
+
+        }
+
+        orderBy = String.format(" order by %s", orderBy);
+
+        if (filterOptions.getSortOrder().isPresent() && filterOptions.getSortOrder().get().equalsIgnoreCase("desc")) {
+            orderBy = String.format("%s desc", orderBy);
+        }
+
+        return orderBy;
     }
 }

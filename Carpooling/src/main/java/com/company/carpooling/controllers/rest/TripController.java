@@ -44,11 +44,13 @@ public class TripController {
                           @RequestParam(required = false) String username,
                           @RequestParam(required = false) Integer passengersCount,
                           @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime departureTime,
-                          @RequestParam(required = false) Date dateOfCreation) {
+                          @RequestParam(required = false) Date dateOfCreation,
+                          @RequestParam(required = false) String sortBy,
+                          @RequestParam(required = false) String sortOrder) {
 
         FilterOptionsTrip filterOptionsTrip = new FilterOptionsTrip(status, startPointStreet,
                 startPointCity, startPointCountry, endPointStreet, endPointCity, endPointCountry, username,
-                passengersCount, departureTime, dateOfCreation);
+                passengersCount, departureTime, dateOfCreation, sortBy, sortOrder);
         try {
             authenticationHelper.tryGetUser(encodedString);
             return tripService.get(filterOptionsTrip);

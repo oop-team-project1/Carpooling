@@ -25,10 +25,13 @@ public class FilterOptionsTrip {
     private Optional<LocalDateTime> departureTime;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Optional<Date> dateOfCreation;
+    private Optional<String> sortBy;
+    private Optional<String> sortOrder;
 
     public FilterOptionsTrip(String status, String startPointStreet, String startPointCity, String startPointCountry,
                              String endPointStreet, String endPointCity, String endPointCountry,
-                             String username, Integer passengersCount, LocalDateTime departureTime, Date dateOfCreation) {
+                             String username, Integer passengersCount, LocalDateTime departureTime, Date dateOfCreation,
+                             String sortBy, String sortOrder) {
         this.status = Optional.ofNullable(status);
         this.startPointStreet = Optional.ofNullable(startPointStreet);
         this.startPointCity = Optional.ofNullable(startPointCity);
@@ -40,6 +43,8 @@ public class FilterOptionsTrip {
         this.passengersCount = Optional.ofNullable(passengersCount);
         this.departureTime = Optional.ofNullable(departureTime);
         this.dateOfCreation = Optional.ofNullable(dateOfCreation);
+        this.sortBy = Optional.ofNullable(sortBy);
+        this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
 
