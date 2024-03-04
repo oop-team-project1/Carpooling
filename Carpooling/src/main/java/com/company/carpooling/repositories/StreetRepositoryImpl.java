@@ -20,8 +20,8 @@ public class StreetRepositoryImpl implements StreetRepository {
     public Street create(Street street,City city) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            City managedCity = session.merge(city);
-            street.setCity(managedCity);
+            /*City managedCity = session.merge(city);
+            street.setCity(managedCity);*/
             session.persist(street);
             session.getTransaction().commit();
             session.refresh(street);
