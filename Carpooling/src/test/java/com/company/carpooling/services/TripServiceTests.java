@@ -40,32 +40,56 @@ public class TripServiceTests {
         Mockito.when(mockRepository.get(Mockito.anyInt())).thenReturn(mockTrip);
         Trip result = tripService.get(mockTrip.getId());
 
-        Assertions.assertEquals(mockTrip,result);
+        Assertions.assertEquals(mockTrip, result);
     }
 
     @Test
-    public void create_Should_CallRepository_When_UserIsNotBlocked () {
-            Trip trip = createMockTrip();
-            User user = createMockUser();
+    public void create_Should_CallRepository_When_UserIsNotBlocked() {
+        Trip trip = createMockTrip();
+        User user = createMockUser();
 
-            Mockito.doNothing().when(mockRepository).create(trip);
+        Mockito.doNothing().when(mockRepository).create(trip);
 
-            tripService.create(trip,user);
+        tripService.create(trip, user);
 
-            Mockito.verify(mockRepository, Mockito.times(1)).create(trip);
+        Mockito.verify(mockRepository, Mockito.times(1)).create(trip);
     }
 
     @Test
-    public void create_Should_Throw_When_UserIsBlocked () {
+    public void create_Should_Throw_When_UserIsBlocked() {
         Trip trip = createMockTrip();
         User user = createMockUser();
         user.setBlocked(true);
 
-        Assertions.assertThrows(AuthorizationException.class, () -> tripService.create(trip,user));
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.create(trip, user));
 
     }
 
+    @Test
+    public void update_Should_CallRepository_When_UserIsDriver() {
+        Trip mockTrip = createMockTrip();
+        User driver = mockTrip.getDriver();
 
+        tripService.update(mockTrip, driver);
 
+        Mockito.verify(mockRepository, Mockito.times(1)).update(mockTrip);
+    }
 
+    @Test
+    public void update_Should_Throw_When_UserIsBlocked() {
+        Trip mockTrip = createMockTrip();
+        User driver = mockTrip.getDriver();
+        driver.setBlocked(true);
+
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.update(mockTrip, driver));
+    }
+
+    @Test
+    public void update_Should_Throw_When_UserIsNotDriver() {
+        Trip mockTrip = createMockTrip();
+        User driver = createMockUser();
+        driver.setId(2);
+
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.update(mockTrip, driver));
+    }
 }
