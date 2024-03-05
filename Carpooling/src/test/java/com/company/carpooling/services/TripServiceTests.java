@@ -92,4 +92,49 @@ public class TripServiceTests {
 
         Assertions.assertThrows(AuthorizationException.class, () -> tripService.update(mockTrip, driver));
     }
+
+    @Test
+    public void cancelTrip_Should_CallRepository_When_UserIsDriver() {
+        Trip mockTrip = createMockTrip();
+        User mockDriver = mockTrip.getDriver();
+
+        Mockito.when(mockRepository.get(Mockito.anyInt())).thenReturn(mockTrip);
+
+        tripService.cancelTrip(mockTrip.getId(), mockDriver);
+
+        Mockito.verify(mockRepository, Mockito.times(1)).update(mockTrip);
+    }
+
+    @Test
+    public  void cancelTrip_Should_CallRepository_When_UserIsAdmin() {
+        User mockUserAdmin = createMockAdmin();
+        Trip mockTrip = createMockTrip();
+
+        Mockito.when(mockRepository.get(Mockito.anyInt())).thenReturn(mockTrip);
+
+        tripService.cancelTrip(mockTrip.getId(), mockUserAdmin);
+
+        Mockito.verify(mockRepository, Mockito.times(1))
+                .update(mockTrip);
+    }
+
+    @Test
+    void delete_Should_ThrowException_When_UserIsNotAdminOrCreator() {
+        // Arrange
+        Trip mockTrip = createMockTrip();
+        User driver = mockTrip.getDriver();
+        driver.setId(1);
+
+        Mockito.when(mockRepository.get(Mockito.anyInt()))
+                .thenReturn(mockTrip);
+
+        User mockUser = createMockUser();
+        mockUser.setId(2);
+
+        // Act, Assert
+        Assertions.assertThrows(
+                AuthorizationException.class,
+                () -> tripService.cancelTrip(mockTrip.getId(), mockUser));
+    }
+
 }

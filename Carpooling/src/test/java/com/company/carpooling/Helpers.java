@@ -9,36 +9,36 @@ import java.time.LocalDateTime;
 
 public class Helpers {
     public static FilterOptionsTrip createMockFilterOptionsForTrip() {
-            return new FilterOptionsTrip(
-                    "status",
-                    "startStreet",
-                    "startCity",
-                    "startCountry",
-                    "endStreet",
-                    "endCity",
-                    "endCountry",
-                    "username",
-                    2,
-                    LocalDateTime.now(),
-                    Date.valueOf(LocalDate.now()),
-                    "startPointCity",
-                    "desc"
-            );
+        return new FilterOptionsTrip(
+                "status",
+                "startStreet",
+                "startCity",
+                "startCountry",
+                "endStreet",
+                "endCity",
+                "endCountry",
+                "username",
+                2,
+                LocalDateTime.now(),
+                Date.valueOf(LocalDate.now()),
+                "startPointCity",
+                "desc"
+        );
     }
 
     public static Trip createMockTrip() {
-       Trip mockTrip = new Trip();
-       mockTrip.setId(1);
-       mockTrip.setDriver(createMockUser());
-       mockTrip.setStartPoint(createMockPoint(1));
-       mockTrip.setEndPoint(createMockPoint(2));
-       mockTrip.setDepartureTime(LocalDateTime.now());
-       mockTrip.setDistance(15.75f);
-       mockTrip.setDuration(3.4f);
-       mockTrip.setPassengersCount(3);
-       mockTrip.setStatus(1);
-       mockTrip.setDateOfCreation(Date.valueOf(LocalDate.now()));
-       return mockTrip;
+        Trip mockTrip = new Trip();
+        mockTrip.setId(1);
+        mockTrip.setDriver(createMockUser());
+        mockTrip.setStartPoint(createMockPoint(1));
+        mockTrip.setEndPoint(createMockPoint(2));
+        mockTrip.setDepartureTime(LocalDateTime.now());
+        mockTrip.setDistance(15.75f);
+        mockTrip.setDuration(3.4f);
+        mockTrip.setPassengersCount(3);
+        mockTrip.setStatus(1);
+        mockTrip.setDateOfCreation(Date.valueOf(LocalDate.now()));
+        return mockTrip;
     }
 
     public static Street createMockPoint(int id) {
@@ -65,7 +65,7 @@ public class Helpers {
     }
 
     //TODO: remove when merge branches
-    public static User createMockUser () {
+    public static User createMockUser() {
         User user = new User();
         user.setId(1);
         user.setFirstName("name");
@@ -86,5 +86,11 @@ public class Helpers {
         pic.setPic("url");
         return pic;
 
+    }
+
+    public static User createMockAdmin() {
+        User admin = createMockUser();
+        admin.setAdmin(true);
+        return admin;
     }
 }
