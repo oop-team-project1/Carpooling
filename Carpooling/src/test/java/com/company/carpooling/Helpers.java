@@ -1,6 +1,7 @@
 package com.company.carpooling;
 
 import com.company.carpooling.helpers.FilterOptionsTrip;
+import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.models.*;
 
 import java.sql.Date;
@@ -92,5 +93,14 @@ public class Helpers {
         User admin = createMockUser();
         admin.setAdmin(true);
         return admin;
+    }
+
+    public static FilterOptionsUsers createMockFilterOptionsUsers() {
+        return new FilterOptionsUsers(
+                "username",
+                "0000000000",
+                "email@abv.bg",
+                "username",
+                "desc");
     }
 }
