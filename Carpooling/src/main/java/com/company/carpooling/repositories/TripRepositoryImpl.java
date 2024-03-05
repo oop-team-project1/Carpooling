@@ -116,16 +116,6 @@ public class TripRepositoryImpl implements TripRepository {
         }
     }
 
-    @Override
-    public void delete(int id) {
-        Trip tripToDelete = get(id);
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.remove(tripToDelete);
-            session.getTransaction().commit();
-        }
-    }
-
     private String generateOrderBy(FilterOptionsTrip filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {
             return "";
