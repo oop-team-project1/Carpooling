@@ -44,7 +44,7 @@ public class TripServiceImpl implements TripService {
     public void create(Trip trip, User user) {
         checkIfBlocked(user, BLOCKED_USER_ERROR);
         trip.setDriver(user);
-        trip.setStatus(1);
+        trip.setStatusId(1);
         tripRepository.create(trip);
     }
 
@@ -58,8 +58,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public void cancelTrip(int id, User user) {
         Trip tripToCancel = tripRepository.get(id);
-        checkModifyPermissions(tripToCancel, user);
-        tripToCancel.setStatus(3);
+        checkModifyPermissions(tripToCancel, user, MODIFY_PERMISSION_ERROR);
+        tripToCancel.setStatusId(3);
         tripRepository.update(tripToCancel);
     }
 
