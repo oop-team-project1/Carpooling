@@ -36,8 +36,8 @@ public class Helpers {
         mockTrip.setDepartureTime(LocalDateTime.now());
         mockTrip.setDistance(15.75f);
         mockTrip.setDuration(3.4f);
-        mockTrip.setPassengersCount(3);
-        mockTrip.setStatus(1);
+        mockTrip.setSeatsAvailable(3);
+        mockTrip.setStatusId(1);
         mockTrip.setDateOfCreation(Date.valueOf(LocalDate.now()));
         return mockTrip;
     }
