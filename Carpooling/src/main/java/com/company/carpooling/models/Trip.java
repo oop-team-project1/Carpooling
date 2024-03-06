@@ -1,15 +1,16 @@
 package com.company.carpooling.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -52,14 +53,38 @@ public class Trip {
     private float duration;
 
     @Column(name = "passengers_count")
-    private int passengersCount;
+    private int seatsAvailable;
 
-    @JoinColumn(name = "status_id")
-    private int status;
+    @Column(name = "status_id")
+    private int statusId;
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfCreation;
+
+    // TODO make separate return entity
+    @JsonIgnore
+    @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Application> applications;
+
+
+    @Formula(value = "(select count(*) from applications where applications.trip_id = trip_id and applications.status_id=2)")
+    private Long countApproved;
+
+    public boolean isFull() {
+        return countApproved == seatsAvailable;
+    }
+
+
+    //TODO set of users (accepted, pending, ...) or Map<User, UserStatus>
+    /*@ManyToMany
+    @JoinTable(name = "passengers",
+            joinColumns = {@JoinColumn(name = "trip_id")},
+            inverseJoinColumns = {@JoinColumn(name = "trip_id")})
+    @MapKeyJoinColumn(@JoinTable(name = "passengers_statuses",
+            joinColumns = @JoinColumn(name = "status_id"),
+            inverseJoinColumns = @JoinColumn(name = "status_id")))
+    private Map<User, TripStatus> acceptedUsers;*/
 
     //TODO set of users (accepted, pending, ...) or Map<User, UserStatus>
     /*@ElementCollection

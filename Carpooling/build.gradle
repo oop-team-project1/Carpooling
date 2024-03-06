@@ -36,6 +36,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.37.0'
 }
 
 tasks.named('test') {

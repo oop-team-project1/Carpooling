@@ -22,8 +22,8 @@ public class TripMapper {
         trip.setDepartureTime(dto.getDepartureTime());
         trip.setStartPoint(startPoint);
         trip.setEndPoint(endPoint);
-        trip.setPassengersCount(dto.getFreeSpots());
-        trip.setStatus(1);
+        trip.setSeatsAvailable(dto.getFreeSpots());
+        trip.setStatusId(1);
         return trip;
     }
 

@@ -18,6 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @PropertySource("classpath:application.properties")
 public class BingMapsService {
+    public static final String URI_GET_LOCATIONS = "Locations?countryRegion=%s&locality=%s&addressLine=%s&key=%s&maxResults=1";
+    public static final String URI_DISTANCE_DURATION = "Routes/DistanceMatrix?origins=%s&destinations=%s&travelMode=driving&key=%s";
     private final WebClient webClient;
     private final String key;
 
@@ -28,7 +30,7 @@ public class BingMapsService {
     }
 
     public Point getCoordinates(AddressDto addressDto) {
-        String uri = String.format("Locations?countryRegion=%s&locality=%s&addressLine=%s&key=%s&maxResults=1", addressDto.getCountry(), addressDto.getCity(), addressDto.getStreet(), key);
+        String uri = String.format(URI_GET_LOCATIONS, addressDto.getCountry(), addressDto.getCity(), addressDto.getStreet(), key);
         String json = webClient.get()
                 .uri(uri).
                 retrieve().
@@ -50,7 +52,7 @@ public class BingMapsService {
     public void setDistanceAndDuration(TripDto tripDto, Trip trip) {
         Point coordinateStart = getCoordinates(tripDto.getStartPoint());
         Point coordinateEnd = getCoordinates(tripDto.getEndPoint());
-        String uri = String.format("Routes/DistanceMatrix?origins=%s&destinations=%s&travelMode=driving&key=%s", coordinateStart, coordinateEnd.toString(), key);
+        String uri = String.format(URI_DISTANCE_DURATION, coordinateStart, coordinateEnd.toString(), key);
         System.out.println(uri);
         String json = webClient.get()
                 .uri(uri)
