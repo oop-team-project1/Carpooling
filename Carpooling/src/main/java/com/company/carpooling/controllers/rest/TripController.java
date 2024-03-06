@@ -119,6 +119,7 @@ public void cancelTrip(@PathVariable int id,
     } catch (AuthorizationException e) {
         throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
+}
 
     @GetMapping("/{id}/applications")
     public Set<Application> getApplications(@PathVariable int id,
