@@ -20,8 +20,8 @@ public class CityRepositoryImpl implements CityRepository {
     public City create(City city,Country country) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            /*Country managedCountry = session.merge(country);
-            city.setCountry(managedCountry);*/
+            Country managedCountry = session.merge(country);
+            city.setCountry(managedCountry);
             session.persist(city);
             session.getTransaction().commit();
             session.refresh(city);
