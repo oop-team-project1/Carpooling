@@ -17,11 +17,11 @@ public interface TripService {
 
     void update(Trip trip, User user);
 
-    void delete(int id, User user);
-
     Set<Application> getApplications(int tripId, User user);
 
     void applyForTrip(int tripId, User user);
+  
+    void cancelTrip (int id, User user);
 
     void cancelParticipation(int tripId, User user);
 
