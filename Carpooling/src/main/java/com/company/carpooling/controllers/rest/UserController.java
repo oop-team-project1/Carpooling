@@ -1,11 +1,11 @@
 package com.company.carpooling.controllers.rest;
 
 import com.company.carpooling.exceptions.*;
-import com.company.carpooling.helpers.AuthenticationHelper;
-import com.company.carpooling.helpers.FeedbackMapper;
-import com.company.carpooling.helpers.FilterOptionsUsers;
-import com.company.carpooling.helpers.UserMapper;
+import com.company.carpooling.helpers.*;
 import com.company.carpooling.models.*;
+import com.company.carpooling.models.dtos.CommentDto;
+import com.company.carpooling.models.dtos.FeedbackDto;
+import com.company.carpooling.models.dtos.UserDto;
 import com.company.carpooling.services.FeedbackService;
 import com.company.carpooling.services.TripService;
 import com.company.carpooling.services.UserProfilePicService;
@@ -31,6 +31,7 @@ public class UserController {
     private final UserProfilePicService userProfilePicService;
     private final FeedbackService feedbackService;
     private final FeedbackMapper feedbackMapper;
+    private final CommentMapper commentMapper;
 
 
     @GetMapping
@@ -238,6 +239,25 @@ public class UserController {
         }
 
 
+    }
+
+    @PostMapping("/{id}/feedbacks/{feedbackId}/comments")
+    public void addCommentToFeedback (@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                      @PathVariable int id,
+                                      @PathVariable int feedbackId,
+                                      @Valid @RequestBody CommentDto commentDto) {
+
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            Feedback feedback = feedbackService.getById(feedbackId);
+            FeedbackComment comment = commentMapper.fromCommentDto(commentDto);
+            User toUser = userService.getById(id);
+            feedbackService.addCommentToFeedback(user, toUser, feedback, comment);
+        }catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/feedbacks")

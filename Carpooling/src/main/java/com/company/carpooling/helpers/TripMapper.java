@@ -1,6 +1,7 @@
 package com.company.carpooling.helpers;
 
 import com.company.carpooling.models.*;
+import com.company.carpooling.models.dtos.TripDto;
 import com.company.carpooling.repositories.TripRepository;
 import com.company.carpooling.services.BingMapsService;
 import lombok.AllArgsConstructor;

@@ -2,6 +2,8 @@ package com.company.carpooling.repositories;
 
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.Feedback;
+import com.company.carpooling.models.FeedbackComment;
+import com.company.carpooling.models.Trip;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,10 +33,30 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
     }
 
     @Override
+    public Feedback getById(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            Feedback trip = session.get(Feedback.class, id);
+            if (trip == null) {
+                throw new EntityNotFoundException("Feedback", id);
+            }
+            return trip;
+        }
+    }
+
+    @Override
     public void create(Feedback feedback) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(feedback);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void createFeedbackComment(FeedbackComment comment) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(comment);
             session.getTransaction().commit();
         }
     }

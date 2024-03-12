@@ -1,9 +1,7 @@
 package com.company.carpooling.helpers;
 
 import com.company.carpooling.models.User;
-import com.company.carpooling.models.UserDto;
-import com.company.carpooling.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.company.carpooling.models.dtos.UserDto;
 import org.springframework.stereotype.Component;
 
 @Component

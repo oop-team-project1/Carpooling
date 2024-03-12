@@ -1,4 +1,4 @@
-package com.company.carpooling.models;
+package com.company.carpooling.models.dtos;
 
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

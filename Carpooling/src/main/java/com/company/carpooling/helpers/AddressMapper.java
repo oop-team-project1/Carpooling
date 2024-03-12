@@ -1,6 +1,7 @@
 package com.company.carpooling.helpers;
 
 import com.company.carpooling.models.*;
+import com.company.carpooling.models.dtos.AddressDto;
 import com.company.carpooling.services.CityService;
 import com.company.carpooling.services.CountryService;
 import com.company.carpooling.services.StreetService;

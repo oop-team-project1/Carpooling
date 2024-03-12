@@ -8,7 +8,7 @@ import lombok.Setter;
 @Table(name = "feedbacks_comments")
 @Getter
 @Setter
-public class CommentFeedback {
+public class FeedbackComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")

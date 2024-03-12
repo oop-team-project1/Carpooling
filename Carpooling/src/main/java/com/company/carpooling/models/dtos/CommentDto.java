@@ -1,4 +1,4 @@
-package com.company.carpooling.models;
+package com.company.carpooling.models.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,9 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FeedbackDto {
+public class CommentDto {
 
-    @NotNull(message = "Rating cannot be null!")
-    private int rating;
-
+    @NotNull(message = "Comment cannot be null!")
+    private String content;
 }

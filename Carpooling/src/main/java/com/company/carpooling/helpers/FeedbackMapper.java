@@ -1,7 +1,7 @@
 package com.company.carpooling.helpers;
 
 import com.company.carpooling.models.Feedback;
-import com.company.carpooling.models.FeedbackDto;
+import com.company.carpooling.models.dtos.FeedbackDto;
 import org.springframework.stereotype.Component;
 
 @Component
