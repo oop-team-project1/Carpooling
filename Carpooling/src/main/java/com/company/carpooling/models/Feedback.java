@@ -1,6 +1,7 @@
 package com.company.carpooling.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Table(name = "feedbacks")
 @Getter
 @Setter
+@JsonIgnoreProperties({"creator", "receiver"})
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,8 +1,8 @@
 package com.company.carpooling.services;
 
-import com.company.carpooling.models.AddressDto;
+import com.company.carpooling.models.dtos.AddressDto;
 import com.company.carpooling.models.Trip;
-import com.company.carpooling.models.TripDto;
+import com.company.carpooling.models.dtos.TripDto;
 import com.company.carpooling.models.json.Point;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

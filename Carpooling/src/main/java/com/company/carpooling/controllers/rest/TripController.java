@@ -9,7 +9,7 @@ import com.company.carpooling.helpers.FilterOptionsTrip;
 import com.company.carpooling.helpers.TripMapper;
 import com.company.carpooling.models.Application;
 import com.company.carpooling.models.Trip;
-import com.company.carpooling.models.TripDto;
+import com.company.carpooling.models.dtos.TripDto;
 import com.company.carpooling.models.User;
 import com.company.carpooling.services.TripService;
 import lombok.AllArgsConstructor;

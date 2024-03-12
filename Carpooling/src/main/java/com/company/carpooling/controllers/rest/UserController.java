@@ -1,14 +1,17 @@
 package com.company.carpooling.controllers.rest;
 
 import com.company.carpooling.exceptions.*;
-import com.company.carpooling.helpers.AuthenticationHelper;
-import com.company.carpooling.helpers.FilterOptionsUsers;
-import com.company.carpooling.helpers.UserMapper;
-import com.company.carpooling.models.User;
-import com.company.carpooling.models.UserDto;
+import com.company.carpooling.helpers.*;
+import com.company.carpooling.models.*;
+import com.company.carpooling.models.dtos.CommentDto;
+import com.company.carpooling.models.dtos.FeedbackDto;
+import com.company.carpooling.models.dtos.UserDto;
+import com.company.carpooling.services.FeedbackService;
+import com.company.carpooling.services.TripService;
 import com.company.carpooling.services.UserProfilePicService;
 import com.company.carpooling.services.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,23 +21,18 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("roadbuddy/api/v1/users")
 public class UserController {
     private final UserService userService;
+    private final TripService tripService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
     private final UserProfilePicService userProfilePicService;
+    private final FeedbackService feedbackService;
+    private final FeedbackMapper feedbackMapper;
+    private final CommentMapper commentMapper;
 
-
-    public UserController(UserService userService,
-                          AuthenticationHelper authenticationHelper,
-                          UserMapper userMapper,
-                          UserProfilePicService userProfilePicService) {
-        this.userService = userService;
-        this.authenticationHelper = authenticationHelper;
-        this.userMapper = userMapper;
-        this.userProfilePicService = userProfilePicService;
-    }
 
     @GetMapping
     public List<User> getAll(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
@@ -42,8 +40,7 @@ public class UserController {
                              @RequestParam(required = false) String phoneNumber,
                              @RequestParam(required = false) String email,
                              @RequestParam(required = false) String sortBy,
-                             @RequestParam(required = false) String sortOrder)
-    {
+                             @RequestParam(required = false) String sortOrder) {
         FilterOptionsUsers filterOptionsUsers = new FilterOptionsUsers(username, phoneNumber,
                 email, sortBy, sortOrder);
         try {
@@ -224,12 +221,57 @@ public class UserController {
     public void getUserTrips(@PathVariable int id) {
     }
 
-    @PostMapping("/{id}/feedbacks")
-    public void leaveFeedback(@PathVariable int id) {
+    @PostMapping("/{id}/trips/{tripId}/feedbacks")
+    public void leaveFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                              @PathVariable int id,
+                              @PathVariable int tripId,
+                              @Valid @RequestBody FeedbackDto feedbackDto) {
+        try {
+            User fromUser = authenticationHelper.tryGetUser(encodedString);
+            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto);
+            User toUser = userService.getById(id);
+            Trip trip = tripService.get(tripId);
+            feedbackService.create(fromUser, feedback, trip, toUser);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+
+    }
+
+    @PostMapping("/{id}/feedbacks/{feedbackId}/comments")
+    public void addCommentToFeedback (@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                      @PathVariable int id,
+                                      @PathVariable int feedbackId,
+                                      @Valid @RequestBody CommentDto commentDto) {
+
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            Feedback feedback = feedbackService.getById(feedbackId);
+            FeedbackComment comment = commentMapper.fromCommentDto(commentDto);
+            User toUser = userService.getById(id);
+            feedbackService.addCommentToFeedback(user, toUser, feedback, comment);
+        }catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/feedbacks")
-    public void getFeedbacks(@PathVariable int id) {
+    public List<Feedback> getFeedbacks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                             @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            return feedbackService.get(id);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
     }
 
 }

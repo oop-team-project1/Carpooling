@@ -1,5 +1,6 @@
-package com.company.carpooling.models;
+package com.company.carpooling.models.dtos;
 
+import com.company.carpooling.models.dtos.AddressDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;

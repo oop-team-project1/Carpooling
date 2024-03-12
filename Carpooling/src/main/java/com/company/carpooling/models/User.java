@@ -52,6 +52,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Application> applications;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
+    private Set<Feedback> feedbacks;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
