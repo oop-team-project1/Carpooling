@@ -25,13 +25,14 @@ public class Application {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    @Column(name = "status_id")
-    private int status;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private PassengerStatus status;
 
     public Application(Trip trip, User user) {
         this.trip = trip;
         this.user = user;
-        this.status = 1;
+        this.status = new PassengerStatus(1,"Pending");
 
     }
 
