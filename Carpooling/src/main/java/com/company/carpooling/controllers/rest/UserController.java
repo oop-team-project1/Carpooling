@@ -237,8 +237,6 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
-
     }
 
     @PostMapping("/{id}/feedbacks/{feedbackId}/comments")
