@@ -1,9 +1,6 @@
 package com.company.carpooling.controllers.rest;
 
-import com.company.carpooling.exceptions.AuthenticationException;
-import com.company.carpooling.exceptions.AuthorizationException;
-import com.company.carpooling.exceptions.EntityNotFoundException;
-import com.company.carpooling.exceptions.FullyBookedException;
+import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.AuthenticationHelper;
 import com.company.carpooling.helpers.FilterOptionsTrip;
 import com.company.carpooling.helpers.TripMapper;
@@ -106,20 +103,20 @@ public class TripController {
         }
     }
 
-@DeleteMapping("/{id}")
-public void cancelTrip(@PathVariable int id,
-                   @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
-    try {
-        User user = authenticationHelper.tryGetUser(encodedString);
-        tripService.cancelTrip(id, user);
-    } catch (EntityNotFoundException e) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-    } catch (AuthenticationException e) {
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-    } catch (AuthorizationException e) {
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    @DeleteMapping("/{id}")
+    public void cancelTrip(@PathVariable int id,
+                           @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            tripService.cancelTrip(id, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
     }
-}
 
     @GetMapping("/{id}/applications")
     public Set<Application> getApplications(@PathVariable int id,
@@ -147,6 +144,8 @@ public void cancelTrip(@PathVariable int id,
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (EntityDuplicateException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
 
     }
@@ -165,11 +164,11 @@ public void cancelTrip(@PathVariable int id,
         }
     }
 
-    @PostMapping("/{id}/applications/{passengerId}")
-    public void approvePassenger(@PathVariable int id, @PathVariable int passengerId, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+    @PostMapping("/{id}/applications/{applicationId}")
+    public void approvePassenger(@PathVariable int id, @PathVariable int applicationId, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
-            tripService.approvePassenger(id, user, passengerId);
+            tripService.approvePassenger(id, user, applicationId);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (AuthenticationException e) {
@@ -181,11 +180,11 @@ public void cancelTrip(@PathVariable int id,
         }
     }
 
-    @DeleteMapping("/{id}/applications/{passengerId}")
-    public void rejectPassenger(@PathVariable int id, @PathVariable int passengerId, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+    @DeleteMapping("/{id}/applications/{applicationId}")
+    public void rejectPassenger(@PathVariable int id, @PathVariable int applicationId, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
-            tripService.rejectPassenger(id, user, passengerId);
+            tripService.rejectPassenger(id, user, applicationId);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (AuthenticationException e) {
