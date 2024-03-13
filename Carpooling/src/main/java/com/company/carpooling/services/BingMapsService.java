@@ -20,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class BingMapsService {
     public static final String URI_GET_LOCATIONS = "Locations?countryRegion=%s&locality=%s&addressLine=%s&key=%s&maxResults=1";
     public static final String URI_DISTANCE_DURATION = "Routes/DistanceMatrix?origins=%s&destinations=%s&travelMode=driving&key=%s";
+    public static final String REVERSE_GEOCODE= "http://dev.virtualearth.net/REST/v1/Locations/%s,%s?key=%s";
     private final WebClient webClient;
     private final String key;
 
@@ -27,6 +28,31 @@ public class BingMapsService {
     public BingMapsService(WebClient.Builder builder, Environment environment) {
         webClient = builder.build();
         key = environment.getProperty("bingmapkey");
+    }
+    public AddressDto getAddress(Point point){
+        String uri = String.format(REVERSE_GEOCODE,point.getCoordinates().get(0),point.getCoordinates().get(1),key);
+        String json = webClient.get()
+                .uri(uri).
+                retrieve().
+                bodyToMono(String.class)
+                .block();
+        AddressDto verifiedAddress = new AddressDto();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = mapper.readTree(json);
+            JsonNode street = rootNode.path("resourceSets").get(0).path("resources").get(0).path("address").path("addressLine");
+            JsonNode city = rootNode.path("resourceSets").get(0).path("resources").get(0).path("address").path("adminDistrict2");
+            JsonNode country = rootNode.path("resourceSets").get(0).path("resources").get(0).path("address").path("countryRegion");
+
+            verifiedAddress.setStreet(mapper.convertValue(street,String.class));
+            verifiedAddress.setCity(mapper.convertValue(city,String.class));
+            verifiedAddress.setCountry(mapper.convertValue(country,String.class));
+            return verifiedAddress;
+        } catch (JsonProcessingException e) {
+            //TODO figure out what to throw instead
+        }
+        // TODO think of Null pointer exceptions down the line
+        return null;
     }
 
     public Point getCoordinates(AddressDto addressDto) {
@@ -40,6 +66,8 @@ public class BingMapsService {
         try {
             JsonNode rootNode = mapper.readTree(json);
             JsonNode locatedNode = rootNode.path("resourceSets").get(0).path("resources").get(0).path("point");
+
+
 
             return mapper.convertValue(locatedNode, Point.class);
         } catch (JsonProcessingException e) {

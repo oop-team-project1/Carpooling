@@ -1,6 +1,5 @@
 create schema if not exists carpooling;
 
-
 create table countries
 (
     country_id int auto_increment
@@ -18,7 +17,7 @@ create table cities
         foreign key (country_id) references countries (country_id)
 );
 
-create table passengers_statuses
+create table status_passengers
 (
     status_id int auto_increment
         primary key,
@@ -144,7 +143,7 @@ create table passengers
     trip_id      int not null,
     status_id    int not null,
     constraint passengers_passengers_statuses_status_id_fk
-        foreign key (status_id) references passengers_statuses (status_id),
+        foreign key (status_id) references status_passengers (status_id),
     constraint passengers_trips_trip_id_fk
         foreign key (trip_id) references trips (trip_id),
     constraint passengers_users_user_id_fk
