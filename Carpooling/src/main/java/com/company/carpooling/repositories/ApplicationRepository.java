@@ -7,6 +7,6 @@ import com.company.carpooling.models.User;
 public interface ApplicationRepository {
 
     Application get(Trip trip, User user);
-
+    Application get(int id);
     void update(Application application);
 }
