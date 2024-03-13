@@ -1,9 +1,11 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.AuthorizationException;
+import com.company.carpooling.exceptions.EntityDuplicateException;
 import com.company.carpooling.exceptions.FullyBookedException;
 import com.company.carpooling.helpers.FilterOptionsTrip;
 import com.company.carpooling.models.Application;
+import com.company.carpooling.models.PassengerStatus;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.TripStatus;
 import com.company.carpooling.models.User;
@@ -21,11 +23,13 @@ import java.util.Set;
 @AllArgsConstructor
 public class TripServiceImpl implements TripService {
     public static final String BLOCKED_USER_ERROR = "Unable to modify trip, user is blocked";
+    public static final String ENABLED_USER_ERROR = "To proceed, verify your email!";
     public static final String BLOCKED_APPLY_ERR = "Unable to apply for trip, user is blocked";
     public static final String MODIFY_PERMISSION_ERROR = "Only admin or trip creator can modify trip!";
     public static final String INFORMATION_PERMISSION_ERR = "Only trip creator or admin can request passenger info!";
     public static final String DRIVER_CANT_BE_PASSENGER = "As a trip creator you can't apply to be a passenger!";
     public static final String PASSENGER_STATUS_PERMISSION_ERR = "Only trip creators can modify passenger statuses!";
+    public static final String PASSENGER_ENABLED_ERR = "The user has not verified his email and can't be added as passenger!";
 
     TripRepository tripRepository;
     UserRepository userRepository;
@@ -41,6 +45,8 @@ public class TripServiceImpl implements TripService {
         return tripRepository.get(id);
     }
 
+
+    //TODO check time, verified, blocked etc
     @Override
     public void create(Trip trip, User user) {
         checkIfBlocked(user, BLOCKED_USER_ERROR);
@@ -76,8 +82,15 @@ public class TripServiceImpl implements TripService {
         Trip trip = get(tripId);
         checkIfBlocked(user, BLOCKED_APPLY_ERR);
         checkApplicationPermissions(trip, user);
+        checkIfAlreadyApplied(trip, user);
         trip.getApplications().add(new Application(trip, user));
         tripRepository.update(trip);
+    }
+
+    private void checkIfAlreadyApplied(Trip trip, User user) {
+        if (trip.getApplications().stream().anyMatch(application -> application.getUser().equals(user))) {
+            throw new EntityDuplicateException("Application from user", "id", user.getId());
+        }
     }
 
     @Override
@@ -88,33 +101,39 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void approvePassenger(int tripId, User driver, int passengerId) {
+    public void approvePassenger(int tripId, User driver, int applicationId) {
         Trip trip = get(tripId);
+        checkIfEnabled(driver, ENABLED_USER_ERROR);
         checkIfBlocked(driver, BLOCKED_USER_ERROR);
+        checkStatusModificationPermission(trip, driver);
         if (trip.isFull()) {
             throw new FullyBookedException(trip.getId()
             );
         }
-        User passenger = userRepository.getById(passengerId);
-        checkIfBlocked(passenger, BLOCKED_APPLY_ERR);
-        checkStatusModificationPermission(trip, driver);
-        Application application = applicationRepository.get(trip, passenger);
-        application.setStatus(2);
+        Application application = applicationRepository.get(applicationId);
+        checkIfBlocked(application.getUser(), BLOCKED_APPLY_ERR);
+        checkIfEnabled(application.getUser(), PASSENGER_ENABLED_ERR);
+        application.setStatus(new PassengerStatus(2, "Approved"));
         applicationRepository.update(application);
     }
 
     @Override
-    public void rejectPassenger(int tripId, User driver, int passengerId) {
+    public void rejectPassenger(int tripId, User driver, int applicationId) {
         Trip trip = get(tripId);
-        User passenger = userRepository.getById(passengerId);
         checkIfBlocked(driver, BLOCKED_USER_ERROR);
         checkStatusModificationPermission(trip, driver);
-        Application application = applicationRepository.get(trip, passenger);
-        application.setStatus(3);
+        Application application = applicationRepository.get(applicationId);
+        application.setStatus(new PassengerStatus(3, "Rejected"));
         applicationRepository.update(application);
     }
 
     private void checkIfBlocked(User user, String message) {
+        if (user.isBlocked()) {
+            throw new AuthorizationException(message);
+        }
+    }
+
+    private void checkIfEnabled(User user, String message) {
         if (user.isBlocked()) {
             throw new AuthorizationException(message);
         }
