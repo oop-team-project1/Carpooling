@@ -137,18 +137,21 @@ create table trips
         check (`passengers_count` >= 1)
 );
 
-create table passengers
+create table applications
 (
-    passenger_id int not null,
-    trip_id      int not null,
-    status_id    int not null,
-    constraint passengers_passengers_statuses_status_id_fk
-        foreign key (status_id) references status_passengers (status_id),
-    constraint passengers_trips_trip_id_fk
+    passenger_id   int           not null,
+    trip_id        int           not null,
+    status_id      int default 1 not null,
+    application_id int auto_increment
+        primary key,
+    constraint applications_trips_trip_id_fk
         foreign key (trip_id) references trips (trip_id),
-    constraint passengers_users_user_id_fk
+    constraint applications_users_user_id_fk
         foreign key (passenger_id) references users (user_id)
 );
+
+create index applications_passengers_statuses_status_id_fk
+    on applications (status_id);
 
 create table trips_tags
 (
