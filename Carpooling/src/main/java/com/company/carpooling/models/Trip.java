@@ -55,8 +55,9 @@ public class Trip {
     @Column(name = "passengers_count")
     private int seatsAvailable;
 
-    @Column(name = "status_id")
-    private int statusId;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private TripStatus status;
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")

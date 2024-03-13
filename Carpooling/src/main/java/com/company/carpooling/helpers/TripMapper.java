@@ -24,7 +24,6 @@ public class TripMapper {
         trip.setStartPoint(startPoint);
         trip.setEndPoint(endPoint);
         trip.setSeatsAvailable(dto.getFreeSpots());
-        trip.setStatusId(1);
         return trip;
     }
 

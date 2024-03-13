@@ -65,7 +65,6 @@ public class Helpers {
         return mockCountry;
     }
 
-    //TODO: remove when merge branches
     public static User createMockUser() {
         User user = new User();
         user.setId(1);
