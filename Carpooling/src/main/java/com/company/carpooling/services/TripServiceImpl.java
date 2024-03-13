@@ -5,6 +5,7 @@ import com.company.carpooling.exceptions.FullyBookedException;
 import com.company.carpooling.helpers.FilterOptionsTrip;
 import com.company.carpooling.models.Application;
 import com.company.carpooling.models.Trip;
+import com.company.carpooling.models.TripStatus;
 import com.company.carpooling.models.User;
 import com.company.carpooling.repositories.ApplicationRepository;
 import com.company.carpooling.repositories.TripRepository;
@@ -44,7 +45,7 @@ public class TripServiceImpl implements TripService {
     public void create(Trip trip, User user) {
         checkIfBlocked(user, BLOCKED_USER_ERROR);
         trip.setDriver(user);
-        trip.setStatusId(1);
+        trip.setStatus(new TripStatus(1, "Upcoming"));
         tripRepository.create(trip);
     }
 
@@ -59,7 +60,7 @@ public class TripServiceImpl implements TripService {
     public void cancelTrip(int id, User user) {
         Trip tripToCancel = tripRepository.get(id);
         checkModifyPermissions(tripToCancel, user, MODIFY_PERMISSION_ERROR);
-        tripToCancel.setStatusId(3);
+        tripToCancel.setStatus(new TripStatus(4, "Cancelled"));
         tripRepository.update(tripToCancel);
     }
 
