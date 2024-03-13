@@ -2,6 +2,7 @@ package com.company.carpooling.helpers;
 
 import com.company.carpooling.models.*;
 import com.company.carpooling.models.dtos.TripDto;
+import com.company.carpooling.models.json.Point;
 import com.company.carpooling.repositories.TripRepository;
 import com.company.carpooling.services.BingMapsService;
 import lombok.AllArgsConstructor;
@@ -15,8 +16,11 @@ public class TripMapper {
     private final TripRepository tripRepository;
 
     public Trip fromTripDto(TripDto dto) {
-        Street startPoint = addressMapper.getAddress(dto.getStartPoint());
-        Street endPoint = addressMapper.getAddress(dto.getEndPoint());
+        Point startingPoint = bingMapService.getCoordinates(dto.getStartPoint());
+        Point endingPoint = bingMapService.getCoordinates(dto.getEndPoint());
+
+        Street startPoint = addressMapper.getAddress(startingPoint);
+        Street endPoint = addressMapper.getAddress(endingPoint);
         Trip trip = new Trip();
         bingMapService.setDistanceAndDuration(dto, trip);
         //BingServiceLogic for distance
