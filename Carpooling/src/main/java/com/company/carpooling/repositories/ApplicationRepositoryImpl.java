@@ -35,6 +35,17 @@ public class ApplicationRepositoryImpl implements ApplicationRepository {
         }
     }
 
+    @Override
+    public Application get(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            Application application = session.get(Application.class, id);
+            if (application == null) {
+                throw new EntityNotFoundException("Application", id);
+            }
+            return application;
+        }
+    }
+
 
     public void update(Application application) {
         try (Session session = sessionFactory.openSession()) {
