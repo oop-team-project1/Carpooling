@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -146,6 +147,21 @@ public class UserController {
             User userToUpdate = userMapper.fromDto(id, userDto);
             userService.update(userToUpdate, user);
             return userToUpdate;
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                       @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            userService.deleteUser(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
@@ -324,6 +340,31 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PostMapping("/activation/{code}")
+    public String activateUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                               @PathVariable int code) {
+        try {
+            authenticationHelper.tryGetUser(encodedString);
+            userService.activateAccount(code);
+            return "Account activated";
+        } catch (WrongActivationCodeException e) {
+            return "Code has expired! Resend code.";
+        } catch (ForbiddenOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+    @PostMapping("/activation/new-code")
+    public String sendNewActivationCode(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            userService.resendActivationCode(user.getUsername());
+            return "New activation code sent";
+        } catch (ForbiddenOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 }

@@ -41,6 +41,10 @@ public class User {
     @Column(name = "is_blocked")
     private boolean isBlocked;
 
+    @Column(name = "is_enabled")
+    private boolean isVerified;
+
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
