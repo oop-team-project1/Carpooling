@@ -222,28 +222,30 @@ public class UserController {
     }
 
     @PostMapping("/{id}/trips/{tripId}/feedbacks")
-    public void leaveFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                              @PathVariable int id,
-                              @PathVariable int tripId,
-                              @Valid @RequestBody FeedbackDto feedbackDto) {
+    public void leaveFeedbackForDriver(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                       @PathVariable int id,
+                                       @PathVariable int tripId,
+                                       @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
-            User fromUser = authenticationHelper.tryGetUser(encodedString);
+            User passenger = authenticationHelper.tryGetUser(encodedString);
             Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto);
-            User toUser = userService.getById(id);
+            User driver = userService.getById(id);
             Trip trip = tripService.get(tripId);
-            feedbackService.create(fromUser, feedback, trip, toUser);
+            feedbackService.leaveFeedbackForDriver(passenger, feedback, trip, driver);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (TripNotCompletedException | UserIsNotFromTrip | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @PostMapping("/{id}/feedbacks/{feedbackId}/comments")
-    public void addCommentToFeedback (@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                                      @PathVariable int id,
-                                      @PathVariable int feedbackId,
-                                      @Valid @RequestBody CommentDto commentDto) {
+    public void addCommentToFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                     @PathVariable int id,
+                                     @PathVariable int feedbackId,
+                                     @Valid @RequestBody CommentDto commentDto) {
 
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
@@ -251,7 +253,7 @@ public class UserController {
             FeedbackComment comment = commentMapper.fromCommentDto(commentDto);
             User toUser = userService.getById(id);
             feedbackService.addCommentToFeedback(user, toUser, feedback, comment);
-        }catch (AuthorizationException | AuthenticationException e) {
+        } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -260,7 +262,7 @@ public class UserController {
 
     @GetMapping("/{id}/feedbacks")
     public List<Feedback> getFeedbacks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                             @PathVariable int id) {
+                                       @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
             return feedbackService.get(id);

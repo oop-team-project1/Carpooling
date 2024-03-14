@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public interface FeedbackService {
 
-    List<Feedback> get (int userId);
+    List<Feedback> get(int userId);
+
     Feedback getById(int id);
-    void create (User fromUser, Feedback feedback, Trip trip, User toUser);
+
+    void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver);
+
     void addCommentToFeedback(User fromUser, User toUser, Feedback feedback, FeedbackComment comment);
 }
