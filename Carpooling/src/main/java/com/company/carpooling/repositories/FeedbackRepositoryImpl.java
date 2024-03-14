@@ -14,22 +14,22 @@ import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class FeedbackRepositoryImpl implements FeedbackRepository{
+public class FeedbackRepositoryImpl implements FeedbackRepository {
     private final SessionFactory sessionFactory;
 
     @Override
     public List<Feedback> get(int userId) {
-       try (Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Feedback> query = session.createQuery("from Feedback  where " +
                     " receiver.id = :id ", Feedback.class);
-           query.setParameter("id", userId);
+            query.setParameter("id", userId);
 
-           List<Feedback> result = query.list();
-           if (result.isEmpty()) {
-               throw new EntityNotFoundException(String.format("No feedbacks for user with id %d.", userId));
-           }
-           return result;
-       }
+            List<Feedback> result = query.list();
+            if (result.isEmpty()) {
+                throw new EntityNotFoundException(String.format("No feedbacks for user with id %d.", userId));
+            }
+            return result;
+        }
     }
 
     @Override
@@ -57,6 +57,15 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(comment);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void delete(Feedback feedback) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(feedback);
             session.getTransaction().commit();
         }
     }

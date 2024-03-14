@@ -243,9 +243,9 @@ public class UserController {
 
     @PostMapping("/{id}/trips/{tripId}/feedback-passenger")
     public void leaveFeedbackForPassenger(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                                       @PathVariable int id,
-                                       @PathVariable int tripId,
-                                       @Valid @RequestBody FeedbackDto feedbackDto) {
+                                          @PathVariable int id,
+                                          @PathVariable int tripId,
+                                          @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
             User driver = authenticationHelper.tryGetUser(encodedString);
             User passenger = userService.getById(id);
@@ -284,14 +284,28 @@ public class UserController {
     public List<Feedback> getFeedbacks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                                        @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(encodedString);
+            authenticationHelper.tryGetUser(encodedString);
             return feedbackService.get(id);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
     }
 
+    @DeleteMapping("/{id}/feedbacks/{feedbackId}")
+    public void deleteFeedbackForUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                      @PathVariable int id,
+                                      @PathVariable int feedbackId) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            User userToDeleteFeedback = userService.getById(id);
+            Feedback feedbackToDelete = feedbackService.getById(feedbackId);
+            feedbackService.deleteFeedback(user, userToDeleteFeedback, feedbackToDelete);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

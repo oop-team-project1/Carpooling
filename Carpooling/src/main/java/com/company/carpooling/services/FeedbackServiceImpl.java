@@ -17,13 +17,14 @@ import java.util.Set;
 public class FeedbackServiceImpl implements FeedbackService {
 
     public static final String COMMENT_CREATOR_PERMISSION_ERROR = "You are not creator of the feedback!";
-
     public static final String BLOCKED_USER_ERROR = "Unable to create feedback, user is blocked";
     public static final String TRIP_NOT_COMPLETED_ERR = "Feedback cannot be created for an incomplete trip. " +
             "The trip must be completed before providing feedback.";
     public static final String DRIVER_IS_NOT_FROM_TRIP_ERR = "You are not the driver of the given trip.";
     public static final String PASSENGER_IS_NOT_FROM_TRIP_ERR = "The specified user is not in the given trip.";
     public static final String USER_ALREADY_PROVIDED_FEEDBACK_ERR = "You have already provided feedback for this user.";
+    public static final String USER_IS_NOT_THE_RECEIVER_OF_THE_FEEDBACK_ERR = "User is not the receiver of the feedback.";
+
     private final FeedbackRepository feedbackRepository;
 
     @Override
@@ -38,9 +39,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver) {
-        checkIfUserHasAlreadyGivenFeedback(passenger,driver,trip);
+        checkIfUserHasAlreadyGivenFeedback(passenger, driver, trip);
         checkIfBlocked(passenger, BLOCKED_USER_ERROR);
-        checkPermissions(driver,trip,passenger);
+        checkPermissions(driver, trip, passenger);
         feedback.setCreator(passenger);
         feedback.setReceiver(driver);
         feedbackRepository.create(feedback);
@@ -48,7 +49,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void leaveFeedbackForPassenger(User driver, Feedback feedback, Trip trip, User passenger) {
-        checkIfUserHasAlreadyGivenFeedback(driver,passenger,trip);
+        checkIfUserHasAlreadyGivenFeedback(driver, passenger, trip);
         checkIfBlocked(driver, BLOCKED_USER_ERROR);
         checkPermissions(driver, trip, passenger);
         feedback.setCreator(driver);
@@ -70,6 +71,20 @@ public class FeedbackServiceImpl implements FeedbackService {
         comment.setUser(fromUser);
         feedbackRepository.createFeedbackComment(comment);
     }
+
+    @Override
+    public void deleteFeedback(User user, User userToDelete, Feedback feedback) {
+        User creator = feedback.getCreator();
+        User receiver = feedback.getReceiver();
+        if (!user.equals(creator)) {
+            throw new AuthorizationException(COMMENT_CREATOR_PERMISSION_ERROR);
+        }
+        if (!userToDelete.equals(receiver)) {
+            throw new AuthorizationException(USER_IS_NOT_THE_RECEIVER_OF_THE_FEEDBACK_ERR);
+        }
+        feedbackRepository.delete(feedback);
+    }
+
     private void checkPermissions(User driver, Trip trip, User passenger) {
         checkIfTripIsCompleted(trip);
         checkIfDriverIsFromTrip(driver, trip);
@@ -83,7 +98,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         Set<Feedback> feedbacks = toUser.getFeedbacks();
         boolean checkFeedback = feedbacks.stream()
                 .anyMatch(feedback -> feedback.getCreator().equals(fromUser) && feedback.getTrip().equals(trip));
-        if(checkFeedback) {
+        if (checkFeedback) {
             throw new AuthorizationException(USER_ALREADY_PROVIDED_FEEDBACK_ERR);
         }
     }

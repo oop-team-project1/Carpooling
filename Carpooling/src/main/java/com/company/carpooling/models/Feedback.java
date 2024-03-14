@@ -36,4 +36,7 @@ public class Feedback {
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfCreation;
+
+    @OneToOne(mappedBy = "feedback", cascade = CascadeType.REMOVE)
+    private FeedbackComment feedbackComment;
 }
