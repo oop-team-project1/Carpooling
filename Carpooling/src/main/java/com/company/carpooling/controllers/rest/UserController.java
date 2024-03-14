@@ -308,4 +308,22 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @DeleteMapping("/{id}/feedbacks/{feedbackId}/comments/{commentId}")
+    public void deleteCommentForFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                         @PathVariable int id,
+                                         @PathVariable int feedbackId,
+                                         @PathVariable int commentId) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            User userToDeleteFeedback = userService.getById(id);
+            Feedback feedback = feedbackService.getById(feedbackId);
+            FeedbackComment comment = feedbackService.getCommentById(commentId);
+            feedbackService.deleteFeedbackForComment(user, userToDeleteFeedback, feedback, comment);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

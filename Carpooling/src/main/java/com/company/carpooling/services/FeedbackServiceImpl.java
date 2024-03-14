@@ -38,6 +38,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    public FeedbackComment getCommentById(int id) {
+        return feedbackRepository.getCommentById(id);
+    }
+
+    @Override
     public void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver) {
         checkIfUserHasAlreadyGivenFeedback(passenger, driver, trip);
         checkIfBlocked(passenger, BLOCKED_USER_ERROR);
@@ -74,15 +79,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void deleteFeedback(User user, User userToDelete, Feedback feedback) {
-        User creator = feedback.getCreator();
-        User receiver = feedback.getReceiver();
-        if (!user.equals(creator)) {
-            throw new AuthorizationException(COMMENT_CREATOR_PERMISSION_ERROR);
-        }
-        if (!userToDelete.equals(receiver)) {
-            throw new AuthorizationException(USER_IS_NOT_THE_RECEIVER_OF_THE_FEEDBACK_ERR);
-        }
+        checkIfUserIsCreatorOfTheFeedback(user, feedback);
+        checkIfUserIsReceiverOfTheFeedback(userToDelete, feedback);
         feedbackRepository.delete(feedback);
+    }
+
+    @Override
+    public void deleteFeedbackForComment(User user, User userToDelete, Feedback feedback, FeedbackComment feedbackComment) {
+        checkIfUserIsCreatorOfTheFeedback(user, feedback);
+        checkIfUserIsReceiverOfTheFeedback(userToDelete, feedback);
+        checkIfCommentBelongsToFeedback(feedback, feedbackComment);
+        feedbackRepository.deleteFeedbackComment(feedbackComment);
     }
 
     private void checkPermissions(User driver, Trip trip, User passenger) {
@@ -126,6 +133,26 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .anyMatch(application ->
                         application.getUser().getId() == passenger.getId()
                                 && application.getStatus().getStatus().equals("Approved"));
+    }
+
+    private void checkIfUserIsCreatorOfTheFeedback(User user, Feedback feedback) {
+        User creator = feedback.getCreator();
+        if (!user.equals(creator)) {
+            throw new AuthorizationException(COMMENT_CREATOR_PERMISSION_ERROR);
+        }
+    }
+
+    private void checkIfUserIsReceiverOfTheFeedback(User user, Feedback feedback) {
+        User receiver = feedback.getReceiver();
+        if (!user.equals(receiver)) {
+            throw new AuthorizationException(USER_IS_NOT_THE_RECEIVER_OF_THE_FEEDBACK_ERR);
+        }
+    }
+
+    private void checkIfCommentBelongsToFeedback(Feedback feedback, FeedbackComment comment) {
+        if (feedback.getFeedbackComment().getId() != comment.getId()) {
+            throw new EntityNotFoundException("Feedback comment", comment.getId());
+        }
     }
 
 }

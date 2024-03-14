@@ -10,9 +10,13 @@ public interface FeedbackRepository {
 
     Feedback getById(int id);
 
+    FeedbackComment getCommentById(int id);
+
     void create(Feedback feedback);
 
     void createFeedbackComment(FeedbackComment comment);
 
     void delete(Feedback feedback);
+
+    void deleteFeedbackComment(FeedbackComment comment);
 }

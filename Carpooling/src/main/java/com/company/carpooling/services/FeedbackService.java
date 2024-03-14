@@ -14,6 +14,7 @@ public interface FeedbackService {
     List<Feedback> get(int userId);
 
     Feedback getById(int id);
+    FeedbackComment getCommentById(int id);
 
     void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver);
 
@@ -22,4 +23,5 @@ public interface FeedbackService {
     void addCommentToFeedback(User fromUser, User toUser, Feedback feedback, FeedbackComment comment);
 
     void deleteFeedback(User user, User userToDelete, Feedback feedback);
+    void deleteFeedbackForComment(User user, User userToDelete, Feedback feedback, FeedbackComment feedbackComment);
 }

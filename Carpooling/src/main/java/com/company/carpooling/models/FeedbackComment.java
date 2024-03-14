@@ -14,7 +14,7 @@ public class FeedbackComment {
     @Column(name = "comment_id")
     private int id;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     @JoinColumn(name = "feedback_id")
     private Feedback feedback;
 
