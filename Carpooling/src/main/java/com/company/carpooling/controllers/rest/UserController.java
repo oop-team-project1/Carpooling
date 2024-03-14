@@ -228,9 +228,9 @@ public class UserController {
                                        @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
             User passenger = authenticationHelper.tryGetUser(encodedString);
-            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto);
             User driver = userService.getById(id);
             Trip trip = tripService.get(tripId);
+            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto, trip);
             feedbackService.leaveFeedbackForDriver(passenger, feedback, trip, driver);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -248,9 +248,9 @@ public class UserController {
                                        @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
             User driver = authenticationHelper.tryGetUser(encodedString);
-            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto);
             User passenger = userService.getById(id);
             Trip trip = tripService.get(tripId);
+            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto, trip);
             feedbackService.leaveFeedbackForPassenger(driver, feedback, trip, passenger);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

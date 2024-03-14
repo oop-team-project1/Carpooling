@@ -19,9 +19,10 @@ public class FeedbackServiceImpl implements FeedbackService {
     public static final String COMMENT_CREATOR_PERMISSION_ERROR = "You are not creator of the feedback!";
 
     public static final String BLOCKED_USER_ERROR = "Unable to create feedback, user is blocked";
-    public static final String TRIP_NOT_COMPLETED_ERR = "Feedback cannot be created for an incomplete trip. The trip must be completed before providing feedback.";
-    public static final String DRIVER_IS_NOT_FROM_TRIP_ERR = "The specified user is not the driver of the given trip.";
-    public static final String PASSENGER_IS_NOT_FROM_TRIP_ERR = "The specified user is not an accepted passenger in the given trip.";
+    public static final String TRIP_NOT_COMPLETED_ERR = "Feedback cannot be created for an incomplete trip. " +
+            "The trip must be completed before providing feedback.";
+    public static final String DRIVER_IS_NOT_FROM_TRIP_ERR = "You are not the driver of the given trip.";
+    public static final String PASSENGER_IS_NOT_FROM_TRIP_ERR = "The specified user is not in the given trip.";
     public static final String USER_ALREADY_PROVIDED_FEEDBACK_ERR = "You have already provided feedback for this user.";
     private final FeedbackRepository feedbackRepository;
 
@@ -81,7 +82,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private void checkIfUserHasAlreadyGivenFeedback(User fromUser, User toUser, Trip trip) {
         Set<Feedback> feedbacks = toUser.getFeedbacks();
         boolean checkFeedback = feedbacks.stream()
-                .anyMatch(feedback -> feedback.getCreator().equals(fromUser));
+                .anyMatch(feedback -> feedback.getCreator().equals(fromUser) && feedback.getTrip().equals(trip));
         if(checkFeedback) {
             throw new AuthorizationException(USER_ALREADY_PROVIDED_FEEDBACK_ERR);
         }

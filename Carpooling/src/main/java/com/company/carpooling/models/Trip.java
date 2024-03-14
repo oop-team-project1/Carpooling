@@ -76,6 +76,20 @@ public class Trip {
         return countApproved == seatsAvailable;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Trip trip = (Trip) o;
+
+        return getId() == trip.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return getId();
+    }
 
     //TODO set of users (accepted, pending, ...) or Map<User, UserStatus>
     /*@ManyToMany
