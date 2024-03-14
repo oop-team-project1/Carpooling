@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public static final String TRIP_NOT_COMPLETED_ERR = "Feedback cannot be created for an incomplete trip. The trip must be completed before providing feedback.";
     public static final String DRIVER_IS_NOT_FROM_TRIP_ERR = "The specified user is not the driver of the given trip.";
     public static final String PASSENGER_IS_NOT_FROM_TRIP_ERR = "The specified user is not an accepted passenger in the given trip.";
+    public static final String USER_ALREADY_PROVIDED_FEEDBACK_ERR = "You have already provided feedback for this user.";
     private final FeedbackRepository feedbackRepository;
 
     @Override
@@ -35,7 +37,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver) {
-       checkPermissions(driver,trip,passenger);
+        checkIfUserHasAlreadyGivenFeedback(passenger,driver,trip);
+        checkIfBlocked(passenger, BLOCKED_USER_ERROR);
+        checkPermissions(driver,trip,passenger);
         feedback.setCreator(passenger);
         feedback.setReceiver(driver);
         feedbackRepository.create(feedback);
@@ -43,6 +47,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void leaveFeedbackForPassenger(User driver, Feedback feedback, Trip trip, User passenger) {
+        checkIfUserHasAlreadyGivenFeedback(driver,passenger,trip);
+        checkIfBlocked(driver, BLOCKED_USER_ERROR);
         checkPermissions(driver, trip, passenger);
         feedback.setCreator(driver);
         feedback.setReceiver(passenger);
@@ -64,12 +70,20 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackRepository.createFeedbackComment(comment);
     }
     private void checkPermissions(User driver, Trip trip, User passenger) {
-        checkIfBlocked(passenger, BLOCKED_USER_ERROR);
         checkIfTripIsCompleted(trip);
         checkIfDriverIsFromTrip(driver, trip);
         boolean isPassengerFromTrip = checkIfPassengerIsFromTrip(passenger, trip);
         if (!isPassengerFromTrip) {
             throw new UserIsNotFromTrip(PASSENGER_IS_NOT_FROM_TRIP_ERR);
+        }
+    }
+
+    private void checkIfUserHasAlreadyGivenFeedback(User fromUser, User toUser, Trip trip) {
+        Set<Feedback> feedbacks = toUser.getFeedbacks();
+        boolean checkFeedback = feedbacks.stream()
+                .anyMatch(feedback -> feedback.getCreator().equals(fromUser));
+        if(checkFeedback) {
+            throw new AuthorizationException(USER_ALREADY_PROVIDED_FEEDBACK_ERR);
         }
     }
 
