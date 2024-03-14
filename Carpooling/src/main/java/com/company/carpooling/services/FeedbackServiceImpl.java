@@ -35,15 +35,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver) {
-        checkIfBlocked(passenger, BLOCKED_USER_ERROR);
-        checkIfTripIsCompleted(trip);
-        checkIfDriverIsFromTrip(driver, trip);
-        boolean isPassengerFromTrip = checkIfPassengerIsFromTrip(passenger, trip);
-        if (!isPassengerFromTrip) {
-            throw new UserIsNotFromTrip(PASSENGER_IS_NOT_FROM_TRIP_ERR);
-        }
+       checkPermissions(driver,trip,passenger);
         feedback.setCreator(passenger);
         feedback.setReceiver(driver);
+        feedbackRepository.create(feedback);
+    }
+
+    @Override
+    public void leaveFeedbackForPassenger(User driver, Feedback feedback, Trip trip, User passenger) {
+        checkPermissions(driver, trip, passenger);
+        feedback.setCreator(driver);
+        feedback.setReceiver(passenger);
         feedbackRepository.create(feedback);
     }
 
@@ -60,6 +62,15 @@ public class FeedbackServiceImpl implements FeedbackService {
         comment.setFeedback(feedback);
         comment.setUser(fromUser);
         feedbackRepository.createFeedbackComment(comment);
+    }
+    private void checkPermissions(User driver, Trip trip, User passenger) {
+        checkIfBlocked(passenger, BLOCKED_USER_ERROR);
+        checkIfTripIsCompleted(trip);
+        checkIfDriverIsFromTrip(driver, trip);
+        boolean isPassengerFromTrip = checkIfPassengerIsFromTrip(passenger, trip);
+        if (!isPassengerFromTrip) {
+            throw new UserIsNotFromTrip(PASSENGER_IS_NOT_FROM_TRIP_ERR);
+        }
     }
 
     private void checkIfBlocked(User user, String message) {
@@ -86,4 +97,5 @@ public class FeedbackServiceImpl implements FeedbackService {
                         application.getUser().getId() == passenger.getId()
                                 && application.getStatus().getStatus().equals("Approved"));
     }
+
 }

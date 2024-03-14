@@ -16,6 +16,7 @@ public interface FeedbackService {
     Feedback getById(int id);
 
     void leaveFeedbackForDriver(User passenger, Feedback feedback, Trip trip, User driver);
+    void leaveFeedbackForPassenger(User driver, Feedback feedback, Trip trip, User passenger);
 
     void addCommentToFeedback(User fromUser, User toUser, Feedback feedback, FeedbackComment comment);
 }

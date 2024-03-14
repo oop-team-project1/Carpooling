@@ -221,7 +221,7 @@ public class UserController {
     public void getUserTrips(@PathVariable int id) {
     }
 
-    @PostMapping("/{id}/trips/{tripId}/feedbacks")
+    @PostMapping("/{id}/trips/{tripId}/feedback-driver")
     public void leaveFeedbackForDriver(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                                        @PathVariable int id,
                                        @PathVariable int tripId,
@@ -232,6 +232,26 @@ public class UserController {
             User driver = userService.getById(id);
             Trip trip = tripService.get(tripId);
             feedbackService.leaveFeedbackForDriver(passenger, feedback, trip, driver);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (TripNotCompletedException | UserIsNotFromTrip | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/trips/{tripId}/feedback-passenger")
+    public void leaveFeedbackForPassenger(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                       @PathVariable int id,
+                                       @PathVariable int tripId,
+                                       @Valid @RequestBody FeedbackDto feedbackDto) {
+        try {
+            User driver = authenticationHelper.tryGetUser(encodedString);
+            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto);
+            User passenger = userService.getById(id);
+            Trip trip = tripService.get(tripId);
+            feedbackService.leaveFeedbackForPassenger(driver, feedback, trip, passenger);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
