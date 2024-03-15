@@ -29,7 +29,7 @@
                     <div class="login-area">
                         <ul>
                             <li class="log-in"><a href="LoginView.html" title="Login"><i class="flaticon-unlocked"></i> login</a></li>
-                            <li class="Register"><a href="register.html" title="Register"><i class="flaticon-checked"></i> register</a></li>
+                            <li class="Register"><a href="RegisterView.html" title="Register"><i class="flaticon-checked"></i> register</a></li>
                             <li class="post"><a href="#" title="">+post</a></li>
                         </ul>
                     </div>
@@ -44,7 +44,7 @@
                 <div class="col-md-12">
                     <header>
                         <div class="logo">
-                            <a href="index.html" title="index.html"><img src="images/logo-black.png" alt=""></a>
+                            <a href="index.html" title="index.html"><img src="/images/logo-black.png" alt=""></a>
                         </div>
                         <nav>
                             <ul class="main-menu">
@@ -230,7 +230,7 @@
                                             <label class="error" id="password-err" th:errors="*{password}"></label>
                                             <button type="submit" id="checkbox" class="theme-btn" value="Login">login</button>
                                         </form>
-                                        <span>Aren’t you a member yet? <a href="#" title="">Register here</a></span>
+                                        <span>Aren’t you a member yet? <a href="RegisterView.html" th:href="@{/auth/register}" title="">Register here</a></span>
                                     </div>
                                 </div>
                             </div>
