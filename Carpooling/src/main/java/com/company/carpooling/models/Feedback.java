@@ -29,8 +29,14 @@ public class Feedback {
     @ManyToOne
     @JoinColumn(name = "to_user_id")
     private User receiver;
+    @ManyToOne
+    @JoinColumn(name = "trip_id")
+    private Trip trip;
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfCreation;
+
+    @OneToOne(mappedBy = "feedback", cascade = CascadeType.REMOVE)
+    private FeedbackComment feedbackComment;
 }

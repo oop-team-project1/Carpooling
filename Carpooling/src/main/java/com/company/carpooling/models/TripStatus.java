@@ -24,5 +24,20 @@ public class TripStatus {
     private int id;
 
     @Column(name = "status")
-    private String status;
+    private String statusName;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TripStatus that = (TripStatus) o;
+
+        return getStatusName() != null ? getStatusName().equals(that.getStatusName()) : that.getStatusName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getStatusName() != null ? getStatusName().hashCode() : 0;
+    }
 }
