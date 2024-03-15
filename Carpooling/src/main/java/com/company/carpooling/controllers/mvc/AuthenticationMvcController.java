@@ -63,4 +63,10 @@ public class AuthenticationMvcController {
             return "LoginView";
         }
     }
+
+    @GetMapping("/logout")
+    public String handleLogout(HttpSession session) {
+        session.removeAttribute("currentUser");
+        return "redirect:/auth/login";
+    }
 }
