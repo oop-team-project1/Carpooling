@@ -36,5 +36,21 @@ public class Application {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Application that = (Application) o;
+
+        if (getId() != that.getId()) return false;
+        return getStatus() != null ? getStatus().equals(that.getStatus()) : that.getStatus() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+        return result;
+    }
 }
