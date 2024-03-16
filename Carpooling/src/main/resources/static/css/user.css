@@ -1,0 +1,17 @@
+#dashboard, #rides, #reviews {
+    margin-left: 30px;
+}
+
+.user-rating {
+    display: flex;
+}
+
+#date {
+    padding-left: 10px;
+    padding-top: 5px;
+    font-size: 10px;
+}
+
+#user-feedback {
+    padding-bottom: 10px;
+}
