@@ -6,7 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "feedbacks")
@@ -35,7 +36,7 @@ public class Feedback {
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfCreation;
+    private LocalDate dateOfCreation;
 
     @OneToOne(mappedBy = "feedback", cascade = CascadeType.REMOVE)
     private FeedbackComment feedbackComment;
