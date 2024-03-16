@@ -1,5 +1,6 @@
 package com.company.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -53,12 +54,16 @@ public class User {
     private UserProfilePic profilePic;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Application> applications;
 
     @JsonIgnore
     @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
     private Set<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "driver", fetch = FetchType.EAGER)
+    @JsonBackReference
+    private Set<Trip> tripsAsDriver;
 
     @Override
     public boolean equals(Object o) {
