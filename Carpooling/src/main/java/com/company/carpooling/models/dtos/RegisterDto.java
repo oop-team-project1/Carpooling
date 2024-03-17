@@ -18,4 +18,6 @@ public class RegisterDto extends LoginDto{
     @NotEmpty(message = "Last name can't be empty!")
     @Size(min = 4, max = 32, message = "Last name must be between 4 symbols and 32 symbols.")
     private String lastName;
+    @NotEmpty(message = "Phone number can't be empty")
+    private String phoneNumber;
 }
