@@ -2,9 +2,11 @@ package com.company.carpooling.controllers.mvc;
 
 import com.company.carpooling.exceptions.AuthorizationException;
 import com.company.carpooling.exceptions.EntityDuplicateException;
+import com.company.carpooling.exceptions.WrongActivationCodeException;
 import com.company.carpooling.helpers.AuthenticationHelper;
 import com.company.carpooling.helpers.UserMapper;
 import com.company.carpooling.models.User;
+import com.company.carpooling.models.dtos.ActivationCodeDto;
 import com.company.carpooling.models.dtos.LoginDto;
 import com.company.carpooling.models.dtos.RegisterDto;
 import com.company.carpooling.services.UserService;
@@ -96,10 +98,31 @@ public class AuthenticationMvcController {
         try {
             User user = userMapper.fromDtoRegister(register);
             userService.create(user);
-            return "redirect:/auth/login";
+            return "redirect:/auth/verify";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("username", "username_error", e.getMessage());
             return "RegisterView";
+        }
+    }
+
+    @GetMapping("/verify")
+    public String showEmailConfirmationPage (Model model) {
+        model.addAttribute("email", new ActivationCodeDto());
+        return "EmailConfirmationView";
+    }
+
+    @PostMapping("/verify")
+    public String handleEmailConfirmation(@Valid @ModelAttribute("email") ActivationCodeDto activationCodeDto,
+                                 BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "EmailConfirmationView";
+        }
+        try {
+            userService.activateAccount(Integer.parseInt(activationCodeDto.getActivationCode()));
+            return "redirect:/auth/login";
+        } catch (WrongActivationCodeException e) {
+            bindingResult.rejectValue("code", "code_error", e.getMessage());
+            return "EmailConfirmationView";
         }
     }
 }
