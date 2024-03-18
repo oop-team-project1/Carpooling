@@ -2,6 +2,7 @@ package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.models.ActivationCode;
 import com.company.carpooling.models.User;
 import com.company.carpooling.models.UserProfilePic;
 import com.company.carpooling.repositories.UserRepository;
@@ -19,20 +20,18 @@ public class UserServiceImpl implements UserService {
     public static final String MODIFY_PROFILE_PICTURE_ERROR = "You can't modify profile picture!";
     private final UserRepository repository;
     private final EmailService emailService;
-    private final Map<Integer,String> userToActivate;
-    private final Map<Integer, Timestamp> codeValidity;
+    private final ActivationCodeService activationCodeService;
     private final Random random;
 
     public static final String PERMISSION_ERROR = "Only admin or post creator can modify a post";
     public static final String USER_IS_BLOCKED = "User is blocked";
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, EmailService emailService) {
+    public UserServiceImpl(UserRepository repository, EmailService emailService, ActivationCodeService activationCodeService) {
         this.repository = repository;
         this.emailService = emailService;
-        random = new Random();
-        codeValidity = new HashMap<>();
-        userToActivate = new HashMap<>();
+        this.activationCodeService = activationCodeService;
+        this.random = new Random();
     }
 
     @Override
@@ -195,20 +194,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void activateAccount(int code) {
-        if (!userToActivate.containsKey(code))
+        try {
+            ActivationCode activationCode = activationCodeService.getByCode(code);
+            User user = repository.getByUsername(activationCode.getUsername());
+            user.setVerified(true);
+            activationCodeService.deleteActivationCode(code);
+            repository.update(user);
+        } catch (EntityNotFoundException e) {
             throw new WrongActivationCodeException("Code not active. Maybe user is activated already.");
-        Timestamp now = Timestamp.from(Instant.now());
-        if (codeValidity.get(code).before(now)) {
-            userToActivate.remove(code);
-            codeValidity.remove(code);
-            throw new WrongActivationCodeException("Code expired send new code");
         }
-        User user = repository.getByUsername(userToActivate.get(code));
-        user.setVerified(true);
-        userToActivate.remove(code);
-
-        codeValidity.remove(code);
-        repository.update(user);
     }
 
     @Override
@@ -227,15 +221,26 @@ public class UserServiceImpl implements UserService {
         System.out.println(code);
     }
     private int getActivationCode(User user) {
-        int code = getCode();
-        if (userToActivate.containsKey(code))
-            getActivationCode(user);
-        userToActivate.put(code, user.getUsername());
-        codeValidity.put(code, getActivationTime(5));
+        ActivationCode activationCode;
+        int code;
+        do {
+            code = getCode();
+            try {
+                activationCode = activationCodeService.getByCode(code);
+            } catch (EntityNotFoundException ignored) {
+                activationCode = null;
+            }
+        } while (activationCode != null);
+
+        activationCode = new ActivationCode();
+        activationCode.setActivationCode(code);
+        activationCode.setUsername(user.getUsername());
+        activationCodeService.create(activationCode);
+
         return code;
     }
     private int getCode() {
-        return 1000 + random.nextInt(2000);
+        return 1000 + random.nextInt(9000);
     }
     private Timestamp getActivationTime(int minutes) {
         Timestamp out = Timestamp.from(Instant.now());

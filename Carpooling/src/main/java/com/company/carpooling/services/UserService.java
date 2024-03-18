@@ -33,7 +33,7 @@ public interface UserService {
     void addProfilePicture(int id, User user, String newAvatar);
 
     void activateAccount(int code);
+
     void resendActivationCode(String username);
     void sendActivationEmail(User user);
-
 }
