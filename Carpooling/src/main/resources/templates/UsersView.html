@@ -197,261 +197,101 @@
         <div class="space no-space">
             <div class="container-fluid">
                 <div class="cola-page">
-                    <div class="row merged">
-                            <div class="pickup-time">
-                                  	<span class="find">
-                                  		<i class="fa fa-location-arrow"></i>
-                                  		Find a car next to you ...
-                                  		<a href="#" title="" class="theme-btn slim">
-                                  		<i class="fa fa-map-marker"></i>
-                                  		use my location</a>
-                                  	</span>
-                                <div class="date-n-time">
-                                    <p>
-                                        <label><i class="fa fa-calendar"></i></label>
-                                        <input id="datetimepicker1" type="text" placeholder="Pickup">
-                                    </p>
-                                    <p>
-                                        <label><i class="fa fa-clock-o"></i></label>
-                                        <input id="datetimepicker2" type="text" placeholder="Time">
-                                    </p>
-                                    <p>
-                                        <label><i class="fa fa-calendar"></i></label>
-                                        <input id="datetimepicker3" type="text" placeholder="Return">
-                                    </p>
-                                    <p>
-                                        <label><i class="fa fa-clock-o"></i></label>
-                                        <input id="datetimepicker4" type="text" placeholder="Time">
-                                    </p>
-                                    <span><i class="fa fa-search"></i>Filter by model or brand ...</span>
-                                    <a href="#" title="" class="theme-btn slim fiter-car"><i class="fa fa-filter"></i>filters</a>
-                                </div>
-                            </div>
                             <div class="cars-listing">
-                                <div class="filter-popup">
-                                    <div class="filter-meta">
-                                        <span>price / day</span>
-                                        <div id="slider-range"></div>
-                                        <input type="text" id="amount" readonly>
-                                    </div><!-- range slider -->
-                                    <div class="filter-meta">
-                                        <span>style</span>
-                                        <ul>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-1.png" alt=""><i>micro</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-2.png" alt=""><i>Hatchback</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-3.png" alt=""><i>Coupe</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-4.png" alt=""><i>CUV</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-5.png" alt=""><i>SUV</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-6.png" alt=""><i>Cabriolet</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-7.png" alt=""><i>Super Car</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-8.png" alt=""><i>Pickup</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-9.png" alt=""><i>Van</i></a></li>
-                                            <li><a href="#" title=""><img src="images/resources/mockup-10.png" alt=""><i>Caravan</i></a></li>
-                                        </ul>
-                                    </div><!-- car mockup -->
-                                    <div class="filter-meta">
-                                        <span>fule type</span>
-                                        <form method="post" class="fule-type">
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Bi-Fuel
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Diesel
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Electric
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Hybrid
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Petrol
-                                            </p>
-                                        </form>
-                                    </div><!-- enging select -->
-                                    <div class="filter-meta">
-                                        <span>Seats</span>
-                                        <select>
-                                            <option>2+</option>
-                                            <option>4+</option>
-                                            <option>6+</option>
-                                        </select>
-                                    </div><!-- seats -->
-                                    <div class="filter-meta">
-                                        <span>Additional</span>
-                                        <form method="post" class="fule-type additional">
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                ABS
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Cruise control
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Front fog lights
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Alarm
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Electric door mirrors
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Heated door mirrors
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Audio remote control
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Electrically drivers seat
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Passenger airbag
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Bluetooth connection
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Folding rear seats
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Rear electric windows
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Climate control
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Front electric windows
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Remote central locking
-                                            </p>
-                                        </form>
-                                    </div><!-- additional info -->
-                                    <div class="filter-meta">
-                                        <span>Preferences</span>
-                                        <form method="post" class="fule-type">
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                80% acceptance rate
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Replies within 1 hr
-                                            </p>
-                                            <p>
-                                                <input type="checkbox">
-                                                <label></label>
-                                                Long time renting
-                                            </p>
 
-                                        </form>
-                                    </div><!-- preferences -->
-                                    <div class="filter-btns">
-                                        <a href="#" title="" class="del-filter"><i class="fa fa-trash-o"></i>Delete Filters</a>
-                                        <a href="#" title="" class="cancel">Cancel</a>
-                                        <a href="#" title="" class="theme-btn slim"><i class="fa fa-refresh"></i>refresh search</a>
+                                <div class="container">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-10">
+                                            <form action="#" th:action="@{/users}" method="get" th:object="${filterOptionsUsers}">
+                                                <h3 class="text-center">Filtering</h3>
+                                                <div class="form-group">
+                                                    <div class="form-inline justify-content-center">
+                                                        <input type="text" class="form-control mr-2" placeholder="Username" th:field="*{username}">
+                                                        <input type="text" class="form-control mr-2" placeholder="Phone number" th:field="*{phoneNumber}">
+                                                        <input type="text" class="form-control mr-2" placeholder="Email" th:field="*{email}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="form-inline justify-content-center">
+                                                        <select class="form-control mr-3" th:field="*{sortBy}">
+                                                            <option value="">Sort By</option>
+                                                            <option value="username">Username</option>
+                                                            <option value="email">Email</option>
+                                                        </select>
+                                                        <select class="form-control mr-3" th:field="*{sortOrder}">
+                                                            <option value="">Sort Order</option>
+                                                            <option value="asc">Ascending</option>
+                                                            <option value="desc">Descending</option>
+                                                        </select>
+                                                        <button style="margin-top: -30px" type="submit" class="theme-btn">Search</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="cars-list" th:each="user : ${users}" >
-                                    <figure>
-                                        <img alt="" src="/images/resources/car-1.jpg">
-                                    </figure>
-                                    <div class="car-inf">
-                                        <h5><a th:href="'/users/' + ${user.id}" th:text="${user.username}">Username</a></h5>
-                                        <p style="color:#495060;" th:text="${user.firstName + ' ' + user.lastName}">Name</p>
-                                        <div class="phone-info">
-                                            <p>Phone:</p>
-                                            <p th:text="${user.phoneNumber}">Phone number</p>
-                                        </div>
-                                        <div class="phone-info">
-                                            <p>Email:</p>
-                                            <p th:text="${user.email}">Phone number</p>
-                                        </div>
-                                        <div class="phone-info">
-                                            <p>Covered distance:</p>
-                                        </div>
-                                        <div class="car-owner">
-                                            <div class="car-meta">
 
-                                                <ul class="stars-rating">
-                                                    <li><i class="fa fa-star checked"></i></li>
-                                                    <li><i class="fa fa-star checked"></i></li>
-                                                    <li><i class="fa fa-star checked"></i></li>
-                                                    <li><i class="fa fa-star checked"></i></li>
-                                                    <li><i class="fa fa-star checked"></i></li>
-                                                </ul>
-                                                <span>89% acceptance rate <i>replies within 1hr</i></span>
+                                <div class="row">
+                                    <div class="col-md-4" th:each="user : ${users}">
+                                        <div class="cars-list">
+                                            <img th:if="${user.profilePic != null}" th:src="${user.profilePic.pic}" alt="Profile Picture"
+                                                 class="author-image">
+                                            <img th:unless="${user.profilePic != null}" src="/images/default-profile-pic.png"
+                                                 alt="Default Profile Picture" class="author-image">
+                                            <div class="car-inf">
+                                                <h4><a class="post-title" th:href="'/users/' + ${user.id}" th:text="${user.firstName + ' ' + user.lastName}">Name</a></h4>
+                                                <div class="phone-info">
+                                                    <p>Username:</p>
+                                                    <p style="color:#495060;" th:text="${user.username}">Username</p>
+                                                </div>
+                                                <div class="phone-info">
+                                                    <p>Phone:</p>
+                                                    <p th:text="${user.phoneNumber}">Phone number</p>
+                                                </div>
+                                                <div class="phone-info">
+                                                    <p>Email:</p>
+                                                    <p th:text="${user.email}">Phone number</p>
+                                                </div>
+                                                <div class="phone-info">
+                                                    <p>Covered distance:</p>
+                                                </div>
+                                                <div class="car-owner">
+                                                    <div class="car-meta">
+                                                        <ul class="stars-rating">
+                                                            <li><i class="fa fa-star checked"></i></li>
+                                                            <li><i class="fa fa-star checked"></i></li>
+                                                            <li><i class="fa fa-star checked"></i></li>
+                                                            <li><i class="fa fa-star checked"></i></li>
+                                                            <li><i class="fa fa-star checked"></i></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <form th:if="${currentUser.isAdmin()}" action="#" th:action="@{/users/blocks/__${user.id}__}"
+                                                      method="post">
+                                                    <div>
+                                                        <div th:if="${user.isBlocked()}">
+                                                            <button type="submit" class="theme-btn" href="#">Unblock</button>
+                                                        </div>
+                                                        <div th:if="${!user.isBlocked()}">
+                                                            <button type="submit" class="theme-btn" href="#">Block </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br>
+                                                <form th:if="${currentUser.isAdmin()}" action="#" th:action="@{/users/admin/__${user.id}__}"
+                                                      method="post">
+                                                    <div>
+                                                        <div th:if="${user.isAdmin()}">
+                                                            <button type="submit" class="theme-btn" href="#">Remove Admin</button>
+                                                        </div>
+                                                        <div th:if="${!user.isAdmin()}">
+                                                            <button type="submit" class="theme-btn" href="#">Make Admin </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br>
                                             </div>
                                         </div>
-
-                                        <form th:if="${currentUser.isAdmin()}" action="#"
-                                              th:action="@{/users/blocks/__${user.id}__}" method="post">
-                                            <div>
-                                                <div th:if="${user.isBlocked()}">
-                                                    <button type="submit" class="theme-btn" href="#">Unblock</button>
-                                                </div>
-                                                <div th:if="${!user.isBlocked()}">
-                                                    <button type="submit" class="theme-btn" href="#">Block
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <br>
-                                        <form th:if="${currentUser.isAdmin()}" action="#"
-                                              th:action="@{/users/admin/__${user.id}__}" method="post">
-                                            <div>
-                                                <div th:if="${user.isAdmin()}">
-                                                    <button type="submit" class="theme-btn" href="#">Remove Admin</button>
-                                                </div>
-                                                <div th:if="${!user.isAdmin()}">
-                                                    <button type="submit" class="theme-btn" href="#">Make Admin
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <br>
                                     </div>
                                 </div>
 
