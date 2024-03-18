@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/user.css">
 
+    <script src="https://kit.fontawesome.com/3f36e47243.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="site-layout">
@@ -93,18 +94,18 @@
                                         <li><a href="profile-points.html" title="">profile points</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#" title=""><i class="fa fa-ellipsis-v"></i></a>
-                                    <ul>
-                                        <li><a href="login.html" title="">Login page</a></li>
-                                        <li><a href="register.html" title="">Register Page</a></li>
-                                        <li><a href="how-this-work.html" title="">how it's work</a></li>
-                                        <li><a href="faq.html" title="">faq's</a></li>
-                                        <li><a href="points.html" title="">poinst</a></li>
-                                        <li><a href="coming-soon.html" title="">Coming Soon</a></li>
-                                        <li><a href="404.html" title="">404 Page</a></li>
+                                <!--                                <li><a href="#" title=""><i class="fa fa-ellipsis-v"></i></a>-->
+                                <!--                                    <ul>-->
+                                <!--                                        <li><a href="login.html" title="">Login page</a></li>-->
+                                <!--                                        <li><a href="register.html" title="">Register Page</a></li>-->
+                                <!--                                        <li><a href="how-this-work.html" title="">how it's work</a></li>-->
+                                <!--                                        <li><a href="faq.html" title="">faq's</a></li>-->
+                                <!--                                        <li><a href="points.html" title="">poinst</a></li>-->
+                                <!--                                        <li><a href="coming-soon.html" title="">Coming Soon</a></li>-->
+                                <!--                                        <li><a href="404.html" title="">404 Page</a></li>-->
 
-                                    </ul>
-                                </li>
+                                <!--                                    </ul>-->
+                                <!--                                </li>-->
                             </ul>
                         </nav>
                     </header>
@@ -202,21 +203,25 @@
                                             <span class="profile-name"
                                                   th:text="${user.firstName + ' ' + user.lastName}"></span>
                                             <ul class="stars-rating">
-                                                <li><i class="fa fa-star checked"></i></li>
-                                                <li><i class="fa fa-star checked"></i></li>
-                                                <li><i class="fa fa-star checked"></i></li>
-                                                <li><i class="fa fa-star checked"></i></li>
-                                                <li><i class="fa fa-star checked"></i></li>
+                                                <li>
+                                                    <div class="stars-outer">
+                                                        <div class="stars-inner"></div>
+                                                    </div>
+                                                </li>
                                             </ul>
-                                            <ins th:text="${feedbacks.size() + ' feedbacks'}"></ins>
+                                            <ins th:text="${user.getFeedbacks().size() + ' reviews'}"></ins>
                                         </div>
                                         <ul class="verification">
                                             <li><i class="flaticon-tick" th:if="${user.isVerified()}"></i>
                                                 <p>Email verified </p>
                                             </li>
                                             <li>
-                                                <button class="theme-btn" onclick="showPhone()">Show Phone Number
+                                                <button class="theme-btn" onclick="showElement('phone')">Show Phone
+                                                    Number
                                                 </button>
+                                            </li>
+                                            <li>
+                                                <button class="theme-btn" >Set profile picture</button>
                                             </li>
                                             <li>
                                                 <div id="phone" th:text="${user.getPhoneNumber()}"
@@ -243,29 +248,35 @@
                                             <div class="tab-pane active fade show " id="link1">
                                                 <div class="ride-request">
                                                     <ul>
-                                                        <li>Rides created<span
-                                                                th:text="${user.getTripsAsDriver().size()}"></span></li>
-                                                        <li>Rides as driver<span
-                                                                th:text="${user.getTripsAsDriver().size() + ' rides'}"></span>
+                                                        <li>Rides as driver<span th:if="${!user.getTripsAsDriver().isEmpty()}"
+                                                                th:text="${user.getTripsAsDriver().size()}"></span>
                                                         </li>
                                                         <li>Rides as passenger<span
-                                                                th:text="${tripsAsPassengerCount} + ' rides'"></span>
+                                                               th:if="${tripsAsPassenger != null}" th:text="${tripsAsPassenger.size()}"></span>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="link3">
-                                                <div class="colla-table">
-                                                    <h5 class="little-title">Published rides:</h5>
-                                                    <p>There are no upcoming published rides.</p>
+                                                <div class="colla-table" th:if="${!user.getTripsAsDriver().isEmpty()}" th:each="trip : ${user.getTripsAsDriver()}">
+                                                    <h5 class="little-title">Created travels:</h5>
+                                                    <button onclick="showElement('trip')">Trip 1</button>
+                                                    <p id="trip" style="display: none;"
+                                                       th:text="${'Start point: ' + trip.getStartPoint().getCity().getName() + ' End point: ' + trip.getEndPoint().getCity().getName()}"></p>
+
                                                 </div>
-                                                <div class="colla-table">
-                                                    <h5 class="little-title">Requested rides:</h5>
-                                                    <p>There are no upcoming requested rides.</p>
+
+                                                <h5 class="little-title">Applications:</h5>
+                                                <p th:if="${applications.isEmpty()}">User has no applications.</p>
+                                                <div class="colla-table" th:if="${!tripsAsPassenger.isEmpty()}">
+                                                    <a class="theme-btn" th:href="@{${id} +'/applications'}">See all</a>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="link4">
-                                                <ul class="reviewer" th:each="feedback : ${feedbacks}">
+                                                <p th:if="${user.getFeedbacks().isEmpty()}">User haven't received any feedback
+                                                    yet.</p>
+                                                <ul class="reviewer" th:unless="${user.getFeedbacks().isEmpty()}"
+                                                    th:each="feedback : ${user.getFeedbacks()}">
                                                     <li id="user-feedback">
                                                         <figure>
                                                             <img src="/images/resources/reviewer-3.jpg" alt="">
@@ -279,30 +290,103 @@
                                                                       th:text="${#temporals.format(feedback.getDateOfCreation(), 'dd MMMM yyyy')}"></span>
                                                             </div>
                                                             <ul class="stars-rating">
-                                                                <li><i class="fa fa-star checked"></i></li>
-                                                                <li><i class="fa fa-star checked"></i></li>
-                                                                <li><i class="fa fa-star checked"></i></li>
-                                                                <li><i class="fa fa-star checked"></i></li>
-                                                                <li><i class="fa fa-star checked"></i></li>
+                                                                <div class="stars-outer"
+                                                                     th:with="rating=${feedback.rating}">
+                                                                    <div class="stars-inner"
+                                                                         th:style="'width: ' + ${rating * 20 + '%'}"></div>
+                                                                </div>
                                                             </ul>
 
                                                             <p th:if="${feedback.feedbackComment != null}"
                                                                th:text="${feedback.feedbackComment.content}"></p>
                                                         </div>
                                                     </li>
-
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-md-12">
+<!--                                th:if="${isAuthenticated && (currentUser.isAdmin() || currentUser.id == user.id}-->
+                                <div class="col-lg-3 col-md-12" >
                                     <div class="sidebar right">
-                                        <div class="note-box">
+                                        <div class="note-box" >
+                                            <!--                                            Check if authenticated and current user is driver or passenger-->
                                             <span><i
                                                     class="flaticon-volkswagen-car-side-view"></i> Leave Feedback </span>
-                                            <a href="#" title="" class="theme-btn"
-                                               style="margin-left: 80px"><span>+</span></a>
+                                            <button id="showFormButton" class="theme-btn" style="margin-left: 80px">+
+                                            </button>
+                                            <button id="showCommentFormButton" class="theme-btn"> + comment (optional)
+                                            </button>
+                                            <div id="modalOverlay">
+                                                <div id="formContainer" style="display: none;">
+                                                    <form class="rating" th:action="@{'/users/'+ ${id}}"
+                                                          th:object="${feedback}">
+                                                        <div class="stars">
+                                                            <label>
+                                                                <input type="radio" name="stars" value="1"/>
+                                                                <span class="icon">★</span>
+                                                            </label>
+                                                            <label>
+                                                                <input type="radio" name="stars" value="2"/>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                            </label>
+                                                            <label>
+                                                                <input type="radio" name="stars" value="3"/>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                            </label>
+                                                            <label>
+                                                                <input type="radio" name="stars" value="4"/>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                            </label>
+                                                            <label>
+                                                                <input type="radio" name="stars" value="5"/>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                                <span class="icon">★</span>
+                                                            </label>
+
+                                                        </div>
+                                                        <div>
+                                                        <button type="submit" value="Submit" class="theme-btn">Save
+                                                        </button>
+                                                        <button type="button" class="theme-btn" onclick="closeForm()" >
+                                                            Close
+                                                        </button>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+
+                                            <div id="modalOverlayComment">
+                                                <div id="formContainerComment" style="display: none;">
+                                                    <form method="post" class="cola-form">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <label for="feedback-comment"></label>
+                                                                <textarea name="content" id="feedback-comment" rows="3"
+                                                                          placeholder="Comment (optional)"
+                                                                          required="required"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                            <button type="submit" value="Submit" class="theme-btn">Save
+                                                            </button>
+                                                            <button type="button" class="theme-btn"
+                                                                    onclick="closeFormComment()">
+                                                                Close </button>
+
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -312,7 +396,8 @@
                 </div>
             </div>
         </div>
-    </section><!-- points section -->
+    </section>
+    <!-- points section -->
 
     <footer class="light">
         <div class="container">
@@ -383,6 +468,7 @@
 <script src="/js/apps.min.js"></script>
 <script src="/js/script.js"></script>
 <script src="/js/buttons.js"></script>
+
 
 </body>
 </html>		

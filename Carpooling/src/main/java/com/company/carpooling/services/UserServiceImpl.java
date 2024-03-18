@@ -2,8 +2,7 @@ package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.FilterOptionsUsers;
-import com.company.carpooling.models.User;
-import com.company.carpooling.models.UserProfilePic;
+import com.company.carpooling.models.*;
 import com.company.carpooling.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +37,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
         return repository.getAll(filterOptionsUsers);
+    }
+
+    @Override
+    public List<Trip> getTripsAsPassenger(User user) {
+        if(user.getApplications() == null) {
+            return Collections.emptyList();
+        }
+       List<Application> applications = user.getApplications()
+                                            .stream()
+                                            .filter(application -> application.getStatus()
+                                                    .equals(new PassengerStatus(2, "Approved")))
+                                            .toList();
+        return applications
+                .stream()
+                .map(Application::getTrip).toList();
+    }
+
+    @Override
+    public List<Trip> getPendingRides(User user) {
+        if(user.getApplications() == null) {
+            return Collections.emptyList();
+        }
+        List<Application> applications = user.getApplications()
+                .stream()
+                .filter(application -> application.getStatus()
+                        .equals(new PassengerStatus(1, "Pending")))
+                .toList();
+        return applications
+                .stream()
+                .map(Application::getTrip).toList();
     }
 
     @Override
