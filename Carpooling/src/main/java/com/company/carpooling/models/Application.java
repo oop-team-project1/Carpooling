@@ -1,9 +1,11 @@
 package com.company.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
@@ -29,6 +31,10 @@ public class Application {
     @JoinColumn(name = "status_id")
     private PassengerStatus status;
 
+    @Column(name = "created_at")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dateOfCreation;
+
     public Application(Trip trip, User user) {
         this.trip = trip;
         this.user = user;
@@ -43,13 +49,15 @@ public class Application {
 
         Application that = (Application) o;
 
-        if (getId() != that.getId()) return false;
+        if (getUser() != null ? !getUser().equals(that.getUser()) : that.getUser() != null) return false;
+        if (getTrip() != null ? !getTrip().equals(that.getTrip()) : that.getTrip() != null) return false;
         return getStatus() != null ? getStatus().equals(that.getStatus()) : that.getStatus() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getId();
+        int result = getUser() != null ? getUser().hashCode() : 0;
+        result = 31 * result + (getTrip() != null ? getTrip().hashCode() : 0);
         result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
         return result;
     }
