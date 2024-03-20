@@ -1,0 +1,28 @@
+.feedbacks-pagination {
+    height: 20px;
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+   padding: 3rem 0 1rem 0;
+
+}
+
+.pagination-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+
+    background: #999;
+    cursor:pointer;
+    transition: all 0.3s;
+    font-size: 1.2rem;
+}
+
+.pagination-page:hover {
+    background-color: #666 ;
+}
