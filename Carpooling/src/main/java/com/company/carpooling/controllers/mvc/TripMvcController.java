@@ -5,6 +5,9 @@ import com.company.carpooling.exceptions.AuthorizationException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.helpers.mappers.AuthenticationHelper;
 import com.company.carpooling.helpers.filters.FilterOptionsTrip;
+import com.company.carpooling.helpers.mappers.AuthenticationHelper;
+import com.company.carpooling.helpers.mappers.CommentMapper;
+import com.company.carpooling.helpers.mappers.FeedbackMapper;
 import com.company.carpooling.helpers.mappers.CommentMapper;
 import com.company.carpooling.helpers.mappers.FeedbackMapper;
 import com.company.carpooling.helpers.mappers.TripMapper;
@@ -56,6 +59,7 @@ public class TripMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final FeedbackMapper feedbackMapper;
     private static final Logger logger = LoggerFactory.getLogger(TripMvcController.class);
+
     public TripMvcController(BingMapsService bingMapsService, TripService tripService, TripMapper tripMapper,
                              Environment environment, UserService userService,
                              AuthenticationHelper authenticationHelper, FeedbackMapper feedbackMapper,
@@ -96,7 +100,7 @@ public class TripMvcController {
             String currentEmail = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByEmail(currentEmail));
         }*/
-  /*      model.addAttribute("filterOptions", filterDto);*/
+        /*      model.addAttribute("filterOptions", filterDto);*/
         model.addAttribute("trips", trips);
         return "AllTripsView";
 
@@ -107,7 +111,7 @@ public class TripMvcController {
         try {
             User user = authenticationHelper.tryGetUser(session);
             model.addAttribute("trip", new TripDtoCoordinates());
-            model.addAttribute("user",user );
+            model.addAttribute("user", user);
             model.addAttribute("bingMapsKey", bingMapsKey);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
@@ -196,11 +200,11 @@ public class TripMvcController {
 
     @PostMapping("/{id}/users/{userId}/feedbacks")
     public String createFeedbackForPassenger(@Valid @ModelAttribute("feedback") FeedbackDto feedbackDto,
-                             BindingResult bindingResult,
-                             @PathVariable int id,
-                             @PathVariable int userId,
-                             Model model,
-                             HttpSession session) {
+                                             BindingResult bindingResult,
+                                             @PathVariable int id,
+                                             @PathVariable int userId,
+                                             Model model,
+                                             HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
@@ -217,7 +221,7 @@ public class TripMvcController {
             Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto, trip);
             User receiver = userService.getById(userId);
             model.addAttribute("receiver", receiver);
-            feedbackService.leaveFeedbackForPassenger(user,feedback,trip,receiver);
+            feedbackService.leaveFeedbackForPassenger(user, feedback, trip, receiver);
             model.addAttribute("createdFeedback", feedback);
             return "redirect:/trips/" + id;
         } catch (EntityNotFoundException | AuthorizationException e) {
@@ -229,10 +233,10 @@ public class TripMvcController {
 
     @GetMapping("/{id}/users/{userId}/feedbacks/{feedbackId}/comments")
     public String showFeedbackCommentPage(@PathVariable int id,
-                                   @PathVariable int userId,
-                                   @PathVariable int feedbackId,
-                                   Model model,
-                                   HttpSession session) {
+                                          @PathVariable int userId,
+                                          @PathVariable int feedbackId,
+                                          Model model,
+                                          HttpSession session) {
         User user;
         try {
             authenticationHelper.tryGetUser(session);
@@ -243,8 +247,10 @@ public class TripMvcController {
         try {
             Trip trip = tripService.get(id);
             User receiver = userService.getById(userId);
+            Feedback feedback = feedbackService.getById(feedbackId);
             model.addAttribute("receiver", receiver);
             model.addAttribute("trip", trip);
+            model.addAttribute("feedback", feedback);
             return "FeedbackCommentView";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -256,12 +262,12 @@ public class TripMvcController {
 
     @PostMapping("/{id}/users/{userId}/feedbacks/{feedbackId}/comments")
     public String createFeedbackCommentForPassenger(@Valid @ModelAttribute("comment") CommentDto commentDto,
-                                             BindingResult bindingResult,
-                                             @PathVariable int id,
-                                             @PathVariable int userId,
-                                             @PathVariable int feedbackId,
-                                             Model model,
-                                             HttpSession session) {
+                                                    BindingResult bindingResult,
+                                                    @PathVariable int id,
+                                                    @PathVariable int userId,
+                                                    @PathVariable int feedbackId,
+                                                    Model model,
+                                                    HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
@@ -288,6 +294,7 @@ public class TripMvcController {
             return "ErrorView";
         }
     }
+
     @PostMapping("/apply")
     public String applyForTrip(@RequestParam("tripId") int tripId, HttpSession session, Model model) {
         User user;
@@ -296,7 +303,7 @@ public class TripMvcController {
             tripService.applyForTrip(tripId, user);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
-        } catch(EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return "redirect:/trips";
         }
 
