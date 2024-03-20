@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/css/pagination.css">
 
     <script src="https://kit.fontawesome.com/3f36e47243.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{../css/style.css}" href="../static/css/style.css" media="screen">
 </head>
 <body>
 <div th:fragment="header-top">
@@ -31,7 +32,7 @@
                                 <li class="Register"><a th:unless="${isAuthenticated}" th:href="@{/auth/register}"
                                                         href="#" title="Register"><i class="flaticon-checked"></i>
                                     register</a></li>
-                                <li class="post"><a href="#" title="">+post</a></li>
+                                <li class="post"><a href="#" title="" th:if="${isAuthenticated}">+post</a></li>
                                 <li>
                                     <a class="nav-link"
                                        th:if="${isAuthenticated}" th:href="@{/auth/logout}" href="#">Logout</a>
@@ -80,7 +81,7 @@
                 <li><a href="#" title="Support center"><i class="flaticon-support"></i></a></li>
                 <li><a href="#" title="Login"><i class="flaticon-unlocked"></i></a></li>
                 <li><a href="#" title="New register"><i class="flaticon-checked"></i></a></li>
-                <li class="post-new"><a href="#" title="New post">+Post</a></li>
+                <li class="post-new"><a href="#" title="New post" th:if="${isAuthenticated}">+Post</a></li>
             </ul>
         </div>
         <div class="logomenu-bar">
