@@ -174,6 +174,33 @@ public class UserMvcController {
         }
     }
 
+    @GetMapping("/{id}/trips")
+    public String showCreatedTrips(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            try{
+                authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            if (populateIsAuthenticated(session)){
+                String currentEmail = (String) session.getAttribute("currentUser");
+                model.addAttribute("currentUser", userService.getByEmail(currentEmail));
+            }
+
+            User user = userService.getById(id);
+            Set<Trip> tripsAsDriver = user.getTripsAsDriver();
+
+            model.addAttribute("user", user);
+            model.addAttribute("trips", tripsAsDriver);
+            return "UserTripsView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
     @GetMapping("{id}/update")
     public String showUserEditPage(@PathVariable int id, Model model, HttpSession session) {
             User user;
