@@ -42,6 +42,13 @@
                                                 <button type="submit" id="checkbox" class="theme-btn" value="Email">Verify</button>
                                             </form>
                                         </div>
+                                        <div style="display: block; align-items: center;">
+                                            <h6 style="color: white; margin-right: 10px;">You did not receive a code? Leave an email for new code:</h6>
+                                            <form method="POST"  action="#" th:action="@{/auth/verify/new}" th:object="${email}">
+                                                <input type="text" th:field="*{email}" placeholder="Email">
+                                                <button type="submit" class="theme-btn">Send</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
