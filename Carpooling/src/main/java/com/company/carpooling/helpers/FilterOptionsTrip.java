@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class FilterOptionsTrip {
     private Optional<String> status;
     private Optional<String> startPointStreet;
@@ -33,6 +31,14 @@ public class FilterOptionsTrip {
     private Optional<String> dateOfCreation;
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
+
+    public FilterOptionsTrip() {
+        this(null, null,
+                null, null,
+                null, null, null,
+                null, null, null,
+                null, null, null, null);
+    }
 
     public FilterOptionsTrip(String status, String startPointStreet, String startPointCity, String startPointCountry,
                              String endPointStreet, String endPointCity, String endPointCountry,

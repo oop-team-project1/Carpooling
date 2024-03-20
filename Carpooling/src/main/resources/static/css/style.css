@@ -73,6 +73,45 @@ Last change:	01/August/18
   padding: 0;
 }
 
+/*------------------------------------------------------------------------------------------mine*/
+.phone-info {
+    display: flex;
+    align-items: center;
+}
+.phone-info p {
+    margin-right: 5px; /* Adjust spacing between the elements */
+}
+
+.author-image {
+    height: 200px;
+    width: 200px;
+    -o-object-fit: cover;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    margin: 15px;
+    border: 5px solid transparent;
+    box-shadow: 0 0 0 2px #7ba8f9;
+}
+
+.post-title {
+    color: #333;
+    font-weight: 700;
+}
+.post-title:hover {
+    color: #7ba8f9;
+}
+
+.form-control {
+    outline: 0;
+    box-shadow: none;
+}
+.error {
+    color: red;
+}
+/*------------------------------------------------------------------------------------------mine*/
+
+
 body {
   float: left;
   width: 100%;
@@ -5948,10 +5987,7 @@ form.fule-type > p {
   width: 100%;
   margin-top: 90px;
 }
-.car-detail-clone{
-    border-bottom: 1px solid #e1e3e8;
-    text-align: left;
-}
+
 .car-detail {
   border-bottom: 1px solid #e1e3e8;
   float: left;
@@ -5963,7 +5999,7 @@ form.fule-type > p {
 	padding-right: 10px;
 }
 
-.car-detail input {
+.car-detail form input {
   width: 100%;
   margin-bottom: 25px;
 }
@@ -6251,19 +6287,15 @@ form.fule-type > p {
 
 .inline-calendar {
   float: left;
-  width: 300px;
-    height:300px;
+  width: 100%;
 }
 
 .inline-calendar #datepicker {
-  width: 300px;
-    height:300px;
+  width: 100%;
 }
 
 .inline-calendar .ui-datepicker-inline.ui-datepicker.ui-widget.ui-widget-content.ui-helper-clearfix.ui-corner-all {
-  width: 300px;
-    height:300px;
-
+  width: 100%;
 }
 
 .inline-calendar .ui-datepicker-header {
@@ -6948,7 +6980,7 @@ form.fule-type > p {
 }
 
 .responsive-menu ul ul {
-  display: block;
+  display: none;
 }
 
 .responsive-menu > ul > li.menu-item-has-children.active > a {

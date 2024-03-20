@@ -1,8 +1,7 @@
 /*  jQuery Nice Select - v1.1.0
     https://github.com/hernansartorio/jquery-nice-select
     Made by Hernán Sartorio  */
-
-let choice;
+ 
 (function($) {
 
   $.fn.niceSelect = function(method) {
@@ -63,11 +62,10 @@ let choice;
         .attr('tabindex', $select.attr('disabled') ? null : '0')
         .html('<span class="current"></span><ul class="list"></ul>')
       );
-
+        
       var $dropdown = $select.next();
       var $options = $select.find('option');
       var $selected = $select.find('option:selected');
-      choice = $selected;
       
       $dropdown.find('.current').html($selected.data('display') || $selected.text());
       
