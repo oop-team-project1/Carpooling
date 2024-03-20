@@ -3,6 +3,7 @@ package com.company.carpooling.repositories;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.models.User;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -14,14 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @Repository
 public class UserRepositoryImpl implements UserRepository{
-    private final SessionFactory sessionFactory;
 
-    @Autowired
-    public UserRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    private final SessionFactory sessionFactory;
 
     @Override
     public List<User> getAll(FilterOptionsUsers filterOptions) {

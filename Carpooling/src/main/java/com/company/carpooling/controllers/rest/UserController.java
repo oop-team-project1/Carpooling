@@ -10,6 +10,8 @@ import com.company.carpooling.services.FeedbackService;
 import com.company.carpooling.services.TripService;
 import com.company.carpooling.services.UserProfilePicService;
 import com.company.carpooling.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +37,7 @@ public class UserController {
 
 
     @GetMapping
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public List<User> getAll(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                              @RequestParam(required = false) String username,
                              @RequestParam(required = false) String phoneNumber,
@@ -54,6 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public User get(@PathVariable int id,
                     @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -80,6 +84,7 @@ public class UserController {
     }
 
     @GetMapping("/email")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public User getByEmail(@RequestParam String email,
                            @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -95,6 +100,7 @@ public class UserController {
     }
 
     @GetMapping("/phoneNumber")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public User getByPhoneNumber(@RequestParam String phoneNumber,
                                  @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -123,6 +129,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/avatar")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public String setProfilePicture(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                                     @PathVariable int id,
                                     @RequestParam("avatar") MultipartFile file) {
@@ -138,6 +145,7 @@ public class UserController {
 
 
     @PutMapping("/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public User update(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                        @PathVariable int id,
                        @Valid @RequestBody UserDto userDto) {
@@ -155,7 +163,24 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public void delete(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                       @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            userService.deleteUser(id, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
     @PutMapping("/blocks/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void blockUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                           @PathVariable int id) {
         try {
@@ -171,6 +196,7 @@ public class UserController {
     }
 
     @DeleteMapping("/blocks/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void unblockUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                             @PathVariable int id) {
         try {
@@ -186,6 +212,7 @@ public class UserController {
     }
 
     @PutMapping("/admin/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void makeAdmin(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                           @PathVariable int id) {
         try {
@@ -201,6 +228,7 @@ public class UserController {
     }
 
     @DeleteMapping("/admin/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void removeAdmin(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                             @PathVariable int id) {
         try {
@@ -221,29 +249,54 @@ public class UserController {
     public void getUserTrips(@PathVariable int id) {
     }
 
-    @PostMapping("/{id}/trips/{tripId}/feedbacks")
-    public void leaveFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                              @PathVariable int id,
-                              @PathVariable int tripId,
-                              @Valid @RequestBody FeedbackDto feedbackDto) {
+    @PostMapping("/{id}/trips/{tripId}/feedback-driver")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public void leaveFeedbackForDriver(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                       @PathVariable int id,
+                                       @PathVariable int tripId,
+                                       @Valid @RequestBody FeedbackDto feedbackDto) {
         try {
-            User fromUser = authenticationHelper.tryGetUser(encodedString);
-            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto);
-            User toUser = userService.getById(id);
+            User passenger = authenticationHelper.tryGetUser(encodedString);
+            User driver = userService.getById(id);
             Trip trip = tripService.get(tripId);
-            feedbackService.create(fromUser, feedback, trip, toUser);
+            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto, trip);
+            feedbackService.leaveFeedbackForDriver(passenger, feedback, trip, driver);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (TripNotCompletedException | UserIsNotFromTrip | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/trips/{tripId}/feedback-passenger")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public void leaveFeedbackForPassenger(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                          @PathVariable int id,
+                                          @PathVariable int tripId,
+                                          @Valid @RequestBody FeedbackDto feedbackDto) {
+        try {
+            User driver = authenticationHelper.tryGetUser(encodedString);
+            User passenger = userService.getById(id);
+            Trip trip = tripService.get(tripId);
+            Feedback feedback = feedbackMapper.fromFeedbackDto(feedbackDto, trip);
+            feedbackService.leaveFeedbackForPassenger(driver, feedback, trip, passenger);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (TripNotCompletedException | UserIsNotFromTrip | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @PostMapping("/{id}/feedbacks/{feedbackId}/comments")
-    public void addCommentToFeedback (@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                                      @PathVariable int id,
-                                      @PathVariable int feedbackId,
-                                      @Valid @RequestBody CommentDto commentDto) {
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public void addCommentToFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                     @PathVariable int id,
+                                     @PathVariable int feedbackId,
+                                     @Valid @RequestBody CommentDto commentDto) {
 
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
@@ -251,7 +304,7 @@ public class UserController {
             FeedbackComment comment = commentMapper.fromCommentDto(commentDto);
             User toUser = userService.getById(id);
             feedbackService.addCommentToFeedback(user, toUser, feedback, comment);
-        }catch (AuthorizationException | AuthenticationException e) {
+        } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -259,17 +312,74 @@ public class UserController {
     }
 
     @GetMapping("/{id}/feedbacks")
-    public List<Feedback> getFeedbacks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                             @PathVariable int id) {
+    public List<Feedback> getFeedbacks(@PathVariable int id) {
+        try {
+            return feedbackService.get(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}/feedbacks/{feedbackId}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public void deleteFeedbackForUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                      @PathVariable int id,
+                                      @PathVariable int feedbackId) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
-            return feedbackService.get(id);
+            User userToDeleteFeedback = userService.getById(id);
+            Feedback feedbackToDelete = feedbackService.getById(feedbackId);
+            feedbackService.deleteFeedback(user, userToDeleteFeedback, feedbackToDelete);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
     }
 
+    @DeleteMapping("/{id}/feedbacks/{feedbackId}/comments/{commentId}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public void deleteCommentForFeedback(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                                         @PathVariable int id,
+                                         @PathVariable int feedbackId,
+                                         @PathVariable int commentId) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            User userToDeleteFeedback = userService.getById(id);
+            Feedback feedback = feedbackService.getById(feedbackId);
+            FeedbackComment comment = feedbackService.getCommentById(commentId);
+            feedbackService.deleteFeedbackForComment(user, userToDeleteFeedback, feedback, comment);
+        } catch (AuthorizationException | AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PostMapping("/activation/{code}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public String activateUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
+                               @PathVariable int code) {
+        try {
+            authenticationHelper.tryGetUser(encodedString);
+            userService.activateAccount(code);
+            return "Account activated";
+        } catch (WrongActivationCodeException e) {
+            return "Code has expired! Resend code.";
+        } catch (ForbiddenOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
+
+    @PostMapping("/activation/new-code")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
+    public String sendNewActivationCode(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
+        try {
+            User user = authenticationHelper.tryGetUser(encodedString);
+            userService.resendActivationCode(user.getUsername());
+            return "New activation code sent";
+        } catch (ForbiddenOperationException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }
 }

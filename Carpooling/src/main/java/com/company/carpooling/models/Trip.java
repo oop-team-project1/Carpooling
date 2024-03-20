@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class Trip {
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfCreation;
+    private LocalDate dateOfCreation;
 
     // TODO make separate return entity
     @JsonIgnore
@@ -76,6 +77,20 @@ public class Trip {
         return countApproved == seatsAvailable;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Trip trip = (Trip) o;
+
+        return getId() == trip.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return getId();
+    }
 
     //TODO set of users (accepted, pending, ...) or Map<User, UserStatus>
     /*@ManyToMany

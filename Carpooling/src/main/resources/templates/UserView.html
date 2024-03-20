@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+        <div th:replace="~{fragments/PageForm :: head}"></div>
+        <body>
+            <div class="site-layout">
+                <div th:replace="~{fragments/PageForm :: header-top}"></div>
+                <!-- topbar -->
+                <div th:replace="~{fragments/PageForm :: topbar}"></div>
+                <!-- subhead -->
+                <section>
+                    <div class="space">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <div class="profile-dp">
+                                                    <figure><img th:if="${user.getProfilePic() != null}" th:src="${user.getProfilePic().getPic()}" alt=""></figure>
+                                                    <figure><img th:unless="${user.getProfilePic() != null}" src="/images/default-pic.png" alt=""></figure>
+                                                    <div class="profile-info">
+                                                        <span class="profile-name"
+                                                              th:text="${user.firstName + ' ' + user.lastName}"></span>
+                                                        <ul class="stars-rating">
+                                                            <li>
+                                                                <div class="stars-outer">
+                                                                    <div class="stars-inner"></div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                        <ins th:text="${user.getFeedbacks().size() + ' reviews'}"></ins>
+                                                    </div>
+                                                    <ul class="verification">
+                                                        <li><i class="flaticon-tick" th:if="${user.isVerified()}"></i>
+                                                            <p>Email verified </p>
+                                                        </li>
+                                                        <li>
+                                                            <button class="theme-btn aw-8" onclick="showElement('phone')">
+                                                                Show Phone Number
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <div id="phone" th:text="${user.getPhoneNumber()}"
+                                                                 style="display: none; margin-left: 50px;"></div>
+                                                        </li>
+                                                        <li>
+                                                            <a class="theme-btn long aw-8 d-flex justify-content-center"
+                                                               th:if="${isAuthenticated &&
+                                                                  (currentUser.isAdmin() || currentUser.id == user.id)}"
+                                                               th:href="@{${id} +'/update'}">
+                                                                Update profile
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a th:if="${isAuthenticated && currentUser.isAdmin()}"
+                                                               onclick="return confirmDeleteProfile(id)"
+                                                               th:href="@{'/users/' + ${id} + '/delete'}"
+                                                               class="theme-btn long aw-8 d-flex justify-content-center"
+                                                               style="height: 50%">
+                                                                Delete profile
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-sm-12">
+                                                <div class="profile-bg">
+                                                    <ul class="nav nav-tabs profile-btn">
+                                                        <li class="nav-item"><a id="dashboard" class="active" href="#link1"
+                                                                                data-toggle="tab">Dashboard</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a id="rides" class="" href="#link3"
+                                                                                data-toggle="tab">Rides
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a id="reviews" class="" href="#link4"
+                                                                                data-toggle="tab">
+                                                                Reviews
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <!-- Tab panes -->
+                                                    <div class="tab-content profile">
+                                                        <div class="tab-pane active fade show " id="link1">
+                                                            <div class="ride-request">
+                                                                <ul>
+                                                                    <li>Rides as driver<span
+                                                                            th:if="${!user.getTripsAsDriver().isEmpty()}"
+                                                                            th:text="${user.getTripsAsDriver().size()}"></span>
+                                                                    </li>
+                                                                    <li>Rides as passenger<span
+                                                                            th:if="${tripsAsPassenger != null}"
+                                                                            th:text="${tripsAsPassenger.size()}"></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="link3">
+                                                            <div class="colla-table" th:if="${!user.getTripsAsDriver().isEmpty()}"
+                                                                 th:each="trip : ${currentUser.getTripsAsDriver()}">
+                                                                <h5 class="little-title">Created travels:</h5>
+                                                                <a  class="theme-btn" th:href="@{${id} +'/trips'}">
+                                                                    Trips
+                                                                </a>
+                                                            </div>
+                                                            <h5 class="little-title">Applications:</h5>
+                                                            <p th:if="${applications.isEmpty()}">User has no applications.</p>
+                                                            <div class="colla-table" th:if="${!tripsAsPassenger.isEmpty()}">
+                                                                <a class="theme-btn" th:href="@{${id} +'/applications'}">
+                                                                    See all
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="link4">
+                                                            <p th:if="${user.getFeedbacks().isEmpty()}">
+                                                                User haven't received any feedback yet.
+                                                            </p>
+                                                            <ul class="reviewer" id="reviewer-list"
+                                                                th:unless="${user.getFeedbacks().isEmpty()}">
+                                                            </ul>
+                                                            <div class="feedbacks-pagination" id="fb-pagination"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- points section -->
+                <div th:replace="~{fragments/PageForm :: footer}"></div>
+            </div>
+            <script src="/js/apps.min.js"></script>
+            <script src="/js/script.js"></script>
+            <script src="/js/buttons.js"></script>
+            <script src="/js/pagination.js"></script>
+        </body>
+</html>

@@ -2,31 +2,63 @@ package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.FilterOptionsUsers;
-import com.company.carpooling.models.User;
-import com.company.carpooling.models.UserProfilePic;
+import com.company.carpooling.models.*;
 import com.company.carpooling.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     public static final String MODIFY_PROFILE_PICTURE_ERROR = "You can't modify profile picture!";
     private final UserRepository repository;
-    public static final String PERMISSION_ERROR = "Only admin or post creator can modify a post";
-    public static final String USER_IS_BLOCKED = "User is blocked";
+    private final UserProfilePicService userProfilePicService;
+    private final EmailService emailService;
+    private final ActivationCodeService activationCodeService;
+    private final Random random = new Random();
 
-    @Autowired
-    public UserServiceImpl(UserRepository repository) {
-        this.repository = repository;
-    }
+    public static final String PERMISSION_ERROR = "Only admin can delete user.";
+    public static final String USER_IS_BLOCKED = "User is blocked";
 
     @Override
     public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
         return repository.getAll(filterOptionsUsers);
+    }
+
+    @Override
+    public List<Trip> getTripsAsPassenger(User user) {
+        if(user.getApplications() == null) {
+            return Collections.emptyList();
+        }
+       List<Application> applications = user.getApplications()
+                                            .stream()
+                                            .filter(application -> application.getStatus()
+                                                    .equals(new PassengerStatus(2, "Approved")))
+                                            .toList();
+        return applications
+                .stream()
+                .map(Application::getTrip).toList();
+    }
+
+    @Override
+    public List<Trip> getPendingRides(User user) {
+        if(user.getApplications() == null) {
+            return Collections.emptyList();
+        }
+        List<Application> applications = user.getApplications()
+                .stream()
+                .filter(application -> application.getStatus()
+                        .equals(new PassengerStatus(1, "Pending")))
+                .toList();
+        return applications
+                .stream()
+                .map(Application::getTrip).toList();
     }
 
     @Override
@@ -85,26 +117,17 @@ public class UserServiceImpl implements UserService {
             throw new EntityDuplicateException("User", "phone number", userToCreate.getPhoneNumber());
         }
 
+        userToCreate.setVerified(false);
         repository.create(userToCreate);
+        sendActivationEmail(userToCreate);
     }
 
     @Override
     public void update(User userToUpdate, User user) {
         checkIfBlocked(user);
-        boolean duplicateExists = true;
-        try {
-            User existingUser = repository.getByUsername(userToUpdate.getUsername());
-            if (existingUser.getId() == userToUpdate.getId()) {
-                duplicateExists = false;
-            }
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new EntityDuplicateException("User", "username", userToUpdate.getUsername());
-        }
-
+        checkIfUsernameIsUnique(userToUpdate);
+        checkIfEmailIsUnique(userToUpdate);
+        checkIfPhoneNumberIsUnique(userToUpdate);
         repository.update(userToUpdate);
     }
 
@@ -180,6 +203,57 @@ public class UserServiceImpl implements UserService {
         repository.update(user);
     }
 
+    @Override
+    public void activateAccount(int code) {
+        try {
+            ActivationCode activationCode = activationCodeService.getByCode(code);
+            User user = repository.getByEmail(activationCode.getEmail());
+            user.setVerified(true);
+            activationCodeService.deleteActivationCodeByUser(user.getEmail());
+            repository.update(user);
+        } catch (EntityNotFoundException e) {
+            throw new WrongActivationCodeException("Code not active. Maybe user is activated already.");
+        }
+    }
+
+    @Override
+    public void resendActivationCode(String username) {
+        User user = repository.getByUsername(username);
+        if (user.isVerified())
+            throw new ForbiddenOperationException("User already activated!");
+        sendActivationEmail(user);
+    }
+    @Override
+    public void sendActivationEmail(User user){
+        String email = user.getEmail();
+        int code = getActivationCode(user);
+        emailService.sendEmail(email, "Account activation", String.valueOf(code));
+        emailService.sendUserCreationVerificationCode(user, code);
+        System.out.println(code);
+    }
+    private int getActivationCode(User user) {
+        ActivationCode activationCode;
+        int code;
+        do {
+            code = getCode();
+            try {
+                activationCode = activationCodeService.getByCode(code);
+            } catch (EntityNotFoundException ignored) {
+                activationCode = null;
+            }
+        } while (activationCode != null);
+
+        activationCode = new ActivationCode();
+        activationCode.setActivationCode(code);
+        activationCode.setEmail(user.getEmail());
+        activationCodeService.create(activationCode);
+
+        return code;
+    }
+    private int getCode() {
+        return 1000 + random.nextInt(9000);
+    }
+
     private void checkModifyPermissions(User user) {
         if (!(user.isAdmin())) {
             throw new AuthorizationException(PERMISSION_ERROR);
@@ -197,5 +271,54 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    private void checkIfUsernameIsUnique(User user) {
+        boolean duplicateExists = true;
+        try {
+            User existingUser = repository.getByUsername(user.getUsername());
+            if (existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+    }
+
+    private void checkIfEmailIsUnique(User user) {
+        boolean duplicateExists = true;
+
+        try {
+            User existingUser = repository.getByEmail(user.getEmail());
+            if(existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "email", user.getEmail());
+        }
+    }
+
+    private void checkIfPhoneNumberIsUnique(User user) {
+        boolean duplicateExists = true;
+        try {
+            User existingUser = repository.getByPhoneNumber(user.getPhoneNumber());
+            if(existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
+        }
     }
 }

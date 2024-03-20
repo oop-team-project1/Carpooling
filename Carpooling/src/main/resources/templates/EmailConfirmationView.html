@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title>Car Carry</title>
+    <link rel="icon" type="image/png" href="/images/fav.png">
+
+    <link rel="stylesheet" href="/css/apps.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/color.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+
+    <link rel="stylesheet" th:href="@{../css/styles.css}" href="../static/css/style.css" media="screen">
+
+</head>
+<body>
+<div class="site-layout">
+    <div class="comingsoon-page blackish low-opacity">
+        <div class="bg-image" style="background-image:url(/images/slider/featured-avatar5.jpg);"></div>
+        <div class="coming-soon-top">
+            <div class="logo">
+                <a href="index.html" title=""><img src="/images/logo-white.png" alt=""></a>
+            </div>
+        </div>
+        <section>
+            <div class="space">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="login-sec">
+                                <div class="row">
+                                    <div class="offset-lg-1 col-lg-7 col-md-8">
+                                        <div class="cola-form">
+                                            <h4 style="color: white">We have sent you a confirmation email.</h4>
+                                            <h4 style="color: white">Please enter the code:</h4>
+                                            <form method="POST" action="#" th:action="@{/auth/verify}"
+                                                  th:object="${email}">
+                                                <input type="text" th:field="*{activationCode}" placeholder="Activation code">
+                                                <button type="submit" id="checkbox" class="theme-btn" value="Email">Verify</button>
+                                            </form>
+                                        </div>
+                                        <div style="display: block; align-items: center;">
+                                            <h6 style="color: white; margin-right: 10px;">You did not receive a code? Leave an email for new code:</h6>
+                                            <form method="POST"  action="#" th:action="@{/auth/verify/new}" th:object="${email}">
+                                                <input type="text" th:field="*{email}" placeholder="Email">
+                                                <button type="submit" class="theme-btn">Send</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- form section -->
+    </div>
+</div>
+<script src="/js/apps.min.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+
+</body>
+</html>

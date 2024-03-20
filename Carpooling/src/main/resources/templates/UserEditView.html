@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="~{fragments/PageForm :: head}"></div>
+    <body>
+        <div class="site-layout">
+            <div th:replace="~{fragments/PageForm :: header-top}"></div>
+            <!-- topbar -->
+            <div th:replace="~{fragments/PageForm :: topbar}"></div>
+            <!-- subhead -->
+            <section>
+                <div class="space">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="profile-edit">
+                                    <div class="row">
+                                        <div class="col-lg-9 col-md-12">
+                                            <div class="edit-profile">
+                                                <form th:object="${userToUpdate}"
+                                                      th:action="@{'/users/' + ${id} + '/update'}"
+                                                      method="post" class="cola-form">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>First Name:</label>
+                                                            <input type="text" th:field="*{firstName}" placeholder="First Name">
+                                                            <label class="error" id="first-name-error" th:errors="*{firstName}">
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Last Name:</label>
+                                                            <input type="text" th:field="*{lastName}" placeholder="Last Name">
+                                                            <label class="error" id="last-name-error"
+                                                                   th:errors="*{lastName}"></label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Username:</label>
+                                                            <input type="text" th:field="*{username}" placeholder="Username">
+                                                            <label class="error" id="username-error"
+                                                                   th:errors="*{username}">
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Email:</label>
+                                                            <input type="text" name="email" id="email" th:field="*{email}"
+                                                                   placeholder="Email: user@example.com">
+                                                            <label class="error" id="email-error" th:errors="*{email}">
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Password:</label>
+                                                            <input type="password" th:field="*{password}"
+                                                                   placeholder="Password">
+                                                            <label class="error" id="pass-err" th:errors="*{password}">
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Phone Number:</label>
+                                                            <input type="text" th:field="*{phoneNumber}"
+                                                                   placeholder="Phone number">
+                                                            <label class="error" id="phoneNumber-error"
+                                                                   th:errors="*{phoneNumber}">
+                                                            </label>
+                                                        </div>
+                                                        <button type="submit" value="Edit" class="theme-btn long"
+                                                                style="height: 50%">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: 10px">
+                                        <div class="dp-edit">
+                                            <form action="#" method="post"
+                                                  th:action="@{'/users/' + ${id} + '/set-profile-picture'}"
+                                                  enctype="multipart/form-data">
+                                                <span>Profile image:</span>
+                                                <input type="file" name="file">
+                                                <input type="submit" class="theme-btn long rml-0" value="Upload"/>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- points section -->
+            <div th:replace="~{fragments/PageForm :: footer}"></div>
+        </div>
+        <script src="/js/apps.min.js"></script>
+        <script src="/js/script.js"></script>
+    </body>
+</html>		
