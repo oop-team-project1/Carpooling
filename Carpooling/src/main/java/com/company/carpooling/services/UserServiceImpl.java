@@ -118,7 +118,6 @@ public class UserServiceImpl implements UserService {
         }
 
         userToCreate.setVerified(false);
-        userToCreate.setProfilePic(userProfilePicService.getById(1));
         repository.create(userToCreate);
         sendActivationEmail(userToCreate);
     }
