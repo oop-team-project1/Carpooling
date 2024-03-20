@@ -4,6 +4,7 @@ import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.models.*;
 import com.company.carpooling.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +14,18 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     public static final String MODIFY_PROFILE_PICTURE_ERROR = "You can't modify profile picture!";
     private final UserRepository repository;
+    private final UserProfilePicService userProfilePicService;
     private final EmailService emailService;
     private final ActivationCodeService activationCodeService;
-    private final Random random;
+    private final Random random = new Random();
 
     public static final String PERMISSION_ERROR = "Only admin can delete user.";
     public static final String USER_IS_BLOCKED = "User is blocked";
-
-    @Autowired
-    public UserServiceImpl(UserRepository repository, EmailService emailService, ActivationCodeService activationCodeService) {
-        this.repository = repository;
-        this.emailService = emailService;
-        this.activationCodeService = activationCodeService;
-        this.random = new Random();
-    }
 
     @Override
     public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
@@ -124,6 +119,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userToCreate.setVerified(false);
+        userToCreate.setProfilePic(userProfilePicService.getById(1));
         repository.create(userToCreate);
         sendActivationEmail(userToCreate);
     }
