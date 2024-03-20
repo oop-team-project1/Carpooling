@@ -1,7 +1,7 @@
 $(window).load(function () {
     $("#wizard").aiiaWizard();
 });
-let selectedValue = 3;
+
 ;(function ($, window, document, undefined) {
 
 	var settings;
@@ -493,7 +493,6 @@ let selectedValue = 3;
 			.removeClass('theme-btn')
 			.addClass('theme-btn')
 			.html(txt);
-
 	}
 
 	function unsetFinishButton($pluginElement, settings) {
@@ -548,22 +547,6 @@ let selectedValue = 3;
 			slideRight($elementToSlide, settings, $plugin, goToFirst);
 		}
 	}
-
-	$(document).ready(function() {
-		// Initialize the wizard plugin
-		$("#wizard").aiiaWizard();
-		console.log("hello");
-
-		// Define click event for the finish button
-		$('.aiia-wizard-button-next').click(function() {
-			// Check if the finish button is clicked
-			if ($(this).text() === 'Submit') {
-
-				$('#trip-form').submit();
-			}
-
-		});
-	});
 
 
 	////////////////////////////////////////// Plugin definition

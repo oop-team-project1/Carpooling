@@ -1,7 +1,7 @@
 //google map
 if ($("#map-canvas").length) {
 jQuery(document).ready(function($) {
-
+	
 	"use strict";
 
 		var map;
@@ -14,19 +14,19 @@ jQuery(document).ready(function($) {
 		      mapOptions);
 		      var marker = new google.maps.Marker({
 		        map: map,
-		        icon: "/images/map-marker.png",
+		        icon: "images/map-marker.png",
 		        title: "Mi marcador",
 		        position: map.getCenter()
 		      });
 		      var marker2 = new google.maps.Marker({
 		        map: map,
-		        icon: "/images/map-marker2.png",
+		        icon: "images/map-marker2.png",
 		        title: "Otro marker",
 		        position: new google.maps.LatLng(37.071450, -100.900326)
 		      });
 		      var marker3 = new google.maps.Marker({
 		        map: map,
-		        icon: "/images/map-marker3.png",
+		        icon: "images/map-marker3.png",
 		        title: "Otro marker mas",
 		        position: new google.maps.LatLng(37.020208, -100.917492)
 		      });
