@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="~{fragments/PageForm :: head}"></div>>
+<body>
+<div class="sidebar right">
+    <div class="note-box">
+        <!--                                            Check if authenticated and current user is driver or passenger-->
+        <span><i
+                class="flaticon-volkswagen-car-side-view"></i> Leave Feedback </span>
+        <button id="showFormButton" class="theme-btn" style="margin-left: 80px">
+            +
+        </button>
+<!--        <a th:if="${feedback != null}" th:href="@{'/trips/'+ ${trip.id} + '/users/'-->
+<!--                                            + ${receiver.id} + '/feedbacks/' + ${createdFeedback.id} + '/comments'}" title="" class="theme-btn long" id="showCommentFormButton"> + comment-->
+<!--            (optional)-->
+<!--        </a>-->
+        <div id="modalOverlay">
+            <div id="formContainer" style="display: none;">
+                <form class="rating" method="POST" th:action="@{'/trips/'+ ${trip.id} + '/users/' + ${receiver.id} + '/feedbacks'}"
+                th:object="${feedback}"
+                >
+                    <div class="stars">
+                        <label>
+                            <input type="radio" name="stars" value="1" th:field="${feedback.rating}"/>
+                            <span class="icon">★</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="stars" value="2" th:field="${feedback.rating}"/>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="stars" value="3" th:field="${feedback.rating}"/>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="stars" value="4" th:field="${feedback.rating}"/>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="stars" value="5" th:field="${feedback.rating}"/>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                            <span class="icon">★</span>
+                        </label>
+
+                    </div>
+                    <div>
+                        <button type="submit"  value="Submit" class="theme-btn">
+                            Save
+                        </button>
+                        <button type="button" class="theme-btn"
+                                onclick="closeForm()">
+                            Close
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+<!--        <div id="modalOverlayComment">-->
+<!--            <div id="formContainerComment" style="display: none;" >-->
+<!--                <form method="post" class="cola-form" th:action="@{'/trips/'+ ${trip.id} + '/users/'-->
+<!--                 + ${receiver.id} + '/feedbacks/' + ${feedbackForComment.id} + '/comments'}"-->
+<!--                th:object="${comment}">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-lg-12">-->
+<!--                            <label for="feedback-comment"></label>-->
+<!--                            <textarea name="content" id="feedback-comment"-->
+<!--                                      rows="3"-->
+<!--                                      placeholder="Comment (optional)"-->
+<!--                                      required="required" th:field="${comment.content}"></textarea>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <button type="submit" value="Submit" class="theme-btn">Save-->
+<!--                    </button>-->
+<!--                    <button type="button" class="theme-btn"-->
+<!--                            onclick="closeFormComment()">-->
+<!--                        Close-->
+<!--                    </button>-->
+
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+</div>
+<script src="/js/buttons.js"></script>
+</body>
+</html>

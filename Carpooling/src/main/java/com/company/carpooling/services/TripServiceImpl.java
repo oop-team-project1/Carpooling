@@ -16,6 +16,7 @@ import com.company.carpooling.services.contracts.TripService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -126,6 +127,18 @@ public class TripServiceImpl implements TripService {
         Application application = applicationRepository.get(applicationId);
         application.setStatus(new PassengerStatus(3, "Rejected"));
         applicationRepository.update(application);
+    }
+
+    @Override
+    public List<Application> getApprovedPassengers(Trip trip) {
+        if(trip.getApplications() == null) {
+            return Collections.emptyList();
+        }
+        return trip.getApplications()
+                .stream()
+                .filter(application -> application.getStatus()
+                        .equals(new PassengerStatus(2, "Approved")))
+                .toList();
     }
 
     private void checkIfBlocked(User user, String message) {

@@ -1,5 +1,5 @@
 function showElement(element) {
-    var x = document.getElementById(element);
+    const x = document.getElementById(element);
     if (x.style.display === "none") {
         x.style.display = "block";
     } else {
@@ -11,8 +11,8 @@ const modalOverlay = document.getElementById('modalOverlay');
 const formContainer = document.getElementById('formContainer');
 
 showFormButton.addEventListener('click', function() {
-    modalOverlay.style.display = 'flex'; // Display the modal overlay
-    formContainer.style.display = 'block'; // Display the form container
+    modalOverlay.style.display = 'flex';
+    formContainer.style.display = 'block';
 });
 
 const showFormButtonComment = document.getElementById('showCommentFormButton');
@@ -20,8 +20,8 @@ const modalOverlayComment = document.getElementById('modalOverlayComment');
 const formContainerComment = document.getElementById('formContainerComment');
 
 showFormButtonComment.addEventListener('click', function() {
-    modalOverlayComment.style.display = 'flex'; // Display the modal overlay
-    formContainerComment.style.display = 'block'; // Display the form container
+    modalOverlayComment.style.display = 'flex';
+    formContainerComment.style.display = 'block';
 });
 
 function closeFormComment() {
@@ -45,6 +45,5 @@ function confirmDeleteProfile(id) {
         return false;
     }
 }
-
 
 
