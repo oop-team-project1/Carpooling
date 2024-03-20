@@ -1,16 +1,17 @@
 package com.company.carpooling.models.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.sql.Time;
 import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class FilterOptionsTripDto {
     private String status;
     private String startPointStreet;
@@ -21,9 +22,9 @@ public class FilterOptionsTripDto {
     private String endPointCountry;
     private String username;
     private Integer passengersCount;
-    private LocalDateTime departureTime;
-    private LocalDateTime departureDate;
-    private Date dateOfCreation;
+    private String departureTime;
+    private String departureDate;
+    private String dateOfCreation;
     private String sortBy;
     private String sortOrder;
 

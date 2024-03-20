@@ -18,13 +18,13 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "country_id")
-    int id;
+    private int id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @OneToMany(mappedBy = "country", orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     @JsonIgnore
-    Set<City> cities;
+    private Set<City> cities;
 }

@@ -16,14 +16,14 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "city_id")
-    int id;
+    private int id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
     @JsonIgnoreProperties("id")
-    Country country;
+    private Country country;
 
 }

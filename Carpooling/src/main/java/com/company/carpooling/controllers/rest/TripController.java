@@ -18,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -45,15 +43,15 @@ public class TripController {
                           @RequestParam(required = false) String endPointCountry,
                           @RequestParam(required = false) String username,
                           @RequestParam(required = false) Integer passengersCount,
-                          @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime departureTime,
-                          @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm") LocalDateTime departureDate,
-                          @RequestParam(required = false) Date dateOfCreation,
+                          @RequestParam(required = false) @DateTimeFormat(pattern = "HH:mm") String departureTime,
+                          @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") String departureDate,
+                          @RequestParam(required = false) String dateOfCreation,
                           @RequestParam(required = false) String sortBy,
                           @RequestParam(required = false) String sortOrder) {
 
         FilterOptionsTrip filterOptionsTrip = new FilterOptionsTrip(status, startPointStreet,
                 startPointCity, startPointCountry, endPointStreet, endPointCity, endPointCountry, username,
-                passengersCount, departureTime, departureDate, dateOfCreation, sortBy, sortOrder);
+                passengersCount, departureTime,departureDate, dateOfCreation, sortBy, sortOrder);
         try {
             authenticationHelper.tryGetUser(encodedString);
             return tripService.get(filterOptionsTrip);

@@ -1,15 +1,20 @@
 package com.company.carpooling.helpers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class FilterOptionsTrip {
     private Optional<String> status;
@@ -21,17 +26,17 @@ public class FilterOptionsTrip {
     private Optional<String> endPointCountry;
     private Optional<String> username;
     private Optional<Integer> passengersCount;
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-    private Optional<LocalDateTime> departureTime;
-    private Optional<LocalDateTime> departureDate;
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Optional<Date> dateOfCreation;
+    @JsonFormat(pattern = "HH:mm")
+    private Optional<String> departureTime;
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private Optional<String> departureDate;
+    private Optional<String> dateOfCreation;
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
     public FilterOptionsTrip(String status, String startPointStreet, String startPointCity, String startPointCountry,
                              String endPointStreet, String endPointCity, String endPointCountry,
-                             String username, Integer passengersCount, LocalDateTime departureTime, LocalDateTime departureDate,Date dateOfCreation,
+                             String username, Integer passengersCount, String departureTime, String departureDate,String dateOfCreation,
                              String sortBy, String sortOrder) {
         this.status = Optional.ofNullable(status);
         this.startPointStreet = Optional.ofNullable(startPointStreet);

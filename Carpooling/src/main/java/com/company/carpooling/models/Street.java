@@ -17,14 +17,14 @@ public class Street {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "street_id")
-    int id;
+    private int id;
 
     @Column(name = "street_name")
-    String streetName;
+    private String streetName;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id")
     @JsonIgnoreProperties("id")
-    City city;
+    private City city;
 
 }

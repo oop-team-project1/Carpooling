@@ -5,8 +5,10 @@ import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.models.*;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Helpers {
     public static FilterOptionsTrip createMockFilterOptionsForTrip() {
@@ -20,9 +22,9 @@ public class Helpers {
                 "endCountry",
                 "username",
                 2,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                Date.valueOf(LocalDate.now()),
+                LocalTime.now().toString(),
+                LocalDate.now().toString(),
+                LocalDate.now().toString(),
                 "startPointCity",
                 "desc"
         );
@@ -39,7 +41,7 @@ public class Helpers {
         mockTrip.setDuration(3.4f);
         mockTrip.setSeatsAvailable(3);
         mockTrip.setStatus(new TripStatus(1,"Upcoming"));
-        mockTrip.setDateOfCreation(Date.valueOf(LocalDate.now()));
+        mockTrip.setDateOfCreation(Date.valueOf(LocalDate.now()).toLocalDate());
         return mockTrip;
     }
 

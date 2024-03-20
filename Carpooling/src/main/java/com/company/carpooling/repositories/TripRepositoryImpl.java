@@ -9,6 +9,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @AllArgsConstructor
@@ -17,11 +22,21 @@ public class TripRepositoryImpl implements TripRepository {
 
     private final SessionFactory sessionFactory;
 
+
     @Override
     public List<Trip> get(FilterOptionsTrip filterOptions) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        SimpleDateFormat dateParser = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat dateTimeParser = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
             Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getStatus().ifPresent(value -> {
+                filters.add("status.statusName like :status");
+                params.put("status", value);
+            });
 
             filterOptions.getUsername().ifPresent(value -> {
                 filters.add("driver.username like :username");
@@ -34,8 +49,11 @@ public class TripRepositoryImpl implements TripRepository {
             });
 
             filterOptions.getStartPointCity().ifPresent(value -> {
+                if(!value.isBlank()){
+                    System.out.println(value);
                 filters.add("startPoint.city.name like :startPointCity");
                 params.put("startPointCity", String.format("%%%s%%", value));
+                }
             });
 
             filterOptions.getStartPointCountry().ifPresent(value -> {
@@ -49,8 +67,10 @@ public class TripRepositoryImpl implements TripRepository {
             });
 
             filterOptions.getEndPointCity().ifPresent(value -> {
-                filters.add("endPoint.city.name like :endPointCity");
-                params.put("endPointCity", String.format("%%%s%%", value));
+                if(!value.isBlank()) {
+                    filters.add("endPoint.city.name like :endPointCity");
+                    params.put("endPointCity", String.format("%%%s%%", value));
+                }
             });
 
             filterOptions.getEndPointCountry().ifPresent(value -> {
@@ -63,14 +83,32 @@ public class TripRepositoryImpl implements TripRepository {
                 params.put("passengersCount", value);
             });
 
+            filterOptions.getDepartureDate().ifPresent(value -> {
+                if(!value.isBlank()){
+                    filters.add("DATE(departureTime) = DATE(:departureDate)");
+                    try {
+                        params.put("departureDate",dateParser.parse(value));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            });
+
             filterOptions.getDepartureTime().ifPresent(value -> {
-                filters.add("hour(departureTime) = hour(:departureTime) and minute(departureTime) = minute(:departureTime)");
-                params.put("departureTime", value);
-            });
+                if(!value.isBlank()) {
+                    filters.add("TIME(departureTime) = TIME(:departureTime)");
+                    params.put("departureTime", (value.isEmpty() ? value : LocalTime.parse(value, timeFormatter)));
+                }});
             filterOptions.getDateOfCreation().ifPresent(value -> {
-                filters.add("dateOfCreation >= dateOfCreation");
-                params.put("dateOfCreation", value);
-            });
+                if(!value.isBlank()) {
+                    filters.add("dateOfCreation >= :dateOfCreation");
+                    try {
+                        params.put("dateOfCreation", (value.isEmpty() ? value : dateTimeParser.parse(value)));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                }});
 
             StringBuilder queryString = new StringBuilder("from Trip");
 
