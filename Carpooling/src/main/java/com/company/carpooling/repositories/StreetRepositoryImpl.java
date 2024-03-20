@@ -3,6 +3,7 @@ package com.company.carpooling.repositories;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.City;
 import com.company.carpooling.models.Street;
+import com.company.carpooling.repositories.contracts.StreetRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

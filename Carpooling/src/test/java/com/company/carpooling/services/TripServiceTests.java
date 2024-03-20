@@ -1,10 +1,10 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.AuthorizationException;
-import com.company.carpooling.helpers.FilterOptionsTrip;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
-import com.company.carpooling.repositories.TripRepository;
+import com.company.carpooling.repositories.contracts.TripRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

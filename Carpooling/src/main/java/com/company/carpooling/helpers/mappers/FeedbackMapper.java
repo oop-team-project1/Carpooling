@@ -1,4 +1,4 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.mappers;
 
 import com.company.carpooling.models.Feedback;
 import com.company.carpooling.models.Trip;

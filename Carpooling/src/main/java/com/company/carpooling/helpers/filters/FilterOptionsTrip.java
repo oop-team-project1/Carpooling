@@ -1,4 +1,4 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.filters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

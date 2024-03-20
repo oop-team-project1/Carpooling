@@ -1,16 +1,14 @@
 package com.company.carpooling.controllers.mvc;
 
-import com.company.carpooling.exceptions.AuthenticationException;
 import com.company.carpooling.exceptions.AuthorizationException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
-import com.company.carpooling.helpers.*;
-import com.company.carpooling.models.*;
-import com.company.carpooling.models.dtos.CommentDto;
-import com.company.carpooling.models.dtos.FeedbackDto;
+import com.company.carpooling.helpers.FilterOptionsTrip;
+import com.company.carpooling.helpers.TripMapper;
+import com.company.carpooling.models.Trip;
+import com.company.carpooling.models.User;
 import com.company.carpooling.models.dtos.FilterOptionsTripDto;
 import com.company.carpooling.models.dtos.TripDtoCoordinates;
 import com.company.carpooling.services.BingMapsService;
-import com.company.carpooling.services.FeedbackService;
 import com.company.carpooling.services.TripService;
 import com.company.carpooling.services.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -32,7 +30,7 @@ import java.text.ParseException;
 
 
 import java.util.List;
-import java.util.Set;
+
 
 
 @Setter

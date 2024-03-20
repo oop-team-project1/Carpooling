@@ -1,14 +1,16 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.*;
-import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.helpers.filters.FilterOptionsUsers;
 import com.company.carpooling.models.*;
-import com.company.carpooling.repositories.UserRepository;
+import com.company.carpooling.repositories.contracts.UserRepository;
+import com.company.carpooling.services.contracts.ActivationCodeService;
+import com.company.carpooling.services.contracts.EmailService;
+import com.company.carpooling.services.contracts.UserProfilePicService;
+import com.company.carpooling.services.contracts.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

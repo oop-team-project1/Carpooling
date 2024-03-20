@@ -1,9 +1,8 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.mappers;
 
-import com.company.carpooling.models.Feedback;
 import com.company.carpooling.models.FeedbackComment;
 import com.company.carpooling.models.dtos.CommentDto;
-import com.company.carpooling.services.FeedbackService;
+import com.company.carpooling.services.contracts.FeedbackService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
