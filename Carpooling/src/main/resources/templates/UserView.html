@@ -100,13 +100,9 @@
                                                             <div class="colla-table" th:if="${!user.getTripsAsDriver().isEmpty()}"
                                                                  th:each="trip : ${currentUser.getTripsAsDriver()}">
                                                                 <h5 class="little-title">Created travels:</h5>
-                                                                <button onclick="showElement('trip')">Trip 1</button>
-                                                                <p id="trip" style="display: none;"
-                                                                   th:text="${'Start point: '
-                                                                   + trip.getStartPoint().getCity().getName()
-                                                                   + ' End point: ' + trip.getEndPoint().getCity().getName()}">
-
-                                                                </p>
+                                                                <a  class="theme-btn" th:href="@{${id} +'/trips'}">
+                                                                    Trips
+                                                                </a>
                                                             </div>
                                                             <h5 class="little-title">Applications:</h5>
                                                             <p th:if="${applications.isEmpty()}">User has no applications.</p>
