@@ -196,9 +196,9 @@ public class UserServiceImpl implements UserService {
     public void activateAccount(int code) {
         try {
             ActivationCode activationCode = activationCodeService.getByCode(code);
-            User user = repository.getByUsername(activationCode.getUsername());
+            User user = repository.getByEmail(activationCode.getEmail());
             user.setVerified(true);
-            activationCodeService.deleteActivationCode(code);
+            activationCodeService.deleteActivationCodeByUser(user.getEmail());
             repository.update(user);
         } catch (EntityNotFoundException e) {
             throw new WrongActivationCodeException("Code not active. Maybe user is activated already.");
@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
 
         activationCode = new ActivationCode();
         activationCode.setActivationCode(code);
-        activationCode.setUsername(user.getUsername());
+        activationCode.setEmail(user.getEmail());
         activationCodeService.create(activationCode);
 
         return code;

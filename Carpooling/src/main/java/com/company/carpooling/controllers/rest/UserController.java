@@ -6,10 +6,7 @@ import com.company.carpooling.models.*;
 import com.company.carpooling.models.dtos.CommentDto;
 import com.company.carpooling.models.dtos.FeedbackDto;
 import com.company.carpooling.models.dtos.UserDto;
-import com.company.carpooling.services.FeedbackService;
-import com.company.carpooling.services.TripService;
-import com.company.carpooling.services.UserProfilePicService;
-import com.company.carpooling.services.UserService;
+import com.company.carpooling.services.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
