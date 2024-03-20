@@ -73,6 +73,13 @@ public class Trip {
     @Formula(value = "(select count(*) from applications where applications.trip_id = trip_id and applications.status_id=2)")
     private Long countApproved;
 
+    @Transient
+    private LocalDateTime arrivalTime;
+
+    public LocalDateTime getArrivalTime() {
+        return departureTime.plusMinutes(Math.round(duration));
+    }
+
     public boolean isFull() {
         return countApproved == seatsAvailable;
     }
