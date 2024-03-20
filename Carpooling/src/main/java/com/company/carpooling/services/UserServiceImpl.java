@@ -133,20 +133,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User userToUpdate, User user) {
         checkIfBlocked(user);
-        boolean duplicateExists = true;
-        try {
-            User existingUser = repository.getByUsername(userToUpdate.getUsername());
-            if (existingUser.getId() == userToUpdate.getId()) {
-                duplicateExists = false;
-            }
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new EntityDuplicateException("User", "username", userToUpdate.getUsername());
-        }
-
+        checkIfUsernameIsUnique(userToUpdate);
+        checkIfEmailIsUnique(userToUpdate);
+        checkIfPhoneNumberIsUnique(userToUpdate);
         repository.update(userToUpdate);
     }
 
@@ -290,5 +279,54 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    private void checkIfUsernameIsUnique(User user) {
+        boolean duplicateExists = true;
+        try {
+            User existingUser = repository.getByUsername(user.getUsername());
+            if (existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+    }
+
+    private void checkIfEmailIsUnique(User user) {
+        boolean duplicateExists = true;
+
+        try {
+            User existingUser = repository.getByEmail(user.getEmail());
+            if(existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "email", user.getEmail());
+        }
+    }
+
+    private void checkIfPhoneNumberIsUnique(User user) {
+        boolean duplicateExists = true;
+        try {
+            User existingUser = repository.getByPhoneNumber(user.getPhoneNumber());
+            if(existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
+        }
     }
 }
