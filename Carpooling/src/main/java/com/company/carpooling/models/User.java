@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 import java.util.Objects;
 import java.util.Set;
@@ -60,6 +61,11 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "receiver",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Feedback> feedbacks;
+
+    @Formula("(select coalesce((select sum(feedbacks.rating) from feedbacks where feedbacks.to_user_id = user_id) / nullif((select count(*) from feedbacks where feedbacks.to_user_id = user_id), 0), 0))")
+    private double averageRating;
+
+
 
     @OneToMany(mappedBy = "driver",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonBackReference

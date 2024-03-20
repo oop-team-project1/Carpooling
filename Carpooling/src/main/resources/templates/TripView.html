@@ -333,28 +333,24 @@ conversation during the route or if you prefer to stay in silence. I respect tha
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-12">
-                        	<div class="remaing-widget disable">
-                            	<h4>1 remaining seat</h4>
-                                <ul>
-                                	<li>
-                                    	<img src="/images/resources/kola-seat-1.jpg" alt="">
-                                        <span>Jason T.</span>
-                                    </li>
-                                    <li>
-                                    	<img src="/images/resources/kola-seat-2.jpg" alt="">
-                                        <span>Carolina U.</span>
-                                    </li>
-                                    <li>
-                                    	<img src="/images/resources/kola-seat-3.jpg" alt="">
-                                        <span>You?</span>
-                                    </li>
-                                </ul>
+                        	<div th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }"class="remaing-widget disable">
+                            	<h4 th:text="${trip.getSeatsAvailable()+' remaining seat(s)'}"></h4>
                                 <div class="price">
                                 	<span>price per day</span>
                                     <ins>$21</ins>
-                                    <button th:if="${!trip.getDriver().equals(currentUser)}" class="theme-btn place-request" title="" href="#">+ place request</button>
+                                    <button th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#">+ place request</button>
                                     <p>
                                     	By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
+                                    </p>
+                                </div>
+                            </div><!-- remaining seat widget -->
+                            <div th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="remaing-widget disable">
+                                <h4 th:text="${trip.getSeatsAvailable()+' remaining seat(s)'}"></h4>
+                                <div class="price">
+                                    <button th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#">+ place request</button>
+                                    <button th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#">+ cancel request</button>
+                                    <p>
+                                        By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
                                     </p>
                                 </div>
                             </div><!-- remaining seat widget -->

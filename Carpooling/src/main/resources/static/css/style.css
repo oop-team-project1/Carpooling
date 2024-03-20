@@ -5998,8 +5998,11 @@ form.fule-type > p {
 	padding-left: 10px;
 	padding-right: 10px;
 }
-
-.car-detail form input {
+.car-detail-clone{
+    border-bottom: 1px solid #e1e3e8;
+    text-align: left;
+}
+.car-detail input {
   width: 100%;
   margin-bottom: 25px;
 }
