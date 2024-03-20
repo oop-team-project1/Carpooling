@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/css/color.css">
     <link rel="stylesheet" href="/css/responsive.css">
 
-    <link rel="stylesheet" th:href="@{../css/styles.css}" href="../static/css/style.css" media="screen">
+    <link rel="stylesheet" th:href="@{../css/style.css}" href="../static/css/style.css" media="screen">
 
 </head>
 <body>
@@ -189,7 +189,7 @@
     </div><!-- Responsive Header -->
 
     <div class="sub-head blackish ext-low-opacity">
-        <div class="bg-image" style="background-image: url(images/resources/subhead-bg.jpg)"></div>
+        <div class="bg-image" style="background-image: url(/images/resources/subhead-bg.jpg)"></div>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -224,7 +224,7 @@
                                               th:object="${login}">
                                             <label>Email</label>
                                             <input type="text" th:field="*{email}" placeholder="Email">
-                                            <label class="error" id="email-err" th:errors="*{email}"></label>
+                                            <label class="error" style="margin-bottom: 30px" id="email-err" th:errors="*{email}"></label>
                                             <label>password</label>
                                             <input type="password" th:field="*{password}" placeholder="Password">
                                             <label class="error" id="password-err" th:errors="*{password}"></label>
