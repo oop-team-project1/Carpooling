@@ -58,10 +58,10 @@ public class User {
     Set<Application> applications;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "receiver",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Feedback> feedbacks;
 
-    @OneToMany(mappedBy = "driver", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "driver",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonBackReference
     private Set<Trip> tripsAsDriver;
 

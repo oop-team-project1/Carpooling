@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final Map<Integer, Timestamp> codeValidity;
     private final Random random;
 
-    public static final String PERMISSION_ERROR = "Only admin or post creator can modify a post";
+    public static final String PERMISSION_ERROR = "Only admin can delete user.";
     public static final String USER_IS_BLOCKED = "User is blocked";
 
     @Autowired
