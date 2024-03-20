@@ -200,11 +200,6 @@
                             <p>( Cambridge )</p>
                         </div>
                         <a href="#" title="" class="theme-btn"><i class="fa fa-share-alt"></i>share profile</a>
-                        <div class="info-links">
-                            <a href="#" title="">how does this work</a>
-                            <a href="#" title="">submit your car</a>
-                            <span><i class="fa fa-phone"></i>call (012) 345 - 6789</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -256,7 +251,8 @@
                             <div class="rides-list">
                                 <div class="rides-listing" th:each="trip: ${trips}">
                                     <div class="rider-imag">
-                                       <img src="" th:field="${trip.getDriver().getProfilePic()}">
+                                        <img th:if="${trip.getDriver().getProfilePic() != null}" th:src="${trip.getDriver().getProfilePic().getPic()}" alt="">
+                                        <img th:unless="${trip.getDriver().getProfilePic() != null}" src="/images/default-pic.png" alt="">
                                         <div class="rating">
                                             <em th:field="${trip.getDriver().getUsername()}"></em>
                                             <ul class="stars-rating">
@@ -277,8 +273,6 @@
                                         </span>
                                         <p th:text="'Departure: '+ ${trip.getStartPoint().getStreetName()}">Departure: Bristol</p>
                                         <p th:text="'Arrival: '+${trip.getEndPoint().getCity().getName()}">Arrival: Ely Cathedral, Cambridge</p>
-                                        <i class="fa fa-road" data-toggle="tooltip"
-                                           title="This ride goes on the freeway."></i>
                                     </div>
                                     <div class="price-tag">
                                         <em th:text="${#numbers.formatInteger(trip.getDistance(), 0)} + ' km'"></em>
