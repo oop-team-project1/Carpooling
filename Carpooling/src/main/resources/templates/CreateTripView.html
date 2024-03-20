@@ -21,9 +21,13 @@
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-	<script type='text/javascript'>
+	<script type='text/javascript'>function updateSeats() {
+		console.log(document.getElementById("seats").value);
+		document.getElementById("freeSpots").value =document.querySelector('.option.selected').textContent ;
+	}
 
-		window.onload = function(){
+
+	window.onload = function(){
 			let searchBar = document.getElementById('searchInput');
 			searchBar.value = "";
 			let searchBarBot = document.getElementById('searchInputBot');
@@ -257,14 +261,14 @@
 											<li><a href="create-route-notification.html" title="">route notification</a></li>
 											<li><a href="submit-car-intro.html" title="">Submit car introduction</a></li>
 											<li><a href="submit-car-for-rent.html" title="">submit car for rent</a></li>
-											<li><a href="submit-route.html" title="">submit car route</a></li>
+											<li><a href="CreateTripView.html" title="">submit car route</a></li>
 										</ul>
 									</li>
                                     <li><a href="#" title="">rides</a>
 										<ul>
-											<li><a href="ride-listing.html" title="">ride listing</a></li>
+											<li><a href="AllTripsView.html" title="">ride listing</a></li>
 											<li><a href="ride-request.html" title="">ride request</a></li>
-											<li><a href="ride-detail.html" title="">ride detail</a></li>
+											<li><a href="TripView.html" title="">ride detail</a></li>
 											<li><a href="ride-requests-list.html" title="">ride request list</a></li>
 										</ul>
 									</li>
@@ -339,14 +343,14 @@
 							<li><a href="create-route-notification.html" title="">route notification</a></li>
 							<li><a href="submit-car-intro.html" title="">Submit car introduction</a></li>
 							<li><a href="submit-car-for-rent.html" title="">submit car for rent</a></li>
-							<li><a href="submit-route.html" title="">submit car route</a></li>
+							<li><a href="CreateTripView.html" title="">submit car route</a></li>
 						</ul>
 					</li>
 					<li class="menu-item-has-children"><a href="#" title="">rides</a>
 						<ul class="sub-menu">
-							<li><a href="ride-listing.html" title="">ride listing</a></li>
+							<li><a href="AllTripsView.html" title="">ride listing</a></li>
 							<li><a href="ride-request.html" title="">ride request</a></li>
-							<li><a href="ride-detail.html" title="">ride detail</a></li>
+							<li><a href="TripView.html" title="">ride detail</a></li>
 							<li><a href="ride-requests-list.html" title="">ride request list</a></li>
 						</ul>
 					</li>
@@ -401,6 +405,7 @@
         </div>&lt;!&ndash; subhead &ndash;&gt;-->
                 
         <section>
+			<form id ="trip-form" method="post" action="#" th:action="@{'/trips/new'}" th:object="${trip}">
         	<div class="space">
         		<div class="container">
         			<div class="row">
@@ -411,7 +416,6 @@
 									<div class="step-content">
 										<div class="car-detail submit-route">
 											<h1>Route</h1>
-											<form id ="trip-form" method="post" class="cola-form" action="#" th:action="@{'/trips/new'}" th:object="${trip}">
 												<div class="row">
 													<div class="col-lg-12">
 														<label for ="pickUpLocation">Pick up location:</label>
@@ -432,7 +436,7 @@
 														<span class="add-center-point">+ Add intermediate point</span>
 													</div>
 												</div>
-											</form>
+
 										</div>
 									</div>
 								</div>
@@ -441,11 +445,14 @@
 									<h1>Departure</h1>
 									<div class="step-content">
 										<div class="datepicker">
+											<input type="hidden" th:field="${trip.departureTime}" id="datetime">
+											<label class="error" style="color: red" id="datetimeerr" th:errors="*{departureTime}" ></label>
+
 											<div class="datepicker-top">
 												<div class="month-selector">
-													<button class="arrow" id="prevMonth"><i class="fa-solid fa-arrow-left"></i></button>
+													<button class="arrow" type="button" id="prevMonth"><i class="fa-solid fa-arrow-left"></i></button>
 													<span class="month-name" id="currentMonth"></span>
-													<button class="arrow" id="nextMonth"><i class="fa-solid fa-arrow-right"></i></button>
+													<button class="arrow" type="button" id="nextMonth"><i class="fa-solid fa-arrow-right"></i></button>
 												</div>
 											</div>
 											<div class="datepicker-calendar">
@@ -464,7 +471,8 @@
 												<div class="depart-time">
 													<input id ="freeSpots" type="hidden"  th:field = "${trip.freeSpots}" placeholder="Search a location">
 													<label>Departure Time:</label>
-													<select>
+													<input type="time" id="time" name="time" onclose="updateTime()" required />
+													<!--<select>
 														<option>14</option>
 														<option>15</option>
 														<option>16</option>
@@ -475,7 +483,7 @@
 													<select>
 														<option>30</option>
 														<option>40</option>
-													</select>
+													</select>-->
 												</div>
 											</div>
 										</div>
@@ -489,9 +497,9 @@
 										<div class="car-detail">
 											<div class="col-md-12">
 												<div class="route-detail">
-													<form method="post" action="#" th:action="@{'/trips/new'}" th:object="${trip}">
+
 														<label>Free seats (without the driver’s seat included):</label>
-														<select >
+														<select id="seats" onchange=updateSeats()>
 															<option >1</option>
 															<option >2</option>
 															<option >3</option>
@@ -504,13 +512,10 @@
 																<label></label>
 																Accept partial route requests
 															</p>
-															<p>
-																<input type="checkbox">
-																<label></label>
-																Guarantee
-															</p>
+
 															<div class="prefer">
 																<span>Preferences</span>
+																<textarea cols="30" rows="3" placeholder="e.g. departure location, capacity for the baggage, etc."></textarea>
 																<ul>
 																	<li>
 																		<p>
@@ -543,19 +548,12 @@
 																</ul>
 															</div>
 														</div>
-														<textarea cols="30" rows="3" placeholder="e.g. departure location, capacity for the baggage, etc."></textarea>
 														<div class="note-box">
 															<p>
 																Note: We will send you messages on your phone each time a user is interested in renting your car.
 															</p>
 														</div>
-														<span>Highway:</span>
-														<p>
-															<input type="checkbox">
-															<label></label>
-															Highway routes
-														</p>
-													</form>
+
 
 												</div>
 											</div>
@@ -619,6 +617,7 @@
         			</div>
         		</div>
         	</div>
+			</form>
         </section>
 	        
         <footer class="light">
@@ -795,7 +794,17 @@
 		const currentDate = new Date();
 		let currentYear = currentDate.getFullYear();
 		let currentMonth = currentDate.getMonth();
+		let time = '10:00';
+		let date = currentDate.toISOString().split("T")[0];
 
+		function updateTime() {
+			time = document.getElementById("time").value;
+			updateDateTime();
+
+		}
+		function updateDateTime(){
+			document.getElementById("datetime").value = `${date}T${time}`
+		}
 		// Function to update calendar
 		function updateCalendar(year, month) {
 			const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -820,7 +829,15 @@
 			for (let i = 1; i <= daysInMonth; i++) {
 				const dateButton = document.createElement("button");
 				dateButton.classList.add("date");
+				dateButton.type ="button";
 				dateButton.textContent = i;
+				dateButton.onclick = () => {
+					const doubleDigitMonth = month < 10 ? `0${month+1}`: month+1
+					const doubleDigitDay= i < 10 ? `0${i}`: i
+					date = `${year}-${doubleDigitMonth}-${doubleDigitDay}`
+					updateDateTime();
+				};
+
 				calendarDiv.appendChild(dateButton);
 			}
 		}
