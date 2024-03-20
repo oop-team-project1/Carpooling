@@ -44,6 +44,9 @@ Road Buddy  is a web application designed to facilitate ride-sharing between use
 ## Setting Up Swagger
 To access the Swagger documentation for the REST API, follow the link below after running the application:
 http://localhost:8080/swagger-ui/index.html
+* Locate the "Authorize" Button: In the top right corner of the application interface, you will find an "Authorize" button.
+* Enter Your Credentials: A login dialog box will appear. Enter your username and password in the respective fields.
+* Access the Application: Once logged in successfully, you will have access to all the features and functionalities of the Carpooling application.
 
 ## Authors
 
