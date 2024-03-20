@@ -1,5 +1,6 @@
 package com.company.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Table(name = "feedbacks")
 @Getter
 @Setter
-@JsonIgnoreProperties({"creator", "receiver"})
+@JsonIgnoreProperties({"receiver"})
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +31,10 @@ public class Feedback {
     @ManyToOne
     @JoinColumn(name = "to_user_id")
     private User receiver;
+
     @ManyToOne
     @JoinColumn(name = "trip_id")
+    @JsonBackReference
     private Trip trip;
 
     @Column(name = "created_at")
