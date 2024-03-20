@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/css/color.css">
     <link rel="stylesheet" href="/css/responsive.css">
 
-    <link rel="stylesheet" th:href="@{../css/styles.css}" href="../static/css/style.css" media="screen">
+    <link rel="stylesheet" th:href="@{../css/style.css}" href="../static/css/style.css" media="screen">
 
 </head>
 <body>
@@ -189,7 +189,7 @@
     </div><!-- Responsive Header -->
 
     <div class="sub-head blackish ext-low-opacity">
-        <div class="bg-image" style="background-image: url(images/resources/subhead-bg.jpg)"></div>
+        <div class="bg-image" style="background-image: url(/images/resources/subhead-bg.jpg)"></div>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -219,18 +219,25 @@
                                               th:object="${register}">
                                             <label>first Name:</label>
                                             <input type="text" th:field="*{firstName}">
+                                            <label class="error" style="margin-bottom: 30px" id="f-name-err" th:errors="*{firstName}"></label>
                                             <label>last name:</label>
                                             <input type="text" th:field="*{lastName}">
+                                            <label class="error" style="margin-bottom: 30px" id="l-name-err" th:errors="*{lastName}"></label>
                                             <label>username:</label>
                                             <input type="text" th:field="*{username}">
+                                            <label class="error" id="username-err" th:errors="*{username}"></label>
                                             <label>email:</label>
                                             <input type="text" th:field="*{email}">
+                                            <label class="error" style="margin-bottom: 30px" id="email-err" th:errors="*{email}"></label>
                                             <label>phone number:</label>
                                             <input type="text" th:field="*{phoneNumber}">
+                                            <label class="error" id="p-number-err" th:errors="*{phoneNumber}"></label>
                                             <label>password:</label>
                                             <input type="password" th:field="*{password}">
+                                            <label class="error" id="password-err" th:errors="*{password}"></label>
                                             <label>confirm password:</label>
                                             <input type="password" th:field="*{passwordConfirm}">
+                                            <label class="error" id="password-confirm-err" th:errors="*{passwordConfirm}"></label>
                                             <button type="submit" class="theme-btn">register</button>
                                         </form>
                                         <span>Are you a member already? <a href="LoginView.html" th:href="@{/auth/login}" title="">Login here</a></span>
@@ -302,7 +309,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="copyright">© 2019. All rights reserved.</span>
-                        <i><img src="images/credit-cards.png" alt=""></i>
+                        <i><img src="/images/credit-cards.png" alt=""></i>
                     </div>
                 </div>
             </div>
