@@ -5,7 +5,6 @@ import com.company.carpooling.helpers.FilterOptionsUsers;
 import com.company.carpooling.models.*;
 import com.company.carpooling.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -255,12 +254,6 @@ public class UserServiceImpl implements UserService {
     private int getCode() {
         return 1000 + random.nextInt(9000);
     }
-    private Timestamp getActivationTime(int minutes) {
-        Timestamp out = Timestamp.from(Instant.now());
-        out.setTime(out.getTime() + ((60 * minutes) * 1000));
-        return out;
-    }
-
 
     private void checkModifyPermissions(User user) {
         if (!(user.isAdmin())) {
