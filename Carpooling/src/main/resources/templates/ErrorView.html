@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title>Road Buddy</title>
+    <link rel="icon" type="image/png" href="/images/fav.png">
+
+    <link rel="stylesheet" href="/css/apps.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/color.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+
+</head>
+    <body>
+        <div class="site-layout">
+            <div class="comingsoon-page blackish low-opacity">
+                <div class="coming-soon-top">
+                    <div class="logo">
+                        <a href="HomeView.html" title=""><img src="/images/logo-white.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="coming-meta">
+                    <h1 th:text="${statusCode}">HTTP Status Code</h1>
+                    <span>Ooops, Sorry Page Not Available.</span>
+                    <h5 th:unless="${error == null}" class="error" th:text="${error}">Error placeholder</h5>
+                    <a href="HomeView.html" class="theme-btn" style=" margin-top: 50px;" th:href="@{/}"><i class="fa fa-home"></i>Go Back to Home !</a>
+                </div>
+            </div>
+        </div>
+        <script src="/js/apps.min.js"></script>
+        <script src="/js/script.js"></script>
+
+    </body>
+</html>

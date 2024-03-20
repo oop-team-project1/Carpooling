@@ -2,8 +2,7 @@ package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.*;
 import com.company.carpooling.helpers.FilterOptionsUsers;
-import com.company.carpooling.models.User;
-import com.company.carpooling.models.UserProfilePic;
+import com.company.carpooling.models.*;
 import com.company.carpooling.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final Map<Integer, Timestamp> codeValidity;
     private final Random random;
 
-    public static final String PERMISSION_ERROR = "Only admin or post creator can modify a post";
+    public static final String PERMISSION_ERROR = "Only admin can delete user.";
     public static final String USER_IS_BLOCKED = "User is blocked";
 
     @Autowired
@@ -38,6 +37,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll(FilterOptionsUsers filterOptionsUsers) {
         return repository.getAll(filterOptionsUsers);
+    }
+
+    @Override
+    public List<Trip> getTripsAsPassenger(User user) {
+        if(user.getApplications() == null) {
+            return Collections.emptyList();
+        }
+       List<Application> applications = user.getApplications()
+                                            .stream()
+                                            .filter(application -> application.getStatus()
+                                                    .equals(new PassengerStatus(2, "Approved")))
+                                            .toList();
+        return applications
+                .stream()
+                .map(Application::getTrip).toList();
+    }
+
+    @Override
+    public List<Trip> getPendingRides(User user) {
+        if(user.getApplications() == null) {
+            return Collections.emptyList();
+        }
+        List<Application> applications = user.getApplications()
+                .stream()
+                .filter(application -> application.getStatus()
+                        .equals(new PassengerStatus(1, "Pending")))
+                .toList();
+        return applications
+                .stream()
+                .map(Application::getTrip).toList();
     }
 
     @Override
@@ -104,20 +133,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User userToUpdate, User user) {
         checkIfBlocked(user);
-        boolean duplicateExists = true;
-        try {
-            User existingUser = repository.getByUsername(userToUpdate.getUsername());
-            if (existingUser.getId() == userToUpdate.getId()) {
-                duplicateExists = false;
-            }
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new EntityDuplicateException("User", "username", userToUpdate.getUsername());
-        }
-
+        checkIfUsernameIsUnique(userToUpdate);
+        checkIfEmailIsUnique(userToUpdate);
+        checkIfPhoneNumberIsUnique(userToUpdate);
         repository.update(userToUpdate);
     }
 
@@ -261,5 +279,54 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    private void checkIfUsernameIsUnique(User user) {
+        boolean duplicateExists = true;
+        try {
+            User existingUser = repository.getByUsername(user.getUsername());
+            if (existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+    }
+
+    private void checkIfEmailIsUnique(User user) {
+        boolean duplicateExists = true;
+
+        try {
+            User existingUser = repository.getByEmail(user.getEmail());
+            if(existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "email", user.getEmail());
+        }
+    }
+
+    private void checkIfPhoneNumberIsUnique(User user) {
+        boolean duplicateExists = true;
+        try {
+            User existingUser = repository.getByPhoneNumber(user.getPhoneNumber());
+            if(existingUser.getId() == user.getId()) {
+                duplicateExists = false;
+            }
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
+        }
     }
 }

@@ -9,6 +9,8 @@ import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.dtos.TripDto;
 import com.company.carpooling.models.User;
 import com.company.carpooling.services.TripService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +34,7 @@ public class TripController {
 
     // TODO filter by status, start point, end point, free spots, driver
     @GetMapping
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public List<Trip> get(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
                           @RequestParam(required = false) String status,
                           @RequestParam(required = false) String startPointStreet,
@@ -61,6 +64,7 @@ public class TripController {
     }
 
     @GetMapping("/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public Trip get(@PathVariable int id,
                     @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -74,6 +78,7 @@ public class TripController {
     }
 
     @PostMapping
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void create(@RequestBody TripDto tripDto,
                        @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -86,6 +91,7 @@ public class TripController {
     }
 
     @PutMapping("/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public Trip update(@PathVariable int id,
                        @RequestBody TripDto tripDto,
                        @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
@@ -104,6 +110,7 @@ public class TripController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void cancelTrip(@PathVariable int id,
                            @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -119,6 +126,7 @@ public class TripController {
     }
 
     @GetMapping("/{id}/applications")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public Set<Application> getApplications(@PathVariable int id,
                                             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
@@ -134,6 +142,7 @@ public class TripController {
     }
 
     @PostMapping("/{id}/applications")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void applyForTrip(@PathVariable int id, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
@@ -151,6 +160,7 @@ public class TripController {
     }
 
     @DeleteMapping("/{id}/applications")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void cancelParticipation(@PathVariable int id, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
@@ -165,6 +175,7 @@ public class TripController {
     }
 
     @PostMapping("/{id}/applications/{applicationId}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void approvePassenger(@PathVariable int id, @PathVariable int applicationId, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);
@@ -181,6 +192,7 @@ public class TripController {
     }
 
     @DeleteMapping("/{id}/applications/{applicationId}")
+    @Operation(security = {@SecurityRequirement(name = "basic")})
     public void rejectPassenger(@PathVariable int id, @PathVariable int applicationId, @RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString) {
         try {
             User user = authenticationHelper.tryGetUser(encodedString);

@@ -1,5 +1,6 @@
 package com.company.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class FeedbackComment {
 
     @OneToOne
     @JoinColumn(name = "feedback_id")
+    @JsonBackReference
     private Feedback feedback;
 
     @Column(name = "content")
