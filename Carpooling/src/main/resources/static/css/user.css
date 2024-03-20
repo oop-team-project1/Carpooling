@@ -138,5 +138,17 @@
     text-shadow: 0 0 5px #fff200;
 }
 
+.error {
+    color: red;
+}
+
+.rml-0 {
+    margin-left: 0 !important;
+}
+
+.aw-8 {
+    width: 80% !important;
+}
+
 
 
