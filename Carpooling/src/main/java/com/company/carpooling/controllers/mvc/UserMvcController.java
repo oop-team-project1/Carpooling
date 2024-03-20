@@ -1,30 +1,42 @@
 package com.company.carpooling.controllers.mvc;
 
 import com.company.carpooling.exceptions.AuthenticationException;
+import com.company.carpooling.exceptions.AuthorizationException;
+import com.company.carpooling.exceptions.EntityDuplicateException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.helpers.AuthenticationHelper;
 import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.helpers.UserMapper;
+import com.company.carpooling.models.Application;
+import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
 import com.company.carpooling.models.dtos.FilterDtoUser;
+import com.company.carpooling.models.dtos.UserDto;
+import com.company.carpooling.services.UserProfilePicService;
 import com.company.carpooling.services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserMvcController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
+    private final UserMapper userMapper;
 
-    public UserMvcController(UserService userService, AuthenticationHelper authenticationHelper) {
-        this.userService = userService;
-        this.authenticationHelper = authenticationHelper;
-    }
+    private final UserProfilePicService userProfilePicService;
+
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
@@ -103,4 +115,173 @@ public class UserMvcController {
             return "ErrorView";
         }
     }
+
+    @GetMapping("/{id}")
+    public String showSingleUser(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            try {
+                authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            if (populateIsAuthenticated(session)){
+                String currentEmail = (String) session.getAttribute("currentUser");
+                model.addAttribute("currentUser", userService.getByEmail(currentEmail));
+            }
+            User user = userService.getById(id);
+
+            List<Trip> tripsAsPassenger = userService.getTripsAsPassenger(user);
+            List<Trip> pendingRides = userService.getPendingRides(user);
+            Set<Application> applications = user.getApplications();
+
+            model.addAttribute("user", user);
+            model.addAttribute("applications", applications);
+            model.addAttribute("tripsAsPassenger", tripsAsPassenger);
+            model.addAttribute("pendingRides", pendingRides);
+            return "UserView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("/{id}/applications")
+    public String showApplications(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            try{
+                authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            if (populateIsAuthenticated(session)){
+                String currentEmail = (String) session.getAttribute("currentUser");
+                model.addAttribute("currentUser", userService.getByEmail(currentEmail));
+            }
+
+            User user = userService.getById(id);
+            Set<Application> applications = user.getApplications();
+
+            model.addAttribute("user", user);
+            model.addAttribute("applications", applications);
+            return "UserApplicationsView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("{id}/update")
+    public String showUserEditPage(@PathVariable int id, Model model, HttpSession session) {
+            User user;
+            try {
+                user = authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            if (populateIsAuthenticated(session)) {
+                String currentUsername = (String) session.getAttribute("currentUser");
+                model.addAttribute("currentUser", userService.getByEmail(currentUsername));
+            }
+
+            try {
+                User getUserById = userService.getById(id);
+            } catch (EntityNotFoundException e) {
+                return "ErrorView";
+            }
+
+            UserDto userDto = userMapper.userToUserDto(user);
+            model.addAttribute("userToUpdate", userDto);
+            return "UserEditView";
+
+    }
+
+    @PostMapping("{id}/update")
+    public String handleUserEdit(@PathVariable int id,
+                                 @Valid @ModelAttribute("userToUpdate") UserDto dto,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 HttpSession session) {
+        if(bindingResult.hasErrors()) {
+            return "UserEditView";
+        }
+
+        try {
+            User user;
+            try {
+                user = authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            User userToUpdate = userMapper.fromDtoUpdating(dto, user);
+            userService.update(userToUpdate, user);
+            session.removeAttribute("currentUser");
+            session.setAttribute("currentUser", userToUpdate.getEmail());
+            return "redirect:/users/{id}";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("username", "username_error", e.getMessage());
+            return "UserEditView";
+        }  catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("/{id}/delete")
+    public String deleteUser(@PathVariable int id, Model model, HttpSession session){
+        User user;
+        try {
+            user = authenticationHelper.tryGetUser(session);
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+
+        try {
+            userService.deleteUser(id, user);
+            return "redirect:/users";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @PostMapping("{id}/set-profile-picture")
+    public String setProfilePicture(@PathVariable int id,
+                               Model model,
+                               @RequestParam("file") MultipartFile file,
+                                    HttpSession session) {
+
+        User user;
+        try {
+            user = authenticationHelper.tryGetUser(session);
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+
+        try {
+            String picUrl = userProfilePicService.uploadPictureToCloudinary(file);
+            //User userById = userService.getById(id);
+            userService.addProfilePicture(id, user, picUrl);
+            return "redirect:/users/{id}";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
 }
