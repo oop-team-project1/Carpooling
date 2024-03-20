@@ -37,10 +37,10 @@
                                             <label class="error" id="p-number-err" th:errors="*{phoneNumber}"></label>
                                             <label>password:</label>
                                             <input type="password" th:field="*{password}">
-                                            <label class="error" id="password-err" th:errors="*{password}"></label>
+                                            <label class="error" style="margin-bottom: 30px" id="password-err" th:errors="*{password}"></label>
                                             <label>confirm password:</label>
                                             <input type="password" th:field="*{passwordConfirm}">
-                                            <label class="error" id="password-confirm-err" th:errors="*{passwordConfirm}"></label>
+                                            <label class="error" style="margin-bottom: 30px" id="password-confirm-err" th:errors="*{passwordConfirm}"></label>
                                             <button type="submit" class="theme-btn">register</button>
                                         </form>
                                         <span>Are you a member already? <a href="LoginView.html" th:href="@{/auth/login}" title="">Login here</a></span>
