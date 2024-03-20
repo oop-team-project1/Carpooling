@@ -191,6 +191,8 @@ public class UserMvcController {
             try {
                 User getUserById = userService.getById(id);
             } catch (EntityNotFoundException e) {
+                model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+                model.addAttribute("error", e.getMessage());
                 return "ErrorView";
             }
 
