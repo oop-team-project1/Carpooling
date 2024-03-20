@@ -233,7 +233,7 @@
 
                                 <div class="row">
                                     <div class="col-md-4" th:each="user : ${users}">
-                                        <div class="cars-list">
+                                        <div class="cars-list" style="padding: 25px">
                                             <img th:if="${user.profilePic != null}" th:src="${user.profilePic.pic}" alt="Profile Picture"
                                                  class="author-image">
                                             <img th:unless="${user.profilePic != null}" src="/images/default-profile-pic.png"
