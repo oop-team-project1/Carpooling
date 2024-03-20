@@ -297,13 +297,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/feedbacks")
-    public List<Feedback> getFeedbacks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String encodedString,
-                                       @PathVariable int id) {
+    public List<Feedback> getFeedbacks(@PathVariable int id) {
         try {
-            authenticationHelper.tryGetUser(encodedString);
             return feedbackService.get(id);
-        } catch (AuthorizationException | AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
