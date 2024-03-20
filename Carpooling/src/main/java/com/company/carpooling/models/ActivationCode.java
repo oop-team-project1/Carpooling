@@ -16,6 +16,6 @@ public class ActivationCode {
     @Column(name = "code")
     int activationCode;
 
-    @Column(name = "username")
-    String username;
+    @Column(name = "email")
+    String email;
 }
