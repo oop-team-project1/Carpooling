@@ -18,9 +18,9 @@ public class OpenAPIConfig {
         server.setDescription("Development");
 
         Info information = new Info()
-                .title("Wallet")
+                .title("Carpooling")
                 .version("1.0")
-                .description("This API exposes endpoints to manage our wallet.");
+                .description("Carpooling enables you to share your travel from one location to another with other passengers.");
         return new OpenAPI().info(information).servers(List.of(server));
     }
 }
