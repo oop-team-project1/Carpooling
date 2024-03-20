@@ -6,12 +6,13 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
 	<title>Car East</title>
-    <link rel="icon" type="image/png" href="images/fav.png">
+    <link rel="icon" type="image/png" href="/images/fav.png">
 
     <link rel="stylesheet" href="/css/apps.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/color.css">
     <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/user.css">
 
 </head>
 <body>
@@ -302,6 +303,33 @@ conversation during the route or if you prefer to stay in silence. I respect tha
                                         </li>
                                     </ul>
                                 </div>
+                                <div class="about-owner top-space50">
+                                    <h5 class="little-title">Passengers:</h5>
+                                    <div class="owner-avatar" th:if="${approvedPassengersList != null}" th:each="passenger : ${approvedPassengersList}">
+                                        <figure><img th:if="${passenger.getUser().getProfilePic() != null}" th:src="${passenger.getUser().getProfilePic().getPic()}" alt=""></figure>
+                                        <figure><img th:unless="${passenger.getUser().getProfilePic() != null}" src="/images/default-pic.png" alt=""></figure>
+                                        <i title=""><img src="/images/icon-13.png" alt=""></i>
+<!--                                        <div class="rate">-->
+<!--                                            <ul class="stars-rating">-->
+<!--                                                <li><i class="fa fa-star checked"></i></li>-->
+<!--                                                <li><i class="fa fa-star checked"></i></li>-->
+<!--                                                <li><i class="fa fa-star checked"></i></li>-->
+<!--                                                <li><i class="fa fa-star checked"></i></li>-->
+<!--                                                <li><i class="fa fa-star checked"></i></li>-->
+<!--                                            </ul>-->
+<!--                                            <i>12 Reviews</i>-->
+<!--                                        </div>-->
+                                    </div>
+                                    <div class="admin-meta" th:each="passenger : ${approvedPassengersList}">
+                                        <span th:text="${passenger.getUser().getFirstName() + ' ' + passenger.getUser().getLastName()}">Cameron T.</span>
+
+                                        <a th:href="@{'/trips/'+ ${trip.id} + '/users/' + ${passenger.getUser().id} + '/feedbacks'}" title="" class="theme-btn long">send message</a>
+                                        <a th:href="@{'/trips/'+ ${trip.id} + '/users/'
+                                            + ${passenger.getUser().id} + '/feedbacks/' + ${createdFeedback.id} + '/comments' }" title="" class="theme-btn long">send comment</a>
+                                    </div>
+                                </div>
+
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-12">
@@ -309,22 +337,22 @@ conversation during the route or if you prefer to stay in silence. I respect tha
                             	<h4>1 remaining seat</h4>
                                 <ul>
                                 	<li>
-                                    	<img src="images/resources/kola-seat-1.jpg" alt="">
+                                    	<img src="/images/resources/kola-seat-1.jpg" alt="">
                                         <span>Jason T.</span>
                                     </li>
                                     <li>
-                                    	<img src="images/resources/kola-seat-2.jpg" alt="">
+                                    	<img src="/images/resources/kola-seat-2.jpg" alt="">
                                         <span>Carolina U.</span>
                                     </li>
                                     <li>
-                                    	<img src="images/resources/kola-seat-3.jpg" alt="">
+                                    	<img src="/images/resources/kola-seat-3.jpg" alt="">
                                         <span>You?</span>
                                     </li>
                                 </ul>
                                 <div class="price">
                                 	<span>price per day</span>
                                     <ins>$21</ins>
-                                    <button th:if="${!trip.getDriver().equals(currentUser) && }" class="theme-btn place-request" title="" href="#">+ place request</button>
+                                    <button th:if="${!trip.getDriver().equals(currentUser)}" class="theme-btn place-request" title="" href="#">+ place request</button>
                                     <p>
                                     	By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
                                     </p>
@@ -482,8 +510,7 @@ reservation will be accepted.
         
     </div>
 
-	<script src="js/apps.min.js"></script>
-    <script src="js/script.js"></script>
-        
-</body>	
+	<script src="/js/apps.min.js"></script>
+	<script src="/js/buttons.js"></script>
+</body>
 </html>		

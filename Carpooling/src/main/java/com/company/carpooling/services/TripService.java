@@ -12,6 +12,7 @@ public interface TripService {
     List<Trip> get(FilterOptionsTrip filterOptionsTrip);
 
     Trip get(int id);
+    public List<Application> getApprovedPassengers(Trip trip);
 
     void create(Trip trip, User user);
 
