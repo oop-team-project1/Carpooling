@@ -1,8 +1,7 @@
 package com.company.carpooling.services;
 
-import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.City;
-import com.company.carpooling.repositories.CityRepository;
+import com.company.carpooling.repositories.contracts.CityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

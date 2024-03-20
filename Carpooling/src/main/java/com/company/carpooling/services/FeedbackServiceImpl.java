@@ -5,7 +5,8 @@ import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.exceptions.TripNotCompletedException;
 import com.company.carpooling.exceptions.UserIsNotFromTrip;
 import com.company.carpooling.models.*;
-import com.company.carpooling.repositories.FeedbackRepository;
+import com.company.carpooling.repositories.contracts.FeedbackRepository;
+import com.company.carpooling.services.contracts.FeedbackService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

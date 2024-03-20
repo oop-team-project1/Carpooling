@@ -1,6 +1,6 @@
-package com.company.carpooling.repositories;
+package com.company.carpooling.repositories.contracts;
 
-import com.company.carpooling.helpers.FilterOptionsTrip;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
 import com.company.carpooling.models.Trip;
 
 import java.util.List;

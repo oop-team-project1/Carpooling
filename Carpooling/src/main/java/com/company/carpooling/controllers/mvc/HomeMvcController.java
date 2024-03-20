@@ -1,9 +1,9 @@
 package com.company.carpooling.controllers.mvc;
 
-import com.company.carpooling.helpers.FilterOptionsTrip;
-import com.company.carpooling.helpers.FilterOptionsUsers;
-import com.company.carpooling.services.TripService;
-import com.company.carpooling.services.UserService;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
+import com.company.carpooling.helpers.filters.FilterOptionsUsers;
+import com.company.carpooling.services.contracts.TripService;
+import com.company.carpooling.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package com.company.carpooling.repositories;
+package com.company.carpooling.repositories.contracts;
 
 import com.company.carpooling.models.Feedback;
 import com.company.carpooling.models.FeedbackComment;

@@ -2,19 +2,18 @@ package com.company.carpooling.repositories;
 
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.ActivationCode;
-import com.company.carpooling.models.User;
+import com.company.carpooling.repositories.contracts.ActivationCodeRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @AllArgsConstructor
 @Repository
-public class ActivationCodeRepositoryImpl implements ActivationCodeRepository{
+public class ActivationCodeRepositoryImpl implements ActivationCodeRepository {
     private final SessionFactory sessionFactory;
 
     @Override

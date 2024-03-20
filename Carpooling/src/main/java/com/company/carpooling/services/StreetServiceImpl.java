@@ -3,7 +3,8 @@ package com.company.carpooling.services;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.City;
 import com.company.carpooling.models.Street;
-import com.company.carpooling.repositories.StreetRepository;
+import com.company.carpooling.repositories.contracts.StreetRepository;
+import com.company.carpooling.services.contracts.StreetService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.mappers;
 
 import com.company.carpooling.models.*;
 import com.company.carpooling.models.dtos.TripDto;
 import com.company.carpooling.models.dtos.TripDtoCoordinates;
 import com.company.carpooling.models.json.Point;
-import com.company.carpooling.repositories.TripRepository;
+import com.company.carpooling.repositories.contracts.TripRepository;
 import com.company.carpooling.services.BingMapsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

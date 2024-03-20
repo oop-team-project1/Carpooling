@@ -1,13 +1,13 @@
 package com.company.carpooling.repositories;
 
 import com.company.carpooling.exceptions.EntityNotFoundException;
-import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.helpers.filters.FilterOptionsUsers;
 import com.company.carpooling.models.User;
+import com.company.carpooling.repositories.contracts.UserRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Repository
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
 
     private final SessionFactory sessionFactory;
 

@@ -1,4 +1,4 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.mappers;
 
 import com.company.carpooling.models.dtos.PointDto;
 import com.company.carpooling.models.json.Point;
