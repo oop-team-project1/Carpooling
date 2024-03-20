@@ -21,15 +21,15 @@ public class ActivationCodeRepositoryImpl implements ActivationCodeRepository{
     }
 
     @Override
-    public ActivationCode getByUsername(String username) {
+    public ActivationCode getByEmail(String email) {
         try (Session session = sessionFactory.openSession()) {
             Query<ActivationCode> query = session.createQuery(
-                    "from ActivationCode where username = :username", ActivationCode.class);
-            query.setParameter("username", username);
+                    "from ActivationCode where email = :email", ActivationCode.class);
+            query.setParameter("email", email);
 
             List<ActivationCode> result = query.list();
             if (result.isEmpty()) {
-                throw new EntityNotFoundException("Code", "username", username);
+                throw new EntityNotFoundException("Code", "email", email);
             }
 
             return result.get(0);
@@ -66,11 +66,17 @@ public class ActivationCodeRepositoryImpl implements ActivationCodeRepository{
     }
 
     @Override
-    public void deleteActivationCode(int code) {
-        ActivationCode codeToDelete = getByCode(code);
+    public void deleteActivationCodeByUser(String email) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.remove(codeToDelete);
+
+            Query<ActivationCode> query = session.createQuery(
+                    "FROM ActivationCode WHERE email = :email", ActivationCode.class);
+            query.setParameter("email", email);
+            List<ActivationCode> activationCodes = query.getResultList();
+            for (ActivationCode activationCode : activationCodes) {
+                session.remove(activationCode);
+            }
             session.getTransaction().commit();
         }
     }
