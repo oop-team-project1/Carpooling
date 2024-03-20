@@ -16,7 +16,8 @@
                                         <div class="row">
                                             <div class="col-lg-3">
                                                 <div class="profile-dp">
-                                                    <figure><img th:src="${user.getProfilePic().getPic()}" alt=""></figure>
+                                                    <figure><img th:if="${user.getProfilePic() != null}" th:src="${user.getProfilePic().getPic()}" alt=""></figure>
+                                                    <figure><img th:unless="${user.getProfilePic() != null}" src="/images/default-pic.png" alt=""></figure>
                                                     <div class="profile-info">
                                                         <span class="profile-name"
                                                               th:text="${user.firstName + ' ' + user.lastName}"></span>

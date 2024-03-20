@@ -234,9 +234,9 @@
                                 <div class="row">
                                     <div class="col-md-4" th:each="user : ${users}">
                                         <div class="cars-list" style="padding: 25px">
-                                            <img th:if="${user.getProfilePic().getPic() != null}" th:src="${user.getProfilePic().getPic()}" alt="Profile Picture"
+                                            <img th:if="${user.getProfilePic() != null}" th:src="${user.getProfilePic().getPic()}" alt="Profile Picture"
                                                  class="author-image">
-                                            <img th:unless="${user.getProfilePic().getPic() != null}" src="/images/default-profile-pic.png"
+                                            <img th:unless="${user.getProfilePic() != null}" src="/images/default-pic.png"
                                                  alt="Default Profile Picture" class="author-image">
                                             <div class="car-inf">
                                                 <h4><a class="post-title" th:href="'/users/' + ${user.id}" th:text="${user.firstName + ' ' + user.lastName}">Name</a></h4>
