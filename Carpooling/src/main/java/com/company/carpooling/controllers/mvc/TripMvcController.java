@@ -1,17 +1,22 @@
 package com.company.carpooling.controllers.mvc;
 
+import com.company.carpooling.exceptions.AuthenticationException;
 import com.company.carpooling.exceptions.AuthorizationException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
-import com.company.carpooling.helpers.AuthenticationHelper;
+import com.company.carpooling.helpers.mappers.AuthenticationHelper;
 import com.company.carpooling.helpers.filters.FilterOptionsTrip;
+import com.company.carpooling.helpers.mappers.CommentMapper;
+import com.company.carpooling.helpers.mappers.FeedbackMapper;
 import com.company.carpooling.helpers.mappers.TripMapper;
-import com.company.carpooling.models.Trip;
-import com.company.carpooling.models.User;
+import com.company.carpooling.models.*;
+import com.company.carpooling.models.dtos.CommentDto;
+import com.company.carpooling.models.dtos.FeedbackDto;
 import com.company.carpooling.models.dtos.FilterOptionsTripDto;
 import com.company.carpooling.models.dtos.TripDtoCoordinates;
 import com.company.carpooling.services.BingMapsService;
-import com.company.carpooling.services.TripService;
-import com.company.carpooling.services.UserService;
+import com.company.carpooling.services.contracts.FeedbackService;
+import com.company.carpooling.services.contracts.TripService;
+import com.company.carpooling.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -62,9 +67,8 @@ public class TripMvcController {
         this.feedbackMapper = feedbackMapper;
         this.commentMapper = commentMapper;
         this.feedbackService = feedbackService;
-        bingMapsKey = environment.getProperty("bingmapkey");
         this.userService = userService;
-        this.authenticationHelper = authenticationHelper;
+        bingMapsKey = environment.getProperty("bingmapkey");
 
     }
 
@@ -155,7 +159,7 @@ public class TripMvcController {
             List<Application> approvedPassengers = tripService.getApprovedPassengers(trip);
             model.addAttribute("trip", trip);
             model.addAttribute("approvedPassengersList", approvedPassengers);
-            return "TripView";
+            return "TripView2";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
@@ -276,20 +280,34 @@ public class TripMvcController {
             User receiver = userService.getById(userId);
             model.addAttribute("receiver", receiver);
             model.addAttribute("feedbackForComment", feedback);
-            feedbackService.addCommentToFeedback(user,receiver,feedback,comment);
+            feedbackService.addCommentToFeedback(user, receiver, feedback, comment);
             return "redirect:/trips/" + id;
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
-
+    }
     @PostMapping("/apply")
     public String applyForTrip(@RequestParam("tripId") int tripId, HttpSession session, Model model) {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
             tripService.applyForTrip(tripId, user);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        } catch(EntityNotFoundException e){
+            return "redirect:/trips";
+        }
+
+        return "redirect:/trips/{tripId}"; // Redirect to the trips page or any other appropriate page
+    }
+    @PostMapping("/cancelParticipation")
+    public String cancelParticipation(@RequestParam("tripId") int tripId, HttpSession session, Model model) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetUser(session);
+            tripService.cancelParticipation(tripId,user);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         } catch(EntityNotFoundException e){
