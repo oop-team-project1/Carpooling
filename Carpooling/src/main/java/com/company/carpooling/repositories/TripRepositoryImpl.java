@@ -1,15 +1,15 @@
 package com.company.carpooling.repositories;
 
 import com.company.carpooling.exceptions.EntityNotFoundException;
-import com.company.carpooling.helpers.FilterOptionsTrip;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
 import com.company.carpooling.models.Trip;
+import com.company.carpooling.repositories.contracts.TripRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;

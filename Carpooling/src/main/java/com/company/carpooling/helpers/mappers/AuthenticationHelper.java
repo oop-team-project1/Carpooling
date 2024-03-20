@@ -1,10 +1,10 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.mappers;
 
 import com.company.carpooling.exceptions.AuthenticationException;
 import com.company.carpooling.exceptions.AuthorizationException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.User;
-import com.company.carpooling.services.UserService;
+import com.company.carpooling.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

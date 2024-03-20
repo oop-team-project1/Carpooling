@@ -1,14 +1,14 @@
 package com.company.carpooling.controllers.rest;
 
 import com.company.carpooling.exceptions.*;
-import com.company.carpooling.helpers.AuthenticationHelper;
-import com.company.carpooling.helpers.FilterOptionsTrip;
-import com.company.carpooling.helpers.TripMapper;
+import com.company.carpooling.helpers.mappers.AuthenticationHelper;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
+import com.company.carpooling.helpers.mappers.TripMapper;
 import com.company.carpooling.models.Application;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.dtos.TripDto;
 import com.company.carpooling.models.User;
-import com.company.carpooling.services.TripService;
+import com.company.carpooling.services.contracts.TripService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;

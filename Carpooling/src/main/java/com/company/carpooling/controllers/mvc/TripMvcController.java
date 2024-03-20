@@ -3,15 +3,15 @@ package com.company.carpooling.controllers.mvc;
 import com.company.carpooling.exceptions.AuthorizationException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.helpers.AuthenticationHelper;
-import com.company.carpooling.helpers.FilterOptionsTrip;
-import com.company.carpooling.helpers.TripMapper;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
+import com.company.carpooling.helpers.mappers.TripMapper;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
 import com.company.carpooling.models.dtos.FilterOptionsTripDto;
 import com.company.carpooling.models.dtos.TripDtoCoordinates;
 import com.company.carpooling.services.BingMapsService;
-import com.company.carpooling.services.TripService;
-import com.company.carpooling.services.UserService;
+import com.company.carpooling.services.contracts.TripService;
+import com.company.carpooling.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -31,6 +31,7 @@ import java.text.ParseException;
 
 
 import java.util.List;
+
 
 
 @Setter
@@ -82,7 +83,7 @@ public class TripMvcController {
             String currentEmail = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByEmail(currentEmail));
         }*/
-        /*      model.addAttribute("filterOptions", filterDto);*/
+  /*      model.addAttribute("filterOptions", filterDto);*/
         model.addAttribute("trips", trips);
         return "AllTripsView";
 
@@ -118,6 +119,7 @@ public class TripMvcController {
         if (bindingResult.hasErrors()) {
             return "CreateTripView";
         }
+
         try {
             Trip trip = tripMapper.fromTripDtoCoordinates(tripDto);
             tripService.create(trip, user);

@@ -1,11 +1,10 @@
 package com.company.carpooling;
 
-import com.company.carpooling.helpers.FilterOptionsTrip;
-import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.helpers.filters.FilterOptionsTrip;
+import com.company.carpooling.helpers.filters.FilterOptionsUsers;
 import com.company.carpooling.models.*;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

@@ -1,6 +1,6 @@
-package com.company.carpooling.services;
+package com.company.carpooling.services.contracts;
 
-import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.helpers.filters.FilterOptionsUsers;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
 

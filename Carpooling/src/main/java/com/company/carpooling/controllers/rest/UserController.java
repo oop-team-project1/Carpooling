@@ -1,15 +1,19 @@
 package com.company.carpooling.controllers.rest;
 
 import com.company.carpooling.exceptions.*;
-import com.company.carpooling.helpers.*;
+import com.company.carpooling.helpers.filters.FilterOptionsUsers;
+import com.company.carpooling.helpers.mappers.AuthenticationHelper;
+import com.company.carpooling.helpers.mappers.CommentMapper;
+import com.company.carpooling.helpers.mappers.FeedbackMapper;
+import com.company.carpooling.helpers.mappers.UserMapper;
 import com.company.carpooling.models.*;
 import com.company.carpooling.models.dtos.CommentDto;
 import com.company.carpooling.models.dtos.FeedbackDto;
 import com.company.carpooling.models.dtos.UserDto;
-import com.company.carpooling.services.FeedbackService;
-import com.company.carpooling.services.TripService;
-import com.company.carpooling.services.UserProfilePicService;
-import com.company.carpooling.services.UserService;
+import com.company.carpooling.services.contracts.FeedbackService;
+import com.company.carpooling.services.contracts.TripService;
+import com.company.carpooling.services.contracts.UserProfilePicService;
+import com.company.carpooling.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

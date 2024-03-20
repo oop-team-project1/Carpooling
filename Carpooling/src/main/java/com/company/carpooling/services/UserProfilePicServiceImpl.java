@@ -2,6 +2,7 @@ package com.company.carpooling.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.company.carpooling.services.contracts.UserProfilePicService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

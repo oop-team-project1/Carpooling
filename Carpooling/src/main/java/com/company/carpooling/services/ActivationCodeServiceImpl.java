@@ -1,12 +1,13 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.models.ActivationCode;
-import com.company.carpooling.repositories.ActivationCodeRepository;
+import com.company.carpooling.repositories.contracts.ActivationCodeRepository;
+import com.company.carpooling.services.contracts.ActivationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ActivationCodeServiceImpl implements ActivationCodeService{
+public class ActivationCodeServiceImpl implements ActivationCodeService {
     private final ActivationCodeRepository activationCodeRepository;
 
     @Autowired

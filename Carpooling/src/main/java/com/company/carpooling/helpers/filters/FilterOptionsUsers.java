@@ -1,4 +1,4 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.filters;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

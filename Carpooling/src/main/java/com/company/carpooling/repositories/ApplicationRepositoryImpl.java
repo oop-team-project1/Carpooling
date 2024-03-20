@@ -4,6 +4,7 @@ import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.models.Application;
 import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
+import com.company.carpooling.repositories.contracts.ApplicationRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

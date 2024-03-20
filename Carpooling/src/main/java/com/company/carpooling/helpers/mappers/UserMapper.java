@@ -1,4 +1,4 @@
-package com.company.carpooling.helpers;
+package com.company.carpooling.helpers.mappers;
 
 import com.company.carpooling.models.User;
 import com.company.carpooling.models.dtos.RegisterDto;
