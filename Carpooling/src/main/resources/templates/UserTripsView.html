@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/PageForm :: head}"></div>
+<body>
+<div class="site-layout">
+    <div th:replace="~{fragments/PageForm :: header-top}"></div>
+    <!-- topbar -->
+    <div th:replace="~{fragments/PageForm :: topbar}"></div>
+    <!-- subhead -->
+    <!--		-->
+    <!--        <div class="head-search">-->
+    <!--        	<div class="container">-->
+    <!--            	<div class="row">-->
+    <!--                	<div class="col-md-12">-->
+    <!--                    	<div class="search-route">-->
+    <!--                        	<form method="post">-->
+    <!--                            	<div class="location">-->
+    <!--                                	<p>-->
+    <!--                                        <label><i class="fa fa-location-arrow"></i></label>-->
+    <!--                                        <input type="text" placeholder="Your location">-->
+    <!--                                    </p>-->
+    <!--                                        -->
+    <!--                                    <p>    -->
+    <!--                                        <label><i class="fa fa-location-arrow"></i></label>-->
+    <!--                                        <input type="text" placeholder="Going to">-->
+    <!--                                    </p>-->
+    <!--                                </div>-->
+    <!--                                <div class="date-n-time">-->
+    <!--                                	<p>-->
+    <!--                                        <label><i class="fa fa-calendar"></i></label>-->
+    <!--                                        <input id="datetimepicker1" type="text" >-->
+    <!--                                    </p>  -->
+    <!--                                    <p>  -->
+    <!--                                        <label><i class="fa fa-clock-o"></i></label>-->
+    <!--                                        <input id="datetimepicker2" type="text" >-->
+    <!--                                    </p>-->
+    <!--                                </div>-->
+    <!--                                <button class="theme-btn" type="submit"><i class="fa fa-search"></i></button>-->
+    <!--                            </form>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!-- top search head -->
+
+    <section>
+        <div class="space-70">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-left less-margin">
+                            <h5>Trips</h5>
+                        </div>
+                        <div class="request-list" th:if="${!trips.isEmpty()}">
+                            <div class="colla-table">
+                                <table class="table table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="trip : ${user.getTripsAsDriver()}">
+
+                                        <td th:text="${#temporals.format(trip.getDateOfCreation(), 'dd MMMM yyyy')}">6
+                                            Oct, 2017
+                                        </td>
+                                        <td><p th:text="${trip.getStartPoint().getCity().getName()}"></p></td>
+                                        <td>
+                                            <p th:text="${trip.getEndPoint().getCity().getName()}">
+                                                Colchester</p>
+                                        </td>
+                                        <td th:text="${trip.getStatus().getStatusName()}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--notice box-->
+    <div th:replace="~{fragments/PageForm :: footer}"></div>
+</div>
+
+<script src="/js/apps.min.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
