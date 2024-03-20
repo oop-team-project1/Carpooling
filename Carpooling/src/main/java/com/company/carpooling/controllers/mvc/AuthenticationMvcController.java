@@ -6,7 +6,7 @@ import com.company.carpooling.exceptions.WrongActivationCodeException;
 import com.company.carpooling.helpers.AuthenticationHelper;
 import com.company.carpooling.helpers.UserMapper;
 import com.company.carpooling.models.User;
-import com.company.carpooling.models.dtos.ActivationCodeDto;
+import com.company.carpooling.models.ActivationCode;
 import com.company.carpooling.models.dtos.LoginDto;
 import com.company.carpooling.models.dtos.RegisterDto;
 import com.company.carpooling.services.UserService;
@@ -17,10 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/auth")
@@ -64,7 +62,7 @@ public class AuthenticationMvcController {
             User user = authenticationHelper.verifyAuthentication(loginDto.getEmail(), loginDto.getPassword());
             session.setAttribute("currentUser", loginDto.getEmail());
             session.setAttribute("isAdmin", user.isAdmin());
-            return "LoginView";
+            return "redirect:/users";
 
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("email", "auth_error", e.getMessage());
@@ -88,6 +86,9 @@ public class AuthenticationMvcController {
     public String handleRegister(@Valid @ModelAttribute("register") RegisterDto register,
                                  BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                System.out.println("Message: " + error.getDefaultMessage());
+            }
             return "RegisterView";
         }
         if(!register.getPassword().equals(register.getPasswordConfirm())) {
@@ -98,6 +99,7 @@ public class AuthenticationMvcController {
         try {
             User user = userMapper.fromDtoRegister(register);
             userService.create(user);
+            authenticationHelper.verifyAuthentication(register.getEmail(), register.getPassword());
             return "redirect:/auth/verify";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("username", "username_error", e.getMessage());
@@ -107,19 +109,35 @@ public class AuthenticationMvcController {
 
     @GetMapping("/verify")
     public String showEmailConfirmationPage (Model model) {
-        model.addAttribute("email", new ActivationCodeDto());
+        model.addAttribute("email", new ActivationCode());
         return "EmailConfirmationView";
     }
 
     @PostMapping("/verify")
-    public String handleEmailConfirmation(@Valid @ModelAttribute("email") ActivationCodeDto activationCodeDto,
+    public String handleEmailConfirmation(@Valid @ModelAttribute("email") ActivationCode activationCode,
                                  BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "EmailConfirmationView";
         }
         try {
-            userService.activateAccount(Integer.parseInt(activationCodeDto.getActivationCode()));
+            userService.activateAccount(activationCode.getActivationCode());
             return "redirect:/auth/login";
+        } catch (WrongActivationCodeException e) {
+            bindingResult.rejectValue("code", "code_error", e.getMessage());
+            return "EmailConfirmationView";
+        }
+    }
+
+    @PostMapping("/verify/new")
+    public String handleNewCode(@Valid @ModelAttribute("email") ActivationCode activationCode,
+                                BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "EmailConfirmationView";
+        }
+        try {
+            User user = userService.getByEmail(activationCode.getEmail());
+            userService.resendActivationCode(user.getUsername());
+            return "redirect:/auth/verify";
         } catch (WrongActivationCodeException e) {
             bindingResult.rejectValue("code", "code_error", e.getMessage());
             return "EmailConfirmationView";
