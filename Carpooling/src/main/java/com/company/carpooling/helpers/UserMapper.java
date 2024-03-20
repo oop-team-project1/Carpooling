@@ -35,4 +35,25 @@ public class UserMapper {
         user.setEmail(registerDto.getEmail());
         return user;
     }
+
+    public UserDto userToUserDto (User user) {
+        UserDto dto = new UserDto();
+        dto.setUsername(user.getUsername());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setPassword(user.getPassword());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setEmail(user.getEmail());
+        return dto;
+    }
+
+    public User fromDtoUpdating(UserDto dto, User user) {
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setEmail(dto.getEmail());
+        return user;
+    }
 }

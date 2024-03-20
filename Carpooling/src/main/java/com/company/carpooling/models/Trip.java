@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class Trip {
 
     @Column(name = "created_at")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfCreation;
+    private LocalDate dateOfCreation;
 
     // TODO make separate return entity
     @JsonIgnore

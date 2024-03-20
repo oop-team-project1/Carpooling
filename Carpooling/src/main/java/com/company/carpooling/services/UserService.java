@@ -1,12 +1,15 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.helpers.FilterOptionsUsers;
+import com.company.carpooling.models.Trip;
 import com.company.carpooling.models.User;
 
 import java.util.List;
 
 public interface UserService {
     List<User> getAll(FilterOptionsUsers filterOptionsUsers);
+    List<Trip> getTripsAsPassenger(User user);
+    List<Trip> getPendingRides(User user);
 
     User getById(int id);
 
