@@ -21,6 +21,7 @@ public class Helpers {
                 "username",
                 2,
                 LocalDateTime.now(),
+                LocalDateTime.now(),
                 Date.valueOf(LocalDate.now()),
                 "startPointCity",
                 "desc"
@@ -37,7 +38,7 @@ public class Helpers {
         mockTrip.setDistance(15.75f);
         mockTrip.setDuration(3.4f);
         mockTrip.setSeatsAvailable(3);
-        mockTrip.setStatusId(1);
+        mockTrip.setStatus(new TripStatus(1,"Upcoming"));
         mockTrip.setDateOfCreation(Date.valueOf(LocalDate.now()));
         return mockTrip;
     }
