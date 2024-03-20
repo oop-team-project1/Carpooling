@@ -28,7 +28,13 @@ public class RegisterDto{
     @NotEmpty(message = "Phone number can't be empty")
     private String phoneNumber;
     @NotEmpty(message = "Password can't be empty.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+*&^%$#@]).{8,}$",
+            message = "Password must be at least 8 symbols, " +
+                    "should contain capital letter, digit and special symbol (+, -, *, &, ^, …)")
     private String password;
     @NotEmpty(message = "Password confirmation can't be empty!")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+*&^%$#@]).{8,}$",
+            message = "Password must be at least 8 symbols, " +
+                    "should contain capital letter, digit and special symbol (+, -, *, &, ^, …)")
     private String passwordConfirm;
 }
