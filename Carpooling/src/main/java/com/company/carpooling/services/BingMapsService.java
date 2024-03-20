@@ -80,7 +80,12 @@ public class BingMapsService {
     public void setDistanceAndDuration(TripDto tripDto, Trip trip) {
         Point coordinateStart = getCoordinates(tripDto.getStartPoint());
         Point coordinateEnd = getCoordinates(tripDto.getEndPoint());
-        String uri = String.format(URI_DISTANCE_DURATION, coordinateStart, coordinateEnd.toString(), key);
+        setDistanceAndDuration(coordinateStart,coordinateEnd,trip);
+
+    }
+    public void setDistanceAndDuration(Point startPoint, Point endPoint, Trip trip) {
+
+        String uri = String.format(URI_DISTANCE_DURATION,startPoint.toString(), endPoint.toString(), key);
         System.out.println(uri);
         String json = webClient.get()
                 .uri(uri)
