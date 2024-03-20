@@ -12,6 +12,7 @@ import com.company.carpooling.models.dtos.RegisterDto;
 import com.company.carpooling.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/auth")
 public class AuthenticationMvcController {
@@ -27,13 +29,6 @@ public class AuthenticationMvcController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
-
-    @Autowired
-    public AuthenticationMvcController(UserService userService, AuthenticationHelper authenticationHelper, UserMapper userMapper) {
-        this.userService = userService;
-        this.authenticationHelper = authenticationHelper;
-        this.userMapper = userMapper;
-    }
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {

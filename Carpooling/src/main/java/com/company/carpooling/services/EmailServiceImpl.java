@@ -1,20 +1,17 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.models.User;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
-
-    @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 
     private String userCreationTemplate(int code, User user) {
         return String.format("Hello %s , \n welcome to Road buddy! \n To activate your account use this code\n %d",
