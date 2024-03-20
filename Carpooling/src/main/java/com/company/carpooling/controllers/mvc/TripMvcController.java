@@ -135,7 +135,7 @@ public class TripMvcController {
         if (populateIsAuthenticated(session)) {
             String currentEmail = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByEmail(currentEmail));
-        } else {return "LoginView";}
+        } else {return "redirect:/auth/login";}
         try {
             Trip trip = tripService.get(id);
             model.addAttribute("trip", trip);
