@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/color.css">
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/user.css">
+    <link rel="stylesheet" href="/css/pagination.css">
 
     <script src="https://kit.fontawesome.com/3f36e47243.js" crossorigin="anonymous"></script>
 </head>
@@ -27,13 +28,20 @@
                         <li><i class="flaticon-info"></i><a href="#" title="">Faq's</a></li>
                     </ul>
                     <div class="login-area">
-                        <ul>
-                            <li class="log-in"><a href="login.html" title="Login"><i class="flaticon-unlocked"></i>
-                                login</a></li>
-                            <li class="Register"><a href="register.html" title="Register"><i
-                                    class="flaticon-checked"></i> register</a></li>
-                            <li class="post"><a href="#" title="">+post</a></li>
-                        </ul>
+                        <div class="login-area">
+                            <ul>
+                                <li class="log-in"><a th:unless="${isAuthenticated}" th:href="@{/auth/login}" href="#"
+                                                      title="Login"><i class="flaticon-unlocked"></i> login</a></li>
+                                <li class="Register"><a th:unless="${isAuthenticated}" th:href="@{/auth/register}"
+                                                        href="#" title="Register"><i class="flaticon-checked"></i>
+                                    register</a></li>
+                                <li class="post"><a href="#" title="">+post</a></li>
+                                <li>
+                                    <a class="nav-link"
+                                       th:if="${isAuthenticated}" th:href="@{/auth/logout}" href="#">Logout</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,7 +206,8 @@
                             <div class="row">
                                 <div class="col-lg-3">
                                     <div class="profile-dp">
-                                        <figure><img src="/images/resources/profile-pic2.jpg" alt=""></figure>
+                                        <!--                                        <figure><img th:if="${user.getProfilePic() == null}" src="/images/default-pic.png" alt=""></figure>-->
+<!--                                                                                <figure><img  th:src="${user.getProfilePic().getPic()}" alt=""></figure>-->
                                         <div class="profile-info">
                                             <span class="profile-name"
                                                   th:text="${user.firstName + ' ' + user.lastName}"></span>
@@ -216,16 +225,26 @@
                                                 <p>Email verified </p>
                                             </li>
                                             <li>
-                                                <button class="theme-btn" onclick="showElement('phone')">Show Phone
+                                                <button class="theme-btn aw-8" onclick="showElement('phone')">Show Phone
                                                     Number
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="theme-btn" >Set profile picture</button>
-                                            </li>
-                                            <li>
                                                 <div id="phone" th:text="${user.getPhoneNumber()}"
                                                      style="display: none; margin-left: 50px;"></div>
+                                            </li>
+                                            <li>
+                                                <a class="theme-btn long aw-8 d-flex justify-content-center" th:if="${isAuthenticated &&
+                                                (currentUser.isAdmin() || currentUser.id == user.id)}"
+                                                   th:href="@{${id} +'/update'}">Update profile</a>
+                                            </li>
+                                            <li>
+                                                <a th:if="${isAuthenticated &&
+                                                (currentUser.isAdmin() || currentUser.id == user.id)}"
+                                                   onclick="return confirmDeleteProfile(id)"
+                                                   th:href="@{'/users/' + ${id} + '/delete'}" class="theme-btn long aw-8 d-flex justify-content-center"
+                                                   style="height: 50%">Delete profile</a>
+
                                             </li>
                                         </ul>
                                     </div>
@@ -248,17 +267,20 @@
                                             <div class="tab-pane active fade show " id="link1">
                                                 <div class="ride-request">
                                                     <ul>
-                                                        <li>Rides as driver<span th:if="${!user.getTripsAsDriver().isEmpty()}"
+                                                        <li>Rides as driver<span
+                                                                th:if="${!user.getTripsAsDriver().isEmpty()}"
                                                                 th:text="${user.getTripsAsDriver().size()}"></span>
                                                         </li>
                                                         <li>Rides as passenger<span
-                                                               th:if="${tripsAsPassenger != null}" th:text="${tripsAsPassenger.size()}"></span>
+                                                                th:if="${tripsAsPassenger != null}"
+                                                                th:text="${tripsAsPassenger.size()}"></span>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="link3">
-                                                <div class="colla-table" th:if="${!user.getTripsAsDriver().isEmpty()}" th:each="trip : ${user.getTripsAsDriver()}">
+                                                <div class="colla-table" th:if="${!user.getTripsAsDriver().isEmpty()}"
+                                                     th:each="trip : ${currentUser.getTripsAsDriver()}">
                                                     <h5 class="little-title">Created travels:</h5>
                                                     <button onclick="showElement('trip')">Trip 1</button>
                                                     <p id="trip" style="display: none;"
@@ -273,54 +295,35 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="link4">
-                                                <p th:if="${user.getFeedbacks().isEmpty()}">User haven't received any feedback
+                                                <p th:if="${user.getFeedbacks().isEmpty()}">User haven't received any
+                                                    feedback
                                                     yet.</p>
-                                                <ul class="reviewer" th:unless="${user.getFeedbacks().isEmpty()}"
-                                                    th:each="feedback : ${user.getFeedbacks()}">
-                                                    <li id="user-feedback">
-                                                        <figure>
-                                                            <img src="/images/resources/reviewer-3.jpg" alt="">
-                                                        </figure>
-                                                        <div class="activity-meta">
-
-                                                            <div class="user-rating">
-                                                                <span><a href="#" title=""
-                                                                         th:text="${feedback.getCreator().getFirstName() + ' ' + feedback.getCreator().getLastName()}"></a> </span>
-                                                                <span id="date"
-                                                                      th:text="${#temporals.format(feedback.getDateOfCreation(), 'dd MMMM yyyy')}"></span>
-                                                            </div>
-                                                            <ul class="stars-rating">
-                                                                <div class="stars-outer"
-                                                                     th:with="rating=${feedback.rating}">
-                                                                    <div class="stars-inner"
-                                                                         th:style="'width: ' + ${rating * 20 + '%'}"></div>
-                                                                </div>
-                                                            </ul>
-
-                                                            <p th:if="${feedback.feedbackComment != null}"
-                                                               th:text="${feedback.feedbackComment.content}"></p>
-                                                        </div>
-                                                    </li>
+                                                <ul class="reviewer" id="reviewer-list" th:unless="${user.getFeedbacks().isEmpty()}">
                                                 </ul>
+                                                <div class="feedbacks-pagination" id="fb-pagination"></div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!--                                th:if="${isAuthenticated && (currentUser.isAdmin() || currentUser.id == user.id}-->
                                 </div>
-<!--                                th:if="${isAuthenticated && (currentUser.isAdmin() || currentUser.id == user.id}-->
-                                <div class="col-lg-3 col-md-12" >
+                                <div class="col-lg-3 col-md-12">
                                     <div class="sidebar right">
-                                        <div class="note-box" >
+                                        <div class="note-box">
                                             <!--                                            Check if authenticated and current user is driver or passenger-->
                                             <span><i
                                                     class="flaticon-volkswagen-car-side-view"></i> Leave Feedback </span>
-                                            <button id="showFormButton" class="theme-btn" style="margin-left: 80px">+
+                                            <button id="showFormButton" class="theme-btn" style="margin-left: 80px">
+                                                +
                                             </button>
-                                            <button id="showCommentFormButton" class="theme-btn"> + comment (optional)
+                                            <button id="showCommentFormButton" class="theme-btn"> + comment
+                                                (optional)
                                             </button>
                                             <div id="modalOverlay">
                                                 <div id="formContainer" style="display: none;">
                                                     <form class="rating" th:action="@{'/users/'+ ${id}}"
-                                                          th:object="${feedback}">
+                                                    >
+                                                        <!--                                                        <form class="rating" th:action="@{'/users/'+ ${id}}"-->
+                                                        <!--                                                              th:object="${feedback}">-->
                                                         <div class="stars">
                                                             <label>
                                                                 <input type="radio" name="stars" value="1"/>
@@ -355,11 +358,13 @@
 
                                                         </div>
                                                         <div>
-                                                        <button type="submit" value="Submit" class="theme-btn">Save
-                                                        </button>
-                                                        <button type="button" class="theme-btn" onclick="closeForm()" >
-                                                            Close
-                                                        </button>
+                                                            <button type="submit" value="Submit" class="theme-btn">
+                                                                Save
+                                                            </button>
+                                                            <button type="button" class="theme-btn"
+                                                                    onclick="closeForm()">
+                                                                Close
+                                                            </button>
                                                         </div>
                                                     </form>
 
@@ -372,17 +377,19 @@
                                                         <div class="row">
                                                             <div class="col-lg-12">
                                                                 <label for="feedback-comment"></label>
-                                                                <textarea name="content" id="feedback-comment" rows="3"
+                                                                <textarea name="content" id="feedback-comment"
+                                                                          rows="3"
                                                                           placeholder="Comment (optional)"
                                                                           required="required"></textarea>
                                                             </div>
                                                         </div>
 
-                                                            <button type="submit" value="Submit" class="theme-btn">Save
-                                                            </button>
-                                                            <button type="button" class="theme-btn"
-                                                                    onclick="closeFormComment()">
-                                                                Close </button>
+                                                        <button type="submit" value="Submit" class="theme-btn">Save
+                                                        </button>
+                                                        <button type="button" class="theme-btn"
+                                                                onclick="closeFormComment()">
+                                                            Close
+                                                        </button>
 
                                                     </form>
                                                 </div>
@@ -395,7 +402,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </section>
     <!-- points section -->
 
@@ -468,7 +474,7 @@
 <script src="/js/apps.min.js"></script>
 <script src="/js/script.js"></script>
 <script src="/js/buttons.js"></script>
-
+<script src="/js/pagination.js"></script>
 
 </body>
-</html>		
+</html>
