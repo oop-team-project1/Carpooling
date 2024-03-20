@@ -4,12 +4,12 @@ import com.company.carpooling.models.ActivationCode;
 import com.company.carpooling.models.User;
 
 public interface ActivationCodeService {
-    ActivationCode getByUsername(String username);
+    ActivationCode getByEmail(String email);
     ActivationCode getByCode(int code);
 
     void create(ActivationCode activationCode);
 
     void update(ActivationCode activationCode);
 
-    void deleteActivationCode(int code);
+    void deleteActivationCodeByUser(String email);
 }

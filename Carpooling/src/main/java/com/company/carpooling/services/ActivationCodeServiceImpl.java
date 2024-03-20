@@ -16,8 +16,8 @@ public class ActivationCodeServiceImpl implements ActivationCodeService{
 
 
     @Override
-    public ActivationCode getByUsername(String username) {
-        return activationCodeRepository.getByUsername(username);
+    public ActivationCode getByEmail(String email) {
+        return activationCodeRepository.getByEmail(email);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ActivationCodeServiceImpl implements ActivationCodeService{
     }
 
     @Override
-    public void deleteActivationCode(int code) {
-        activationCodeRepository.deleteActivationCode(code);
+    public void deleteActivationCodeByUser(String email) {
+        activationCodeRepository.deleteActivationCodeByUser(email);
     }
 }
