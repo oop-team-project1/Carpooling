@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
     <title>Car East</title>
-    <link rel="icon" type="image/png" href="images/fav.png">
+    <link rel="icon" type="image/png" href="/images/fav.png">
 
     <link rel="stylesheet" href="/css/apps.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -26,8 +26,10 @@
                     </ul>
                     <div class="login-area">
                         <ul>
-                            <li class="log-in"><a href="login.html" title="Login"><i class="flaticon-unlocked"></i> login</a></li>
-                            <li class="Register"><a href="register.html" title="Register"><i class="flaticon-checked"></i> register</a></li>
+                            <li class="log-in"><a href="login.html" title="Login"><i class="flaticon-unlocked"></i>
+                                login</a></li>
+                            <li class="Register"><a href="register.html" title="Register"><i
+                                    class="flaticon-checked"></i> register</a></li>
                             <li class="post"><a href="#" title="">+post</a></li>
                         </ul>
                     </div>
@@ -56,7 +58,8 @@
                                         <li><a href="cars.html" title="">cars</a></li>
                                         <li><a href="car-profile.html" title="">car profile</a></li>
                                         <li><a href="car-detail.html" title="">cars detail</a></li>
-                                        <li><a href="create-route-notification.html" title="">route notification</a></li>
+                                        <li><a href="create-route-notification.html" title="">route notification</a>
+                                        </li>
                                         <li><a href="submit-car-intro.html" title="">Submit car introduction</a></li>
                                         <li><a href="submit-car-for-rent.html" title="">submit car for rent</a></li>
                                         <li><a href="CreateTripView.html" title="">submit car route</a></li>
@@ -125,7 +128,7 @@
             </ul>
         </div>
         <div class="logomenu-bar">
-            <div class="logo"><a href="index.html" title=""><img src="images/logo-black.png" alt=""></a></div>
+            <div class="logo"><a href="index.html" title=""><img src="/images/logo-black.png" alt=""></a></div>
             <span class="responsviemenu-btn"><i class="flaticon-menu-1"></i></span>
         </div>
         <div class="responsive-menu">
@@ -187,133 +190,179 @@
     </div><!-- Responsive Header -->
 
     <div class="sub-head blackish ext-low-opacity">
+        <div class="bg-image" style="background-image: url(images/resources/subhead-bg.jpg)"></div>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="cola-head">
                         <div class="head-meta">
-                            <h4 th:text="${trip.driver.getFirstName() +' '+ trip.driver.getLastName()}">Selena G.</h4>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div><!-- subhead -->
+    <!--		-->
+    <!--        <div class="head-search">-->
+    <!--        	<div class="container">-->
+    <!--            	<div class="row">-->
+    <!--                	<div class="col-md-12">-->
+    <!--                    	<div class="search-route">-->
+    <!--                        	<form method="post">-->
+    <!--                            	<div class="location">-->
+    <!--                                	<p>-->
+    <!--                                        <label><i class="fa fa-location-arrow"></i></label>-->
+    <!--                                        <input type="text" placeholder="Your location">-->
+    <!--                                    </p>-->
+    <!--                                        -->
+    <!--                                    <p>    -->
+    <!--                                        <label><i class="fa fa-location-arrow"></i></label>-->
+    <!--                                        <input type="text" placeholder="Going to">-->
+    <!--                                    </p>-->
+    <!--                                </div>-->
+    <!--                                <div class="date-n-time">-->
+    <!--                                	<p>-->
+    <!--                                        <label><i class="fa fa-calendar"></i></label>-->
+    <!--                                        <input id="datetimepicker1" type="text" >-->
+    <!--                                    </p>  -->
+    <!--                                    <p>  -->
+    <!--                                        <label><i class="fa fa-clock-o"></i></label>-->
+    <!--                                        <input id="datetimepicker2" type="text" >-->
+    <!--                                    </p>-->
+    <!--                                </div>-->
+    <!--                                <button class="theme-btn" type="submit"><i class="fa fa-search"></i></button>-->
+    <!--                            </form>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!-- top search head -->
 
     <section>
-        <div class="space">
+        <div class="space-70">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 col-md-12">
-                        <div class="ride-detail">
-                            <div class="rider-route">
-                                <ul>
-                                    <li>
-                                        <em th:text="${#temporals.format(trip.getDepartureTime(), 'HH:mm')}">09:30</em>
-                                        <div class="area">
-                                            <span th:text="${trip.getStartPoint().getCity().getName()}"><i class="fa fa-location-arrow"></i>Bristol</span>
-                                            <p th:text="${'Departure: '+ trip.getStartPoint().getStreetName()}">Departure: Bristol</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <em th:text="${#temporals.format(trip.getArrivalTime(), 'HH:mm')}">12:45</em>
-                                        <div class="area">
-                                            <span th:text="${trip.getEndPoint().getCity().getName()}"><i class="fa fa-location-arrow"></i>Cambridge</span>
-                                            <p th:text="${'Arrival: '+ trip.getEndPoint().getCity().getName()}">Arrival: Ely Cathedral, Cambridge</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="route-map">
-                                    <i class="flaticon-road-perspective-of-curves"></i>
-                                    <a href="#" title="" class="theme-btn slim"><i class="fa fa-flag-o"></i>see on map</a>
-                                </div>
-                            </div>
-                            <div class="about-owner top-space50">
-                                <h5 class="little-title">About the driver:</h5>
-                                <div class="owner-avatar">
-                                    <img th:if="${trip.getDriver().getProfilePic() != null}" th:src="${trip.getDriver().getProfilePic().getPic()}" alt="">
-                                    <img th:unless="${trip.getDriver().getProfilePic() != null}" src="/images/default-pic.png" alt="">
-                                    <i title=""><img src="images/icon-13.png" alt=""></i>
-                                    <div class="rate">
-                                        <ul class="stars-rating" th:if="${trip.driver.getAverageRating() > 0}">
-                                            <li th:each="star : ${#numbers.sequence(1, trip.driver.getAverageRating())}"><i class="fa fa-star checked"></i></li>
-                                        </ul>
-                                        <i th:text="${trip.getDriver().getFeedbacks().size()+ ' reviews'}"></i>
-                                    </div>
-                                </div>
-                                <div class="admin-meta">
-                                    <span th:text="${trip.getDriver().getUsername()}">Cameron T.</span>
-                                    <ul>
-                                        <li></li>
-                                        <li></li>
-                                    </ul>
-                                    <a  th:href="@{'/users/'+${trip.getDriver().getId()}}" title="" class="theme-btn long">View Profile</a>
-                                </div>
-                            </div>
+                    <div class="col-md-12">
+                        <div class="text-left less-margin">
+                            <h5>Applications</h5>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <div th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }"class="remaing-widget disable">
-                            <h4 th:text="${trip.getSeatsAvailable()+' remaining seat(s)'}"></h4>
-                            <div class="price">
-                                <button th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#">+ place request</button>
-                                <p>
-                                    By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
-                                </p>
-                            </div>
-                        </div><!-- remaining seat widget -->
-                        <div th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="remaing-widget disable">
-                            <h4 th:text="${trip.getSeatsAvailable()+' remaining seat(s)'}"></h4>
-                            <div class="price">
-                                <button th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#" th:action="@{/trips/apply}">+ place request</button>
-                                <button th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#" th:action="@{/trips/cancelParticipation}">+ cancel request</button>
-                                <p>
-                                    By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
-                                </p>
-                            </div>
-                        </div>
-                        <div th:if="${trip.getDriver().equals(currentUser) }"class="remaing-widget disable">
-                                <div class="price">
-                                    <button th:if="${trip.getDriver().equals(currentUser) }" class="theme-btn place-request" title="" href="#">+ view applications</button>
-                                    <p>
-                                        By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
-                                    </p>
-                                </div>
-                        </div><!-- remaining seat widget -->
-                        <div class="about-owner top-space50">
-                            <h5 class="little-title">Passengers:</h5>
-                            <div class="owner-avatar" th:if="${approvedPassengersList != null}" th:each="passenger : ${approvedPassengersList}">
-                                <figure><img th:if="${passenger.getUser().getProfilePic() != null}" th:src="${passenger.getUser().getProfilePic().getPic()}" alt=""></figure>
-                                <figure><img th:unless="${passenger.getUser().getProfilePic() != null}" src="/images/default-pic.png" alt=""></figure>
-                                <i title=""><img src="/images/icon-13.png" alt=""></i>
-                                <!--                                        <div class="rate">-->
-                                <!--                                            <ul class="stars-rating">-->
-                                <!--                                                <li><i class="fa fa-star checked"></i></li>-->
-                                <!--                                                <li><i class="fa fa-star checked"></i></li>-->
-                                <!--                                                <li><i class="fa fa-star checked"></i></li>-->
-                                <!--                                                <li><i class="fa fa-star checked"></i></li>-->
-                                <!--                                                <li><i class="fa fa-star checked"></i></li>-->
-                                <!--                                            </ul>-->
-                                <!--                                            <i>12 Reviews</i>-->
-                                <!--                                        </div>-->
-                            </div>
-                            <div class="admin-meta" th:each="passenger : ${approvedPassengersList}">
-                                <span th:text="${passenger.getUser().getFirstName() + ' ' + passenger.getUser().getLastName()}">Cameron T.</span>
+                        <div class="request-list" th:if="${!applications.isEmpty()}">
+                            <div th:id="${trip.getId()}" class="colla-table">
+                                <table class="table table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:id="${applicationForTrip.id}" th:each="applicationForTrip : ${applications}"
+                                        onclick="redirectToPage(parseInt(this.id))">
+                                            <td th:text="${#temporals.format(applicationForTrip.getDateOfCreation(), 'dd MMMM yyyy')}">
+                                                6 Oct, 2017
+                                            </td>
+                                            <td><p th:text="${applicationForTrip.getUser().getFirstName()}"></p></td>
+                                            <td>
+                                                <p th:text="${applicationForTrip.getUser().getEmail()}">Colchester</p>
+                                            </td>
+                                            <td th:text="${applicationForTrip.getStatus().getStatus()}"></td>
 
-                                <a th:href="@{'/trips/'+ ${trip.id} + '/users/' + ${passenger.getUser().id} + '/feedbacks'}" title="" class="theme-btn long">send message</a>
-                                <a th:href="@{'/trips/'+ ${trip.id} + '/users/'
-                                            + ${passenger.getUser().id} + '/feedbacks/' + ${} + '/comments' }" title="" class="theme-btn long">send comment</a>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section><!-- points section -->
-    <div th:replace="~{fragments/PageForm :: footer}"></div>
+    </section>
 
-<script src="js/apps.min.js"></script>
-<script src="js/script.js"></script>
+    <!--notice box-->
+
+    <footer class="light">
+        <div class="mockup-right">
+            <img src="/images/resources/footer-mockup.png" alt="">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-sm-6">
+                    <div class="widget">
+                        <a href="index.html" title=""><img src="/images/logo-black.png" alt=""></a>
+                        <p>
+                            The trio took this simple idea and built it into the world’s leading carpooling platform,
+                            connecting millions of people going the same way.
+                        </p>
+                        <ul class="social">
+                            <li><a href="#" title="" class="facebook"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#" title="" class="twitter"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#" title="" class="instagram"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-6">
+                    <div class="widget">
+                        <div class="widget-title"><h4>useful links</h4></div>
+                        <ul class="list-style">
+                            <li><a href="#" title="">leasing</a></li>
+                            <li><a href="#" title="">submit route</a></li>
+                            <li><a href="#" title="">how does it work?</a></li>
+                            <li><a href="#" title="">agent listings</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="widget">
+                        <div class="widget-title"><h4>weekly news letter</h4></div>
+                        <div class="news-letter">
+                            <p>We may send you information about related events, webinars, products and services which
+                                we believe.</p>
+                            <form method="post">
+                                <input type="text" placeholder="Enter your email address">
+                                <button type="submit"><i class="fa fa-paper-plane-o"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-6">
+                    <div class="widget">
+                        <div class="widget-title"><h4>download apps</h4></div>
+                        <ul class="colla-apps">
+                            <li><a href="#" title=""><i class="flaticon-android"></i> android</a></li>
+                            <li><a href="#" title=""><i class="flaticon-apple"></i> iPhone</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottombar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="copyright">© 2019. All rights reserved.</span>
+                        <i><img src="/images/credit-cards.png" alt=""></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer><!-- footer -->
+
+</div>
+
+<script src="/js/apps.min.js"></script>
+<script src="/js/script.js"></script>
+<script>
+    function redirectToPage(applicationId) {
+        let element = document.querySelector('.colla-table');
+        // Now you can use modelAttribute in your JavaScript code
+        /*]]>*/
+        window.location.href = "/trips/" + element.id + "/applications/" + applicationId; // Replace "/your-destination-url" with the URL you want to redirect to
+    }
+</script>
 
 </body>
-</html>
+</html>		

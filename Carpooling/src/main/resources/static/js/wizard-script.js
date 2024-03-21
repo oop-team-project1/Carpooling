@@ -701,7 +701,6 @@ $(window).load(function () {
 		$('.aiia-wizard-button-next').click(function() {
 			// Check if the finish button is clicked
 			if ($(this).text() === 'Submit') {
-
 				$('#trip-form').submit();
 			}
 
