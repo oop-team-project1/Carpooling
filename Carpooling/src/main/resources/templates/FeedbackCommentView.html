@@ -7,9 +7,6 @@
         <!--                                            Check if authenticated and current user is driver or passenger-->
         <span><i
                 class="flaticon-volkswagen-car-side-view"></i> Leave Feedback </span>
-        <button id="showFormButton" class="theme-btn" style="margin-left: 80px">
-            +
-        </button>
         <button id="showCommentFormButton" class="theme-btn"> + comment
             (optional)
         </button>
@@ -17,11 +14,11 @@
 
         <div id="modalOverlayComment">
             <div id="formContainerComment" style="display: none;" >
-                <form method="post" class="cola-form" th:action="@{'/trips/'+ ${trip.id} + '/users/'
-                 + ${receiver.id} + '/feedbacks/' + ${feedbackForComment.id} + '/comments'}"
+                <form method="post" class="cola-form" th:action="@{'/users/'+ ${receiver.id} + '/feedbacks/' + ${feedback.id} + '/comments'}"
                       th:object="${comment}">
                     <div class="row">
                         <div class="col-lg-12">
+
                             <label for="feedback-comment"></label>
                             <textarea name="content" id="feedback-comment"
                                       rows="3"

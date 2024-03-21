@@ -15,10 +15,13 @@ const createFeedBacks = async () => {
     const feedBacks = await getFeedBacks()
     let html = ''
 
-  
     feedBacks.slice(activePage * 3, activePage *  3 + 3).forEach(feedback => {
         const {dateOfCreation, rating} = feedback
         const {firstName, lastName} = feedback?.creator
+        console.log(feedback)
+        const receiver = feedback?.receiver?.id
+        const feedbackId = feedback?.id
+        const tripId = feedback?.trip?.id
         const content = feedback?.feedbackComment?.content
 
 
@@ -39,9 +42,12 @@ const createFeedBacks = async () => {
                      ><div class="stars-inner" style="width: ${rating * 20}%"></div>
                   </div>
               </ul>
-              <p>
+               <p>
                  ${content ? content : ''}
               </p>
+              <a class="theme-btn long" href="${receiver}/feedbacks/${feedbackId}/comments">+</a>
+              
+                                          
           </div>
       </li>`
     });
@@ -77,4 +83,6 @@ document.getElementById('fb-pagination').addEventListener('click', (e) => {
 })
 
 pagination()
+
+
 
