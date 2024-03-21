@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Table(name = "feedbacks")
 @Getter
 @Setter
-@JsonIgnoreProperties({"receiver"})
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,6 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "trip_id")
-    @JsonBackReference
     private Trip trip;
 
     @Column(name = "created_at")
