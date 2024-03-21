@@ -39,7 +39,7 @@ import java.text.ParseException;
 
 
 import java.util.List;
-
+import java.util.Set;
 
 
 @Setter
@@ -140,7 +140,7 @@ public class TripMvcController {
         try {
             Trip trip = tripMapper.fromTripDtoCoordinates(tripDto);
             tripService.create(trip, user);
-            return "redirect:HomeView";
+            return "redirect:/trips";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
@@ -329,4 +329,64 @@ public class TripMvcController {
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("currentUser") != null;
     }
+
+    @GetMapping("/{tripId}/applications")
+    public String showApplications(@PathVariable int tripId, Model model, HttpSession session) {
+        try {
+            try{
+                authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            if (populateIsAuthenticated(session)){
+                String currentEmail = (String) session.getAttribute("currentUser");
+                model.addAttribute("currentUser", userService.getByEmail(currentEmail));
+            }
+            Trip trip = tripService.get(tripId);
+            User user = authenticationHelper.tryGetUser(session);
+            if(!trip.getDriver().equals(user)){
+                return "redirect:/trips";
+            }
+            Set<Application> applications = trip.getApplications();
+            model.addAttribute("tripId", tripId);
+            model.addAttribute("trip", trip);
+            model.addAttribute("applications", applications);
+            return "TripApplicationsView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+    @GetMapping("/{tripId}/applications/{appId}")
+    public String showApplications(@PathVariable int tripId,@PathVariable int appId, Model model, HttpSession session) {
+           try{
+            try{
+                authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationException e) {
+                return "redirect:/auth/login";
+            }
+
+            if (populateIsAuthenticated(session)){
+                String currentEmail = (String) session.getAttribute("currentUser");
+                model.addAttribute("currentUser", userService.getByEmail(currentEmail));
+            }
+            Trip trip = tripService.get(tripId);
+            User user = authenticationHelper.tryGetUser(session);
+            if(!trip.getDriver().equals(user)){
+                return "redirect:/trips";
+            }
+            Set<Application> applications = trip.getApplications();
+            model.addAttribute("tripId", tripId);
+            model.addAttribute("trip", trip);
+            model.addAttribute("applications", applications);
+            return "TripApplicationsView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
 }
