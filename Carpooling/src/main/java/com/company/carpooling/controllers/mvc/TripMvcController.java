@@ -231,69 +231,6 @@ public class TripMvcController {
         }
     }
 
-    @GetMapping("/{id}/users/{userId}/feedbacks/{feedbackId}/comments")
-    public String showFeedbackCommentPage(@PathVariable int id,
-                                          @PathVariable int userId,
-                                          @PathVariable int feedbackId,
-                                          Model model,
-                                          HttpSession session) {
-        User user;
-        try {
-            authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationException e) {
-            return "redirect:/auth/login";
-        }
-
-        try {
-            Trip trip = tripService.get(id);
-            User receiver = userService.getById(userId);
-            Feedback feedback = feedbackService.getById(feedbackId);
-            model.addAttribute("receiver", receiver);
-            model.addAttribute("trip", trip);
-            model.addAttribute("feedback", feedback);
-            return "FeedbackCommentView";
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
-        }
-    }
-
-
-    @PostMapping("/{id}/users/{userId}/feedbacks/{feedbackId}/comments")
-    public String createFeedbackCommentForPassenger(@Valid @ModelAttribute("comment") CommentDto commentDto,
-                                                    BindingResult bindingResult,
-                                                    @PathVariable int id,
-                                                    @PathVariable int userId,
-                                                    @PathVariable int feedbackId,
-                                                    Model model,
-                                                    HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthorizationException e) {
-            return "redirect:/auth/login";
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "FeedbackCommentView";
-        }
-
-        try {
-            Trip trip = tripService.get(id);
-            Feedback feedback = feedbackService.getById(feedbackId);
-            FeedbackComment comment = commentMapper.fromCommentDto(commentDto);
-            User receiver = userService.getById(userId);
-            model.addAttribute("receiver", receiver);
-            model.addAttribute("feedbackForComment", feedback);
-            feedbackService.addCommentToFeedback(user, receiver, feedback, comment);
-            return "redirect:/trips/" + id;
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
-        }
-    }
 
     @PostMapping("/apply")
     public String applyForTrip(@RequestParam("tripId") int tripId, HttpSession session, Model model) {

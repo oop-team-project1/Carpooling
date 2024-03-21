@@ -6,12 +6,15 @@ import com.company.carpooling.exceptions.EntityDuplicateException;
 import com.company.carpooling.exceptions.EntityNotFoundException;
 import com.company.carpooling.helpers.mappers.AuthenticationHelper;
 import com.company.carpooling.helpers.filters.FilterOptionsUsers;
+import com.company.carpooling.helpers.mappers.CommentMapper;
 import com.company.carpooling.helpers.mappers.UserMapper;
-import com.company.carpooling.models.Application;
-import com.company.carpooling.models.Trip;
-import com.company.carpooling.models.User;
+import com.company.carpooling.models.*;
+import com.company.carpooling.models.dtos.CommentDto;
+import com.company.carpooling.models.dtos.FeedbackDto;
 import com.company.carpooling.models.dtos.FilterDtoUser;
 import com.company.carpooling.models.dtos.UserDto;
+import com.company.carpooling.services.contracts.FeedbackService;
+import com.company.carpooling.services.contracts.TripService;
 import com.company.carpooling.services.contracts.UserProfilePicService;
 import com.company.carpooling.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -34,7 +37,9 @@ public class UserMvcController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
-
+    private TripService tripService;
+    private FeedbackService feedbackService;
+    private CommentMapper commentMapper;
     private final UserProfilePicService userProfilePicService;
 
 
@@ -312,5 +317,69 @@ public class UserMvcController {
             return "ErrorView";
         }
     }
+
+    @GetMapping("/{userId}/feedbacks/{feedbackId}/comments")
+    public String showFeedbackCommentPage(@PathVariable int userId,
+                                          @PathVariable int feedbackId,
+                                          Model model,
+                                          HttpSession session) {
+        User user;
+        try {
+            authenticationHelper.tryGetUser(session);
+        } catch (AuthenticationException e) {
+            return "redirect:/auth/login";
+        }
+
+        try {
+//            Trip trip = tripService.get(id);
+            User receiver = userService.getById(userId);
+            Feedback feedback = feedbackService.getById(feedbackId);
+            model.addAttribute("receiver", receiver);
+//            model.addAttribute("trip", trip);
+            model.addAttribute("feedback", feedback);
+            model.addAttribute("comment", new CommentDto());
+            return "FeedbackCommentView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+
+    @PostMapping("/{userId}/feedbacks/{feedbackId}/comments")
+    public String createFeedbackCommentForPassenger(@Valid @ModelAttribute("comment") CommentDto commentDto,
+                                                    BindingResult bindingResult,
+                                                    @PathVariable int userId,
+                                                    @PathVariable int feedbackId,
+                                                    Model model,
+                                                    HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "FeedbackCommentView";
+        }
+
+        try {
+//            Trip trip = tripService.get(id);
+            Feedback feedback = feedbackService.getById(feedbackId);
+            FeedbackComment comment = commentMapper.fromCommentDto(commentDto);
+            User receiver = userService.getById(userId);
+            model.addAttribute("receiver", receiver);
+            model.addAttribute("feedbackForComment", feedback);
+            feedbackService.addCommentToFeedback(user, receiver, feedback, comment);
+            return "redirect:/users/" + userId;
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
 
 }
