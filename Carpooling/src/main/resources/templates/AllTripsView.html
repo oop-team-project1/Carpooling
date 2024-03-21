@@ -17,6 +17,26 @@
 <body>
 
 <div th:replace="~{fragments/PageForm :: head}"></div>
+<div class="header-top">
+    <div class="container">
+        <div class="row">
+            <div th:replace="~{fragments/PageForm :: header-top}"></div>
+        </div>
+    </div>
+</div>
+</div><!-- topbar -->
+
+<div class="topbar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- topbar -->
+                <div th:replace="~{fragments/PageForm :: topbar}"></div>
+                <!-- subhead -->
+            </div>
+        </div>
+    </div>
+</div><!-- topbar header -->
 
     <section>
             <form id="filter" action="#" th:action="@{/trips}" method="get" th:object="${filterOptions}">

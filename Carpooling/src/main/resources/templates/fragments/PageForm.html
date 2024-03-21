@@ -32,7 +32,8 @@
                                 <li class="Register"><a th:unless="${isAuthenticated}" th:href="@{/auth/register}"
                                                         href="#" title="Register"><i class="flaticon-checked"></i>
                                     register</a></li>
-                                <li class="post"><a href="#" title="" th:if="${isAuthenticated}">+post</a></li>
+                                <li class="post"><a href="#" title="" th:if="${isAuthenticated}" th:href="@{/trips/new}">+post</a
+                                ></li>
                                 <li>
                                     <a class="nav-link"
                                        th:if="${isAuthenticated}" th:href="@{/auth/logout}" href="#">Logout</a>
@@ -60,7 +61,7 @@
                                 </li>
                                 <li><a th:href="@{/users}" title="">Users</a>
                                 </li>
-                                <li><a href="#" title="">Trips</a>
+                                <li><a  th:href="@{/trips}" title="">Trips</a>
                                 </li>
                             </ul>
                         </nav>
