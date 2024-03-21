@@ -106,7 +106,7 @@
                         <div th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }"class="remaing-widget disable">
                             <h4 th:text="${trip.getSeatsAvailable()+' remaining seat(s)'}"></h4>
                             <div class="price">
-                                <button th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#">+ place request</button>
+                                <a th:href= "@{/trips/__${trip.getId()}__/applications}" th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#">+ place request</a>
                                 <p>
                                     By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
                                 </p>
@@ -115,8 +115,8 @@
                         <div th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="remaing-widget disable">
                             <h4 th:text="${trip.getSeatsAvailable()+' remaining seat(s)'}"></h4>
                             <div class="price">
-                                <button th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#" th:action="@{/trips/apply}">+ place request</button>
-                                <button th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#" th:action="@{/trips/cancelParticipation}">+ cancel request</button>
+                                <a th:if="${!trip.getDriver().equals(currentUser) && !currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#" th:action="@{/trips/apply}">+ place request</a>
+                                <a th:if="${!trip.getDriver().equals(currentUser) && currentUser.getApplications().contains(trip) }" class="theme-btn place-request" title="" href="#" th:action="@{/trips/cancelParticipation}">+ cancel request</a>
                                 <p>
                                     By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
                                 </p>
@@ -124,7 +124,7 @@
                         </div>
                         <div th:if="${trip.getDriver().equals(currentUser) }"class="remaing-widget disable">
                                 <div class="price">
-                                    <button th:if="${trip.getDriver().equals(currentUser) }" class="theme-btn place-request" title="" href="#">+ view applications</button>
+                                    <a th:href= "@{/trips/__${trip.getId()}__/applications}" th:if="${trip.getDriver().equals(currentUser) }" class="theme-btn place-request" title="" href="#">+ view applications</a>
                                     <p>
                                         By booking this trip you accept our <a href="#" title="">conditions of use</a> and <a href="#" title="">cancellation policy</a>.
                                     </p>
