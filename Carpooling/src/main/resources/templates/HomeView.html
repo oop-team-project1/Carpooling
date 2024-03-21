@@ -391,43 +391,6 @@
         </div>
     </section><!-- funfacts section -->
 
-<section th:if="${isAuthenticated}">
-    <div class="space">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading">
-                        <h2>Latest rentals</h2>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6">
-                            <div class="latest-rentalz">
-                                <figure>
-                                    <img src="/images/resources/car4.jpg" alt="">
-                                    <div class="renter">
-                                        <img src="images/resources/renter-1.jpg" alt="">
-                                    </div>
-                                </figure>
-                                <div class="rent-meta">
-                                    <h4><a href="#" title="">Infiniti Q50</a></h4>
-                                    <ul class="stars-rating">
-                                        <li><i class="fa fa-star checked"></i></li>
-                                        <li><i class="fa fa-star checked"></i></li>
-                                        <li><i class="fa fa-star checked"></i></li>
-                                        <li><i class="fa fa-star checked"></i></li>
-                                        <li><i class="fa fa-star checked"></i></li>
-                                    </ul>
-                                    <span><i class="fa fa-location-arrow"></i>01000 New York</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <div th:replace="~{fragments/PageForm :: footer}"></div>
 
 </div>
