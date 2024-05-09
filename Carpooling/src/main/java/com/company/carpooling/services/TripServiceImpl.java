@@ -75,6 +75,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public Set<Application> getApplications(int tripId, User user) {
         Trip trip = get(tripId);
+        checkIfEnabled(user, ENABLED_USER_ERROR);
+        checkIfBlocked(user, BLOCKED_APPLY_ERR);
         checkModifyPermissions(trip, user, INFORMATION_PERMISSION_ERR);
         return trip.getApplications();
     }
@@ -82,17 +84,12 @@ public class TripServiceImpl implements TripService {
     @Override
     public void applyForTrip(int tripId, User user) {
         Trip trip = get(tripId);
+        checkIfEnabled(user, ENABLED_USER_ERROR);
         checkIfBlocked(user, BLOCKED_APPLY_ERR);
         checkApplicationPermissions(trip, user);
         checkIfAlreadyApplied(trip, user);
         trip.getApplications().add(new Application(trip, user));
         tripRepository.update(trip);
-    }
-
-    private void checkIfAlreadyApplied(Trip trip, User user) {
-        if (trip.getApplications().stream().anyMatch(application -> application.getUser().equals(user))) {
-            throw new EntityDuplicateException("Application from user", "id", user.getId());
-        }
     }
 
     @Override
@@ -139,6 +136,12 @@ public class TripServiceImpl implements TripService {
                 .filter(application -> application.getStatus()
                         .equals(new PassengerStatus(2, "Approved")))
                 .toList();
+    }
+
+    private void checkIfAlreadyApplied(Trip trip, User user) {
+        if (trip.getApplications().stream().anyMatch(application -> application.getUser().equals(user))) {
+            throw new EntityDuplicateException("Application from user", "id", user.getId());
+        }
     }
 
     private void checkIfBlocked(User user, String message) {

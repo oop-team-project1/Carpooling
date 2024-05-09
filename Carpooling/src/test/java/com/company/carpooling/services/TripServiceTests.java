@@ -1,6 +1,7 @@
 package com.company.carpooling.services;
 
 import com.company.carpooling.exceptions.AuthorizationException;
+import com.company.carpooling.exceptions.EntityDuplicateException;
 import com.company.carpooling.helpers.filters.FilterOptionsTrip;
 import com.company.carpooling.models.Application;
 import com.company.carpooling.models.Trip;
@@ -155,6 +156,17 @@ public class TripServiceTests {
         Assertions.assertThrows(AuthorizationException.class, () -> tripService.getApplications(1,driver));
     }
     @Test
+    void getApplications_Should_Throw_When_UserIsBlocked(){
+        // Arrange
+        Trip mockTrip = createMockTrip();
+        mockTrip.getDriver().setBlocked(true);
+        // Act
+        Mockito.when(mockRepository.get(Mockito.anyInt()))
+                .thenReturn(mockTrip);
+        // Assert
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.getApplications(1,mockTrip.getDriver()));
+    }
+    @Test
     void getApplications_Should_Return_Applications_WhenUserIsDriver(){
         // Arrange
         Trip mockTrip = Mockito.spy(createMockTrip());
@@ -168,4 +180,85 @@ public class TripServiceTests {
         // Assert
         Mockito.verify(mockTrip,Mockito.times(1)).getApplications();
     }
+
+    @Test
+    void applyForTrip_Should_Throw_When_UserIsBlocked(){
+        // Arrange
+        User user = createMockUser();
+        user.setBlocked(true);
+        // Act & Assert
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.applyForTrip(1,user));
+    }
+    @Test
+    void applyForTrip_Should_Throw_When_UserIsDriver(){
+        // Arrange
+        Trip mockTrip = createMockTrip();
+        User driver = createMockUser();
+
+        // Act
+        Mockito.when(mockRepository.get(Mockito.anyInt()))
+                .thenReturn(mockTrip);
+
+        // Assert
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.applyForTrip(1,driver));
+    }
+
+    @Test
+    void applyForTrip_Should_Throw_When_UserAlreadyApplied(){
+        // Arrange
+        Trip mockTrip = createMockTrip();
+        mockTrip.getDriver().setId(2);
+        User driver = createMockUser();
+        Set<Application> applications = new HashSet<>();
+        applications.add(createMockApplication());
+        mockTrip.setApplications(applications);
+
+        // Act
+        Mockito.when(mockRepository.get(Mockito.anyInt()))
+                .thenReturn(mockTrip);
+
+        // Assert
+        Assertions.assertThrows(EntityDuplicateException.class, () -> tripService.applyForTrip(1,driver));
+    }
+
+
+    @Test
+    public void applyForTrip_Should_CallRepository() {
+        User mockUser = createMockUser();
+        Trip mockTrip = createMockTrip();
+        mockTrip.getDriver().setId(2);
+
+        Mockito.when(mockRepository.get(Mockito.anyInt())).thenReturn(mockTrip);
+
+        tripService.applyForTrip(mockTrip.getId(), mockUser);
+
+        Mockito.verify(mockRepository, Mockito.times(1))
+                .update(mockTrip);
+    }
+    @Test
+    public void cancelParticipation_Should_CallRepository() {
+        User mockUser = createMockUser();
+        Trip mockTrip = createMockTrip();
+
+        Mockito.when(mockRepository.get(Mockito.anyInt())).thenReturn(mockTrip);
+
+        tripService.cancelParticipation(mockTrip.getId(), mockUser);
+
+        Mockito.verify(mockRepository, Mockito.times(1))
+                .update(mockTrip);
+    }
+
+    @Test
+    public void approvePassengers_Should_Throw_When_UserIsBlocked() {
+        User driver = createMockUser();
+        driver.setBlocked(true);
+
+        Assertions.assertThrows(AuthorizationException.class, () -> tripService.approvePassenger(1,driver, 1));
+
+    }
+
+
+
+
+
 }
