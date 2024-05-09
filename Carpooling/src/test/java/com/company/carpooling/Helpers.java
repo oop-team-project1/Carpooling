@@ -96,6 +96,16 @@ public class Helpers {
         return admin;
     }
 
+    public static Application createMockApplication() {
+        Application application = new Application();
+        application.setId(1);
+        application.setStatus(new PassengerStatus(1,"Applied"));
+        application.setDateOfCreation(LocalDate.now());
+        application.setUser(createMockUser());
+        application.setTrip(createMockTrip());
+        return  application;
+    }
+
     public static FilterOptionsUsers createMockFilterOptionsUsers() {
         return new FilterOptionsUsers(
                 "username",
