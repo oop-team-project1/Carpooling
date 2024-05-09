@@ -11,6 +11,7 @@ import org.hibernate.annotations.Formula;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -66,7 +67,7 @@ public class Trip {
     // TODO make separate return entity
     @JsonIgnore
     @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Application> applications;
+    private Set<Application> applications = new HashSet<>();
 
 
     @Formula(value = "(select count(*) from applications where applications.trip_id = trip_id and applications.status_id=2)")
